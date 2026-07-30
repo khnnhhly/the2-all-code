@@ -1,0 +1,9 @@
+{
+  "settings": {"brandName":"Tên thương hiệu","tagline":"Tagline","logo":{"src":"https://example.com/logo.png","alt":"Logo thương hiệu"},"defaultSeo":{"title":"","description":""},"socialLinks":[],"copyright":"© 2026"},
+  "navigation": {"primaryLinks":[{"label":"Trang chủ","url":"/"}],"footerColumns":[]},
+  "home": {"heroTitle":"","heroSubtitle":"","heroImage":{"src":"https://example.com/hero.jpg","alt":""},"introduction":"Đoạn một\n\nĐoạn hai","featuredServiceSlugs":[],"featuredProjectSlugs":[],"gallery":[],"seo":{"title":"","description":""}},
+  "about": {"heroTitle":"","heroSubtitle":"","story":"","values":[],"statistics":[],"team":[],"seo":{"title":"","description":""}},
+  "services": [{"slug":"wedding-planning","title":"","order":1,"coverImage":{"src":"https://example.com/service.jpg","alt":""},"summary":"","body":"","includedItems":[],"process":[],"gallery":[],"seo":{"title":"","description":""}}],
+  "projects": [{"slug":"du-an-mau","title":"","eventDate":"2026-01-01","location":"","categories":[],"serviceSlugs":[],"coverImage":{"src":"https://example.com/project.jpg","alt":""},"intro":"","story":"","gallery":[],"credits":[],"seo":{"title":"","description":""}}],
+  "contact": {"heroTitle":"","heroSubtitle":"","email":"","phone":"","address":"","mapUrl":"","businessHours":[],"formHeading":"","formIntro":"","formButtonLabel":"Gửi yêu cầu","seo":{"title":"","description":""}}
+}
