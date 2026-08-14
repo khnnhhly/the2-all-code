@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Menu, X, Globe, ChevronDown, Heart, BookOpen, Search, CalendarDays, Palette, Rocket, Clock, Lightbulb, Trash2, MapPin, Check, XIcon } from 'lucide-react';
 import { translationData } from './translationData';
@@ -192,8 +193,8 @@ function JournalSection({ t, currentLang }) {
 
 // ─── Main App ───
 
-export default function App() {
-  const [lang, setLang] = useState('en');
+export default function App({ heroData }) {
+  const [lang, setLang] = useState('vi');
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesMenuOpen, setServicesMenuOpen] = useState(false);
@@ -496,7 +497,7 @@ export default function App() {
 
       {/* ─── PAGE ROUTED CONTENT ─── */}
       <main>
-        {currentPage === 'home' && <Home t={t.home} currentLang={lang} setCurrentPage={handleNavClick} />}
+        {currentPage === 'home' && <Home t={t.home} currentLang={lang} setCurrentPage={handleNavClick} heroData={heroData} />}
         {currentPage === 'about' && (
           <>
             <About t={t.about} currentLang={lang} setCurrentPage={handleNavClick} />

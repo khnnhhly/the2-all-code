@@ -1,8 +1,10 @@
+'use client';
 import React, { useState } from 'react';
 
 export default function TestimonialCard({ author, event, teaser, full, readMoreLabel, readLessLabel }) {
   const [expanded, setExpanded] = useState(false);
-  const paragraphs = (full || '').split('\n').filter(Boolean);
+  const paragraphs = (full || '').split('
+').filter(Boolean);
 
   return (
     <div className="bento-card" style={{

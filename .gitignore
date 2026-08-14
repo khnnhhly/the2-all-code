@@ -1,0 +1,13 @@
+# Dependency directories
+node_modules/
+
+# Next.js build output
+frontend/.next/
+frontend/out/
+
+# Sanity build output
+the2/dist/
+
+# Operating system files
+.DS_Store
+Thumbs.db

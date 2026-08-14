@@ -1,3 +1,4 @@
+'use client';
 import React, { useState } from 'react';
 
 const VIDEO_ID = 'az1eBpmYOpE';

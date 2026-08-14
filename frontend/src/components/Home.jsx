@@ -1,7 +1,8 @@
+'use client';
 import { useEffect, useState } from 'react';
 import LogoMarquee from './LogoMarquee';
 import DriveVideoEmbed from './DriveVideoEmbed';
-import HeroVideoBackground from './HeroVideoBackground';
+import HeroSection from './HeroSection';
 import HomeShowcaseCarousel from './HomeShowcaseCarousel';
 import HomeServiceRow from './HomeServiceRow';
 import {
@@ -12,7 +13,7 @@ import {
   CLOSING_SECTION_BG,
 } from '../content/homeAssets';
 
-export default function Home({ t, currentLang, setCurrentPage }) {
+export default function Home({ t, currentLang, setCurrentPage, heroData }) {
   const [heroColorized, setHeroColorized] = useState(false);
   const quoteParagraphs = t.quoteBodyParagraphs || (t.quoteBody ? [t.quoteBody] : []);
   const closingLines = t.closingParagraphs || [];
@@ -79,43 +80,7 @@ export default function Home({ t, currentLang, setCurrentPage }) {
   return (
     <div id="home">
       {/* Hero */}
-      <section className="hero-home">
-        <HeroVideoBackground colorize={heroColorized} />
-        <div className="hero-home-overlay" />
-
-        <div
-          className={`container hero-content-wrapper${currentLang === 'vi' ? ' hero-content-wrapper-vi' : ''}`}
-        >
-          <p
-            className={`hero-tagline hero-tagline--animate brand-preserve-case preserve-copy-case${currentLang === 'vi' ? ' hero-home-eyebrow-vi' : ''}`}
-            onAnimationEnd={() => setHeroColorized(true)}
-          >
-            {renderHeroLabel()}
-          </p>
-
-          {heroTitle && (
-            <h1 className={`reveal-on-scroll delay-100 hero-home-title${currentLang === 'vi' ? ' hero-home-title-vi' : ' hero-home-title-en'}`}>
-              {heroTitle}
-            </h1>
-          )}
-
-          <div className={`reveal-on-scroll delay-200 brand-preserve-case${currentLang === 'vi' ? ' hero-home-subtext-vi' : ''} hero-home-subtext`}>
-            {heroParagraphs.map((para, i) => (
-              <p key={i}>{para}</p>
-            ))}
-          </div>
-
-          <div className="hero-cta-links reveal-on-scroll delay-300">
-            <button type="button" className="hero-cta-link hero-cta-link--primary" onClick={() => setCurrentPage('contact')}>
-              {t.ctaStart}
-            </button>
-            <span className="hero-cta-divider">·</span>
-            <button type="button" className="hero-cta-link" onClick={() => setCurrentPage('showcase')}>
-              {t.ctaExplore}
-            </button>
-          </div>
-        </div>
-      </section>
+      <HeroSection heroData={heroData} lang={currentLang} onCtaClick={setCurrentPage} />
 
       {/* Quote */}
       <section className="section-padding home-showcase-section" style={{ backgroundColor: 'var(--white)', borderBottom: '1px solid var(--border-color)' }}>

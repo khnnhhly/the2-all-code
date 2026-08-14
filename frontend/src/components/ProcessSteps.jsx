@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 
 export default function ProcessSteps({ steps, numberColor = 'var(--accent-secondary)', numberOpacity = 1 }) {

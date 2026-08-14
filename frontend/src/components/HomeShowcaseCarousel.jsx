@@ -1,3 +1,4 @@
+'use client';
 import { useRef, useState } from 'react';
 import OptimizedImage from './OptimizedImage';
 import { HOME_SHOWCASE_CAROUSEL } from '../content/homeAssets';

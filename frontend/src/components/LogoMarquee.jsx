@@ -1,3 +1,4 @@
+'use client';
 import { PARTNER_LOGOS } from '../imageAssets';
 import OptimizedImage from './OptimizedImage';
 

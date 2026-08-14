@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import OptimizedImage from './OptimizedImage';
 import { COUPLE_THUMBNAILS } from '../imageAssets';

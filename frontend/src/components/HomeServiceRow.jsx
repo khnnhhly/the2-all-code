@@ -1,3 +1,4 @@
+'use client';
 import OptimizedImage from './OptimizedImage';
 
 export default function HomeServiceRow({ service, index, onNavigate }) {

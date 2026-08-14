@@ -1,3 +1,4 @@
+'use client';
 export default function LogoSvg({ color = "#7f1d1d", armColor = "#2a2526", size = 120, withBackground = false }) {
   return (
     <div role="img" aria-label="The Two Planner logo" style={{ display: "inline-flex", width: `${size}px`, height: `${size * 0.7}px`, alignItems: "center", justifyContent: "center", backgroundColor: withBackground ? "#5a5e27" : "transparent" }}>

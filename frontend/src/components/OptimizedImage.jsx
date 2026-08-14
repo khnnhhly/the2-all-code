@@ -1,3 +1,4 @@
+'use client';
 export function imageDisplayUrl(src, maxWidth = 800) {
   if (!src || typeof src !== 'string') return src;
   return src;

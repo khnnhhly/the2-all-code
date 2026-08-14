@@ -1,3 +1,4 @@
+'use client';
 import { useState } from 'react';
 import { CheckCircle, ArrowRight } from 'lucide-react';
 import LogoSvg from './LogoSvg';

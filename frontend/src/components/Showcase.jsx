@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { SHOWCASE_GALLERIES, COUPLE_THUMBNAILS } from '../imageAssets';
