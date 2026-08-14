@@ -1,0 +1,96 @@
+/* ── Extra design polish on top of index.css ── */
+
+/* Flat mobile dropdown backing for Notion style */
+.mobile-dropdown-menu {
+  background: #FFFFFF !important;
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Bento card headers styling */
+.bento-card-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.15rem;
+  color: var(--charcoal);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+/* Bento card descriptions */
+.bento-card-desc {
+  font-size: 0.9rem;
+  color: var(--charcoal-light);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .editorial-grid { gap: 16px; }
+  .container { padding: 0 24px; }
+}
+
+/* ── Services Grid: 4 equal columns ── */
+.services-grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  width: 100%;
+  margin-bottom: 50px;
+}
+
+/* Tablet: 2x2 grid */
+@media (max-width: 1024px) {
+  .services-grid-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile: single column */
+@media (max-width: 600px) {
+  .services-grid-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── YouTube Responsive Embed ── */
+.video-container {
+  max-width: 800px;
+  margin: 40px auto;
+  width: 100%;
+}
+.video-responsive {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+}
+.video-responsive iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ── Responsive Nav Container ── */
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 0 24px;
+  }
+}

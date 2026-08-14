@@ -1,0 +1,52 @@
+.gallery__wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  user-select: none;
+}
+
+.gallery__wrapper__gl {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  user-select: none;
+}
+
+.gallery__image__container,
+.gallery__image__container__gl {
+  display: flex;
+  gap: 2rem;
+  will-change: transform;
+  height: 100%;
+}
+
+.gallery__media,
+.gallery__media__gl,
+.gallery__empty__gl {
+  flex-shrink: 0;
+  aspect-ratio: 4 / 3;
+  max-height: 60vh;
+  height: 60vh;
+  overflow: hidden;
+  position: relative;
+  display: block;
+}
+
+.gallery__media__image {
+  position: absolute;
+  top: 0;
+  left: -12.5%;
+  width: 125%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery__media__image__gl {
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
