@@ -2,7 +2,7 @@ import { client } from './sanity';
 
 export async function getSanityData() {
   const query = `{
-    "settings": *[_type == "siteSettings" && _id in ["site.settings", "drafts.site.settings"]] | order((_id == "site.settings") desc)[0] {
+    "settings": *[_type in ["siteSettings", "settings"] && (_id in ["site.settings", "drafts.site.settings", "settings"])] | order((_id == "site.settings") desc, _updatedAt desc)[0] {
       ...,
       logo { asset-> },
       footerBrandLogo { asset-> },
@@ -23,7 +23,7 @@ export async function getSanityData() {
       seoDescription { en, vi },
       seoImage { asset-> }
     },
-    "home": *[_type == "homePage" && _id in ["site.home", "drafts.site.home"]] | order((_id == "site.home") desc)[0] {
+    "home": *[(_type in ["homePage", "page", "home"] || _id in ["site.home", "drafts.site.home", "home"]) && (_id in ["site.home", "drafts.site.home", "home"] || slug.current == "home" || title match "*Home*" || title match "*Trang chủ*")] | order((_id == "site.home") desc, _updatedAt desc)[0] {
       ...,
       heroSection {
         ...,
@@ -85,7 +85,7 @@ export async function getSanityData() {
         ctaButtonText { en, vi }
       }
     },
-    "about": *[_type == "aboutPage" && _id in ["site.about", "drafts.site.about"]] | order((_id == "site.about") desc)[0] {
+    "about": *[(_type in ["aboutPage", "page", "about"] || _id in ["site.about", "drafts.site.about", "about"]) && (_id in ["site.about", "drafts.site.about", "about"] || slug.current == "about" || title match "*About*" || title match "*Giới thiệu*")] | order((_id == "site.about") desc, _updatedAt desc)[0] {
       ...,
       heroSection {
         ...,
@@ -143,7 +143,7 @@ export async function getSanityData() {
         }
       }
     },
-    "services": *[_type == "servicesPage" && _id in ["site.services", "drafts.site.services"]] | order((_id == "site.services") desc)[0] {
+    "services": *[(_type in ["servicesPage", "page", "services"] || _id in ["site.services", "drafts.site.services", "services"]) && (_id in ["site.services", "drafts.site.services", "services"] || slug.current == "services" || title match "*Service*" || title match "*Dịch vụ*")] | order((_id == "site.services") desc, _updatedAt desc)[0] {
       ...,
       heroSection {
         ...,
@@ -215,7 +215,7 @@ export async function getSanityData() {
         }
       }
     },
-    "works": *[_type == "worksPage" && _id in ["site.works", "drafts.site.works"]] | order((_id == "site.works") desc)[0] {
+    "works": *[(_type in ["worksPage", "page", "works"] || _id in ["site.works", "drafts.site.works", "works"]) && (_id in ["site.works", "drafts.site.works", "works"] || slug.current == "works" || slug.current == "our-works" || title match "*Work*" || title match "*Dự án*")] | order((_id == "site.works") desc, _updatedAt desc)[0] {
       ...,
       heroSection {
         ...,
@@ -252,7 +252,7 @@ export async function getSanityData() {
         }
       }
     },
-    "contact": *[_type == "contactPage" && _id in ["site.contact", "drafts.site.contact"]] | order((_id == "site.contact") desc)[0] {
+    "contact": *[(_type in ["contactPage", "page", "contact"] || _id in ["site.contact", "drafts.site.contact", "contact"]) && (_id in ["site.contact", "drafts.site.contact", "contact"] || slug.current == "contact" || title match "*Contact*" || title match "*Liên hệ*")] | order((_id == "site.contact") desc, _updatedAt desc)[0] {
       ...,
       heroSection {
         ...,
