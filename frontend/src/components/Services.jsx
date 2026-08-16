@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, ChevronDown } from 'lucide-react';
 import OptimizedImage from './OptimizedImage';
+import { urlFor } from '../lib/sanity';
 
 function ServiceCarousel({ services, accentColor, onLearnMore, currentLang }) {
   const trackRef = useRef(null);
@@ -21,7 +22,6 @@ function ServiceCarousel({ services, accentColor, onLearnMore, currentLang }) {
 
   useEffect(() => {
     checkScrollLimits();
-    // Re-check after images or layout render
     const timer = setTimeout(checkScrollLimits, 300);
     window.addEventListener('resize', checkScrollLimits);
     return () => {
@@ -188,15 +188,17 @@ function ServiceCarousel({ services, accentColor, onLearnMore, currentLang }) {
             >
               {/* Card Image */}
               <div style={{ width: '100%', height: '220px', backgroundColor: 'var(--bg-secondary)', overflow: 'hidden' }}>
-                <OptimizedImage
-                  src={service.img}
-                  alt={service.name}
-                  width="340"
-                  height="220"
-                  maxWidth={480}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  draggable="false"
-                />
+                {service.img && (
+                  <OptimizedImage
+                    src={service.img}
+                    alt={service.name}
+                    width="340"
+                    height="220"
+                    maxWidth={480}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    draggable="false"
+                  />
+                )}
               </div>
 
               {/* Card Content */}
@@ -257,17 +259,61 @@ function ServiceCarousel({ services, accentColor, onLearnMore, currentLang }) {
   );
 }
 
-export default function Services({ t, currentLang, setCurrentPage }) {
+export default function Services({ servicesData, currentLang, setCurrentPage }) {
   const [activeModal, setActiveModal] = useState(null);
   const [activeFaqTab, setActiveFaqTab] = useState('wedding');
   const [expandedFaq, setExpandedFaq] = useState(null);
 
+  const getLocalizedText = (field) => {
+    if (!field) return '';
+    if (typeof field === 'string') return field;
+    return field[currentLang] || field.en || field.vi || '';
+  };
+
+  const getServiceId = (item) => {
+    const titleEn = item.title?.en?.toLowerCase() || '';
+    if (titleEn.includes('planning')) return 'full-plan';
+    if (titleEn.includes('coordination')) return 'coord';
+    if (titleEn.includes('decoration')) return 'concept';
+    if (titleEn.includes('destination')) return 'dest';
+    if (titleEn.includes('anniversary')) return 'anniv';
+    if (titleEn.includes('proposal')) return 'proposal';
+    if (titleEn.includes('birthday')) return 'birthday';
+    if (titleEn.includes('reveal')) return 'reveal';
+    return item._id;
+  };
+
+  const mapServiceItem = (item) => {
+    if (!item) return null;
+    let imgUrl = '';
+    if (item.cardImage) {
+      try {
+        imgUrl = urlFor(item.cardImage).url() || '';
+      } catch (e) {}
+    }
+    const serviceId = getServiceId(item);
+    return {
+      id: serviceId,
+      name: getLocalizedText(item.title),
+      desc: getLocalizedText(item.shortDescription),
+      overview: getLocalizedText(item.modalDetails?.fullDescription) || getLocalizedText(item.shortDescription),
+      img: imgUrl,
+      who: item.modalDetails?.whoThisIsFor?.map(x => getLocalizedText(x)) || [],
+      scope: item.modalDetails?.scopeOfWork?.map(x => getLocalizedText(x)) || [],
+      benefits: item.modalDetails?.benefits?.map(x => getLocalizedText(x)) || [],
+      why: ''
+    };
+  };
+
+  const weddingServices = servicesData?.weddingCarouselSection?.weddingServices?.map(mapServiceItem).filter(Boolean) || [];
+  const eventServices = servicesData?.eventCarouselSection?.eventServices?.map(mapServiceItem).filter(Boolean) || [];
+
   useEffect(() => {
     const pendingId = window.sessionStorage.getItem('pendingServiceId');
-    if (!pendingId || !t) return;
+    if (!pendingId || !servicesData) return;
 
     window.sessionStorage.removeItem('pendingServiceId');
-    const allServices = [...(t.list || []), ...(t.eventServices || [])];
+    const allServices = [...weddingServices, ...eventServices];
     const matchedService = allServices.find((service) => service.id === pendingId);
 
     window.setTimeout(() => {
@@ -280,28 +326,61 @@ export default function Services({ t, currentLang, setCurrentPage }) {
         window.setTimeout(() => setActiveModal(matchedService), 450);
       }
     }, 250);
-  }, [t]);
+  }, [servicesData]);
 
-  if (!t) return null;
-
-  const weddingServices = t.list || [];
-  const eventServices = t.eventServices || [];
+  if (!servicesData) {
+    return (
+      <div style={{ padding: '160px 0', textAlign: 'center', fontFamily: 'var(--font-body)' }}>
+        <p>{currentLang === 'vi' ? 'Đang tải dữ liệu...' : 'Loading content...'}</p>
+      </div>
+    );
+  }
 
   const handleLearnMore = (service) => {
     setActiveModal(service);
   };
 
-  const label = t.pageLabel || (currentLang === 'en' ? 'our services' : 'dịch vụ của chúng tôi');
-  const title = t.pageTitle || '';
-  const descText = t.pageSubtext || '';
+  const label = getLocalizedText(servicesData?.heroSection?.headline) || (currentLang === 'en' ? 'our services' : 'dịch vụ của chúng tôi');
+  const title = getLocalizedText(servicesData?.heroSection?.subheading) || '';
+  const descText = getLocalizedText(servicesData?.heroSection?.description) || '';
   
-  const weddingSectionLabel = t.weddingLabel || (currentLang === 'en' ? 'wedding' : 'đám cưới');
-  const weddingSectionTitle = t.weddingTitle || (currentLang === 'en' ? 'weddings that feel like you.' : 'những đám cưới mang hơi thở của bạn.');
+  const weddingSectionLabel = getLocalizedText(servicesData?.weddingCarouselSection?.sectionCategory) || (currentLang === 'en' ? 'wedding' : 'đám cưới');
+  const weddingSectionTitle = getLocalizedText(servicesData?.weddingCarouselSection?.sectionHeadline) || (currentLang === 'en' ? 'weddings that feel like you.' : 'những đám cưới mang hơi thở của bạn.');
   
-  const eventSectionLabel = t.eventLabel || (currentLang === 'en' ? 'event' : 'sự kiện');
-  const eventSectionTitle = t.eventSectionTitle || (currentLang === 'en' ? 'private celebrations filled with intention and warmth.' : 'những dấu mốc đáng nhớ xứng đáng được kỷ niệm theo cách riêng.');
+  const eventSectionLabel = getLocalizedText(servicesData?.eventCarouselSection?.sectionCategory) || (currentLang === 'en' ? 'event' : 'sự kiện');
+  const eventSectionTitle = getLocalizedText(servicesData?.eventCarouselSection?.sectionHeadline) || (currentLang === 'en' ? 'private celebrations filled with intention and warmth.' : 'những dấu mốc đáng nhớ xứng đáng được kỷ niệm theo cách riêng.');
 
-  const faqData = t.faqs || { wedding: [], event: [] };
+  const faqData = {
+    wedding: servicesData?.faqSection?.weddingFaqs?.map(faq => ({
+      q: getLocalizedText(faq.question),
+      a: getLocalizedText(faq.answer)
+    })) || [],
+    event: servicesData?.faqSection?.eventFaqs?.map(faq => ({
+      q: getLocalizedText(faq.question),
+      a: getLocalizedText(faq.answer)
+    })) || []
+  };
+
+  const faqsLabel = getLocalizedText(servicesData?.faqSection?.categoryTag) || 'FAQs';
+  const faqsTitle = getLocalizedText(servicesData?.faqSection?.mainHeadline) || (currentLang === 'en' ? 'Common Questions' : 'Câu hỏi thường gặp');
+  const faqsDescription = getLocalizedText(servicesData?.faqSection?.subheading) || '';
+
+  const closingText = getLocalizedText(servicesData?.preFooterCtaSection?.headline);
+  const closingCta = getLocalizedText(servicesData?.preFooterCtaSection?.ctaButton?.label);
+
+  let preFooterBgUrl = '/assets/site-media/home-showcase-portrait-02.webp';
+  if (servicesData?.preFooterCtaSection?.backgroundImage) {
+    try {
+      preFooterBgUrl = urlFor(servicesData.preFooterCtaSection.backgroundImage).url() || preFooterBgUrl;
+    } catch (e) {}
+  }
+
+  let heroBgUrl = '/assets/site-media/services-hero-optimized.webp';
+  if (servicesData?.heroSection?.heroImage) {
+    try {
+      heroBgUrl = urlFor(servicesData.heroSection.heroImage).url() || heroBgUrl;
+    } catch (e) {}
+  }
 
   return (
     <div id="services" className="services-page">
@@ -309,32 +388,24 @@ export default function Services({ t, currentLang, setCurrentPage }) {
       <section
         className="services-intro-section"
         style={{
-          backgroundImage: 'linear-gradient(rgba(18, 17, 16, 0.32), rgba(18, 17, 16, 0.44)), url("/assets/site-media/services-hero-optimized.webp")',
+          backgroundImage: `linear-gradient(rgba(18, 17, 16, 0.32), rgba(18, 17, 16, 0.44)), url(${heroBgUrl})`,
         }}
       >
         <div className="container services-intro-container">
           <div className="services-intro-copy">
             <span className="eyebrow reveal-on-scroll services-intro-label">{label}</span>
-            {(title || t.pageTitleLines?.length > 0) && (
-              <h1
-                className="reveal-on-scroll delay-100 services-intro-title"
-              >
-                {t.pageTitleLines?.length > 0 ? (
-                  t.pageTitleLines.map((line, i) => (
-                    <React.Fragment key={i}>
-                      {line}
-                      {i < t.pageTitleLines.length - 1 && <br />}
-                    </React.Fragment>
-                  ))
-                ) : (
-                  title
-                )}
+            {title && (
+              <h1 className="reveal-on-scroll delay-100 services-intro-title">
+                {title.split('\n').map((line, i) => (
+                  <React.Fragment key={i}>
+                    {line}
+                    {i < title.split('\n').length - 1 && <br />}
+                  </React.Fragment>
+                ))}
               </h1>
             )}
             {descText && (
-              <p
-                className="reveal-on-scroll delay-200 services-intro-subtitle"
-              >
+              <p className="reveal-on-scroll delay-200 services-intro-subtitle">
                 {descText}
               </p>
             )}
@@ -345,236 +416,248 @@ export default function Services({ t, currentLang, setCurrentPage }) {
       {/* Service List */}
       <section className="services-list-section">
         <div className="container services-list-container">
-
-          {/* Service Section Groups (Wedding first, then Event) */}
           <div className="services-staggered-bg">
             
             {/* Wedding Services Section */}
-            <div className="reveal-on-scroll services-staggered-panel services-staggered-panel--wedding">
-              <div style={{ marginBottom: '36px' }}>
-                <span className="eyebrow" style={{ display: 'inline-block', marginBottom: '8px' }}>{weddingSectionLabel}</span>
-                <h2 style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
-                  color: 'var(--charcoal)',
-                  fontWeight: 400,
-                  margin: 0
-                }}>
-                  {weddingSectionTitle}
-                </h2>
+            {weddingServices.length > 0 && (
+              <div className="reveal-on-scroll services-staggered-panel services-staggered-panel--wedding">
+                <div style={{ marginBottom: '36px' }}>
+                  <span className="eyebrow" style={{ display: 'inline-block', marginBottom: '8px' }}>{weddingSectionLabel}</span>
+                  <h2 style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
+                    color: 'var(--charcoal)',
+                    fontWeight: 400,
+                    margin: 0
+                  }}>
+                    {weddingSectionTitle}
+                  </h2>
+                </div>
+                <ServiceCarousel
+                  services={weddingServices}
+                  accentColor="var(--accent-secondary)"
+                  onLearnMore={handleLearnMore}
+                  currentLang={currentLang}
+                />
               </div>
-              <ServiceCarousel
-                services={weddingServices}
-                accentColor="var(--accent-secondary)"
-                onLearnMore={handleLearnMore}
-                currentLang={currentLang}
-              />
-            </div>
+            )}
 
             {/* Event Services Section */}
-            <div className="reveal-on-scroll services-staggered-panel services-staggered-panel--event">
-              <div style={{ marginBottom: '36px' }}>
-                <span className="eyebrow" style={{ display: 'inline-block', marginBottom: '8px' }}>{eventSectionLabel}</span>
-                <h2 style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
-                  color: 'var(--charcoal)',
-                  fontWeight: 400,
-                  margin: 0
-                }}>
-                  {eventSectionTitle}
-                </h2>
+            {eventServices.length > 0 && (
+              <div className="reveal-on-scroll services-staggered-panel services-staggered-panel--event">
+                <div style={{ marginBottom: '36px' }}>
+                  <span className="eyebrow" style={{ display: 'inline-block', marginBottom: '8px' }}>{eventSectionLabel}</span>
+                  <h2 style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
+                    color: 'var(--charcoal)',
+                    fontWeight: 400,
+                    margin: 0
+                  }}>
+                    {eventSectionTitle}
+                  </h2>
+                </div>
+                <ServiceCarousel
+                  services={eventServices}
+                  accentColor="var(--charcoal)"
+                  onLearnMore={handleLearnMore}
+                  currentLang={currentLang}
+                />
               </div>
-              <ServiceCarousel
-                services={eventServices}
-                accentColor="var(--charcoal)"
-                onLearnMore={handleLearnMore}
-                currentLang={currentLang}
-              />
-            </div>
+            )}
 
           </div>
         </div>
       </section>
 
       {/* FAQs Section */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
-        <div className="container" style={{ maxWidth: '850px' }}>
-          <div style={{ textAlign: 'center', marginBottom: '48px' }} className="reveal-on-scroll">
-            <span className="eyebrow">{t.faqsLabel || 'FAQs'}</span>
-            <h2 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(2rem, 4vw, 2.8rem)',
-              color: 'var(--charcoal)',
-              marginTop: '8px',
-              marginBottom: '12px',
-              fontWeight: 400
-            }}>
-              {t.faqsTitle || 'Common Questions'}
-            </h2>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'var(--text-muted)', margin: 0 }}>
-              {t.faqsDescription}
-            </p>
+      {(faqData.wedding.length > 0 || faqData.event.length > 0) && (
+        <section className="section-padding" style={{ backgroundColor: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
+          <div className="container" style={{ maxWidth: '850px' }}>
+            <div style={{ textAlign: 'center', marginBottom: '48px' }} className="reveal-on-scroll">
+              <span className="eyebrow">{faqsLabel}</span>
+              <h2 style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(2rem, 4vw, 2.8rem)',
+                color: 'var(--charcoal)',
+                marginTop: '8px',
+                marginBottom: '12px',
+                fontWeight: 400
+              }}>
+                {faqsTitle}
+              </h2>
+              {faqsDescription && (
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'var(--text-muted)', margin: 0 }}>
+                  {faqsDescription}
+                </p>
+              )}
 
-            {/* Tab switch buttons */}
-            <div style={{
-              display: 'flex',
-              justifyContent: 'center',
-              gap: '12px',
-              marginTop: '32px'
-            }}>
-              <button
-                onClick={() => { setActiveFaqTab('wedding'); setExpandedFaq(null); }}
-                style={{
-                  backgroundColor: activeFaqTab === 'wedding' ? '#5a5e27' : 'transparent',
-                  border: '1.5px solid #5a5e27',
-                  color: activeFaqTab === 'wedding' ? '#ffffff' : '#5a5e27',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.85rem',
-                  fontWeight: 300,
-                  padding: '10px 24px',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  letterSpacing: '0.04em',
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                {currentLang === 'en' ? 'Wedding FAQ' : 'Đám cưới'}
-              </button>
-              <button
-                onClick={() => { setActiveFaqTab('event'); setExpandedFaq(null); }}
-                style={{
-                  backgroundColor: activeFaqTab === 'event' ? '#5a5e27' : 'transparent',
-                  border: '1.5px solid #5a5e27',
-                  color: activeFaqTab === 'event' ? '#ffffff' : '#5a5e27',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.85rem',
-                  fontWeight: 300,
-                  padding: '10px 24px',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  letterSpacing: '0.04em',
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                {currentLang === 'en' ? 'Event FAQ' : 'Sự kiện'}
-              </button>
-            </div>
-          </div>
-
-          {/* Accordion list */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }} className="reveal-on-scroll">
-            {(faqData[activeFaqTab] || []).map((faq, i) => {
-              const isOpen = expandedFaq === i;
-              const accentColor = '#5a5e27';
-              return (
-                <div 
-                  key={i} 
-                  style={{
-                    backgroundColor: 'var(--bg-secondary)',
-                    border: '1px solid var(--border-muted)',
-                    borderRadius: '6px',
-                    padding: '24px 28px',
-                    transition: 'border-color var(--transition)'
-                  }}
-                >
-                  <button 
-                    onClick={() => setExpandedFaq(isOpen ? null : i)}
+              {/* Tab switch buttons */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                gap: '12px',
+                marginTop: '32px'
+              }}>
+                {faqData.wedding.length > 0 && (
+                  <button
+                    onClick={() => { setActiveFaqTab('wedding'); setExpandedFaq(null); }}
                     style={{
-                      width: '100%', border: 'none', background: 'none',
-                      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                      textAlign: 'left', cursor: 'pointer', padding: 0
+                      backgroundColor: activeFaqTab === 'wedding' ? '#5a5e27' : 'transparent',
+                      border: '1.5px solid #5a5e27',
+                      color: activeFaqTab === 'wedding' ? '#ffffff' : '#5a5e27',
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '0.85rem',
+                      fontWeight: 300,
+                      padding: '10px 24px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      letterSpacing: '0.04em',
+                      transition: 'all 0.3s ease'
                     }}
                   >
-                    <span style={{ 
-                      fontFamily: 'var(--font-display)', 
-                      fontSize: '1.15rem', 
-                      color: 'var(--charcoal)', 
-                      fontWeight: 400,
-                      lineHeight: 1.4
-                    }}>
-                      {faq.q}
-                    </span>
-                    <ChevronDown size={18} style={{
-                      color: accentColor, flexShrink: 0, marginLeft: '16px',
-                      transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                      transition: 'transform var(--transition)'
-                    }} />
+                    {currentLang === 'en' ? 'Wedding FAQ' : 'Đám cưới'}
                   </button>
-                  <div style={{
-                    maxHeight: isOpen ? '250px' : '0px',
-                    opacity: isOpen ? 1 : 0,
-                    overflow: 'hidden',
-                    transition: 'max-height 0.4s ease, opacity 0.4s ease',
-                    marginTop: isOpen ? '16px' : '0px'
-                  }}>
-                    <p style={{ 
-                      fontFamily: 'var(--font-body)', 
-                      fontSize: '0.95rem', 
-                      color: 'var(--charcoal)', 
-                      opacity: 0.8, 
-                      lineHeight: 1.6, 
-                      margin: 0 
+                )}
+                {faqData.event.length > 0 && (
+                  <button
+                    onClick={() => { setActiveFaqTab('event'); setExpandedFaq(null); }}
+                    style={{
+                      backgroundColor: activeFaqTab === 'event' ? '#5a5e27' : 'transparent',
+                      border: '1.5px solid #5a5e27',
+                      color: activeFaqTab === 'event' ? '#ffffff' : '#5a5e27',
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '0.85rem',
+                      fontWeight: 300,
+                      padding: '10px 24px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      letterSpacing: '0.04em',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    {currentLang === 'en' ? 'Event FAQ' : 'Sự kiện'}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Accordion list */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }} className="reveal-on-scroll">
+              {(faqData[activeFaqTab] || []).map((faq, i) => {
+                const isOpen = expandedFaq === i;
+                const accentColor = '#5a5e27';
+                return (
+                  <div 
+                    key={i} 
+                    style={{
+                      backgroundColor: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-muted)',
+                      borderRadius: '6px',
+                      padding: '24px 28px',
+                      transition: 'border-color var(--transition)'
+                    }}
+                  >
+                    <button 
+                      onClick={() => setExpandedFaq(isOpen ? null : i)}
+                      style={{
+                        width: '100%', border: 'none', background: 'none',
+                        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                        textAlign: 'left', cursor: 'pointer', padding: 0
+                      }}
+                    >
+                      <span style={{ 
+                        fontFamily: 'var(--font-display)', 
+                        fontSize: '1.15rem', 
+                        color: 'var(--charcoal)', 
+                        fontWeight: 400,
+                        lineHeight: 1.4
+                      }}>
+                        {faq.q}
+                      </span>
+                      <ChevronDown size={18} style={{
+                        color: accentColor, flexShrink: 0, marginLeft: '16px',
+                        transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform var(--transition)'
+                      }} />
+                    </button>
+                    <div style={{
+                      maxHeight: isOpen ? '250px' : '0px',
+                      opacity: isOpen ? 1 : 0,
+                      overflow: 'hidden',
+                      transition: 'max-height 0.4s ease, opacity 0.4s ease',
+                      marginTop: isOpen ? '16px' : '0px'
                     }}>
-                      {faq.a}
-                    </p>
+                      <p style={{ 
+                        fontFamily: 'var(--font-body)', 
+                        fontSize: '0.95rem', 
+                        color: 'var(--charcoal)', 
+                        opacity: 0.8, 
+                        lineHeight: 1.6, 
+                        margin: 0 
+                      }}>
+                        {faq.a}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Closing CTA */}
-      <section style={{ 
-        backgroundImage: 'linear-gradient(rgba(42, 42, 42, 0.7), rgba(42, 42, 42, 0.7)), url("/assets/site-media/home-showcase-portrait-02.webp")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-        color: '#ffffff', 
-        padding: '120px 0', 
-        textAlign: 'center' 
-      }}>
-        <div className="container reveal-on-scroll" style={{ maxWidth: '850px', margin: '0 auto' }}>
-          {t.closingText && (
-            <p style={{
-              fontFamily: 'var(--font-display)',
-              fontStyle: 'italic',
-              fontSize: 'clamp(1.2rem, 3vw, 1.6rem)',
-              color: '#ffffff',
-              lineHeight: 1.6,
-              marginBottom: '32px',
-              fontWeight: 300,
-              opacity: 0.95
-            }}>
-              {t.closingText}
-            </p>
-          )}
-          {t.closingCta && (
-            <button
-              onClick={() => setCurrentPage('contact')}
-              style={{
-                backgroundColor: '#ffffff',
-                color: 'var(--accent-primary)',
-                fontFamily: 'var(--font-body)',
-                fontSize: '1rem',
+      {(closingText || closingCta) && (
+        <section style={{ 
+          backgroundImage: `linear-gradient(rgba(42, 42, 42, 0.7), rgba(42, 42, 42, 0.7)), url(${preFooterBgUrl})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
+          color: '#ffffff', 
+          padding: '120px 0', 
+          textAlign: 'center' 
+        }}>
+          <div className="container reveal-on-scroll" style={{ maxWidth: '850px', margin: '0 auto' }}>
+            {closingText && (
+              <p style={{
+                fontFamily: 'var(--font-display)',
+                fontStyle: 'italic',
+                fontSize: 'clamp(1.2rem, 3vw, 1.6rem)',
+                color: '#ffffff',
+                lineHeight: 1.6,
+                marginBottom: '32px',
                 fontWeight: 300,
-                padding: '16px 40px',
-                borderRadius: '4px',
-                border: 'none',
-                cursor: 'pointer',
-                letterSpacing: '0.04em',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
-              onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-            >
-              {t.closingCta}
-            </button>
-          )}
-        </div>
-      </section>
+                opacity: 0.95
+              }}>
+                {closingText}
+              </p>
+            )}
+            {closingCta && (
+              <button
+                onClick={() => setCurrentPage('contact')}
+                style={{
+                  backgroundColor: '#ffffff',
+                  color: 'var(--accent-primary)',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '1rem',
+                  fontWeight: 300,
+                  padding: '16px 40px',
+                  borderRadius: '4px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  letterSpacing: '0.04em',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
+                onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+              >
+                {closingCta}
+              </button>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Service Detail Modal */}
       {activeModal && (
@@ -652,21 +735,8 @@ export default function Services({ t, currentLang, setCurrentPage }) {
                 lineHeight: 1.7,
                 marginBottom: '24px'
               }}>
-                {activeModal.overview || activeModal.desc || ''}
+                {activeModal.overview}
               </p>
-
-              {activeModal.overviewExtra && (
-                <p style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--charcoal)',
-                  opacity: 0.85,
-                  lineHeight: 1.7,
-                  marginBottom: '24px'
-                }}>
-                  {activeModal.overviewExtra}
-                </p>
-              )}
 
               {activeModal.who && activeModal.who.length > 0 && (
                 <div style={{ marginBottom: '20px' }}>
@@ -692,7 +762,7 @@ export default function Services({ t, currentLang, setCurrentPage }) {
                 </div>
               )}
 
-              {(activeModal.scope || activeModal.included) && (activeModal.scope || activeModal.included).length > 0 && (
+              {activeModal.scope && activeModal.scope.length > 0 && (
                 <div style={{ marginBottom: '20px' }}>
                   <h4 style={{
                     fontFamily: 'var(--font-mono)',
@@ -706,7 +776,7 @@ export default function Services({ t, currentLang, setCurrentPage }) {
                     {currentLang === 'en' ? 'Scope of work' : 'Hạng mục thực hiện'}
                   </h4>
                   <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '6px', padding: 0 }}>
-                    {(activeModal.scope || activeModal.included).map((item, idx) => (
+                    {activeModal.scope.map((item, idx) => (
                       <li key={idx} style={{ display: 'flex', gap: '8px', fontSize: '0.9rem', color: 'var(--charcoal)', opacity: 0.8 }}>
                         <span style={{ color: 'var(--accent-secondary)' }}>✓</span>
                         <span>{item}</span>

@@ -1,108 +1,126 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import { SHOWCASE_GALLERIES, COUPLE_THUMBNAILS } from '../imageAssets';
 import OptimizedImage, { preloadImages } from './OptimizedImage';
+import { urlFor } from '../lib/sanity';
 
-const HERO_BY_ID = {
-  'tony-myriam': COUPLE_THUMBNAILS.tonyMyriam,
-  'olivier-linh': COUPLE_THUMBNAILS.olivierLinh,
-  'ren-jonathan': COUPLE_THUMBNAILS.renJonathan,
-  'thao-vu': COUPLE_THUMBNAILS.phuongThaoTuanVu,
-  'chi-anh': COUPLE_THUMBNAILS.haChiHungAnh,
-  'thanh-lam': COUPLE_THUMBNAILS.thanhLamBacDang,
-};
-
-const LOOKBOOK_DETAILS = {
-  'tony-myriam': {
-    meta: 'full wedding planning · Saigon · 2025',
-    viMeta: 'wedding planning trọn gói · Sài Gòn · 2025',
-    quote: 'an intimate cross-cultural celebration bringing together Australian and Indonesian families through warmth, food, music, and a wedding experience centered around connection.',
-    viQuote: 'Một lễ cưới thân mật kết nối hai nền văn hóa, nơi gia đình từ Australia và Indonesia cùng gặp gỡ, sẻ chia và tạo nên những ký ức đẹp. Mọi chi tiết đều được thiết kế xoay quanh sự gắn kết.',
-    testimonial: '“a day that felt exactly like us.”',
-    viTestimonial: '“một ngày cưới thật sự là tụi mình.”'
-  },
-  'olivier-linh': {
-    meta: 'full wedding planning · Saigon · 2025',
-    viMeta: 'wedding planning trọn gói · Sài Gòn · 2025',
-    quote: 'a celebration shaped by French elegance and Vietnamese warmth, thoughtful, emotional, and designed to feel effortlessly intimate from beginning to end.',
-    viQuote: 'Một lễ cưới mang tinh thần thanh lịch của nước Pháp hòa quyện cùng sự ấm áp rất riêng của Việt Nam. Tinh tế nhưng không xa cách. Cảm xúc nhưng không phô trương.',
-    testimonial: '“intimate, elegant, and unforgettable.”',
-    viTestimonial: '“thân mật, tinh tế, và trọn vẹn.”'
-  },
-  'ren-jonathan': {
-    meta: 'full wedding planning · concept and styling · Saigon · 2026',
-    viMeta: 'wedding planning · concept & styling · Sài Gòn · 2026',
-    quote: 'a wedding blending French and Canadian influences into a modern celebration filled with quiet romance, meaningful details, and an atmosphere that felt entirely their own.',
-    viQuote: 'Lấy cảm hứng từ hai nền văn hóa Pháp và Canada, đám cưới được xây dựng như một bản hòa ca của sự hiện đại, lãng mạn và những chi tiết mang ý nghĩa cá nhân.',
-    testimonial: '“no template, just our story.”',
-    viTestimonial: '“không khuôn mẫu. chỉ có câu chuyện của chúng tôi.”'
-  },
-  'thao-vu': {
-    meta: 'concept and styling · coordination · Hanoi · 2025',
-    viMeta: 'concept & styling · coordination · Hà Nội · 2025',
-    quote: 'a deeply personal wedding bringing together Northern and Southern Vietnamese traditions through a modern experience rooted in family, emotion, and cultural connection.',
-    viQuote: 'Một lễ cưới đầy cảm xúc, nơi những nét đẹp Bắc và Nam Việt Nam được kết nối trong một trải nghiệm hiện đại nhưng vẫn đậm chất gia đình.',
-    testimonial: '“beyond what we expected.”',
-    viTestimonial: '“chỉn chu hơn cả mong đợi.”'
-  },
-  'chi-anh': {
-    meta: 'full wedding planning · Hanoi · 2027',
-    viMeta: 'wedding planning trọn gói · Hà Nội · 2027',
-    quote: 'two doctors building a celebration inspired by the life they created together in Germany, intentional, intimate, and centered around the people who mattered most to them.',
-    viQuote: 'Hai bác sĩ cùng xây dựng cuộc sống tại Đức và mong muốn mang tinh thần ấy trở về trong ngày cưới. Thân mật, tinh giản và dành trọn tâm hồn cho những người họ yêu thương.',
-    testimonial: '“care in every small detail.”',
-    viTestimonial: '“tận tâm trong từng chi tiết nhỏ.”'
-  },
-  'thanh-lam': {
-    meta: 'full wedding planning · Hanoi · 2025',
-    viMeta: 'wedding planning trọn gói · Hà Nội · 2025',
-    quote: 'living in Australia meant planning most of their wedding from afar. arriving in Vietnam just a week before the celebration, they were able to step into a wedding that felt completely ready for them, thoughtful, seamless, and filled with the people who mattered most.',
-    viQuote: 'Sống ở Australia nên phần lớn kế hoạch được làm từ xa. Về Việt Nam chỉ một tuần trước ngày cưới, họ bước vào một lễ kỷ niệm đã sẵn sàng, chỉn chu, nhẹ nhàng và đầy những người thân yêu.',
-    testimonial: '“quiet, meaningful, and emotional.”',
-    viTestimonial: '“nhẹ nhàng, sâu sắc, và giàu cảm xúc.”'
-  }
-};
-
-export default function Showcase({ t, currentLang, setCurrentPage, targetProjectId }) {
+export default function Showcase({ worksData, projects, currentLang, setCurrentPage, targetProjectId }) {
   const [activeProject, setActiveProject] = useState(null);
   const [dismissedTargetProjectId, setDismissedTargetProjectId] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState('all');
 
-  const preloadProjectGallery = (projectId) => {
-    const gallery = SHOWCASE_GALLERIES[projectId];
-    if (gallery) preloadImages(gallery, 480);
+  const getLocalizedText = (field) => {
+    if (!field) return '';
+    if (typeof field === 'string') return field;
+    return field[currentLang] || field.en || field.vi || '';
   };
 
-  // Removed global preloadAllShowcaseGalleries useEffect
+  const getThumbnailUrl = (project) => {
+    if (project?.thumbnailImage) {
+      try {
+        return urlFor(project.thumbnailImage).url() || '';
+      } catch (e) {}
+    }
+    return '';
+  };
 
+  const getLookbookImages = (project) => {
+    if (!project) return { hero: null, secondary: [], color: [], bw: [] };
+    const images = project.galleryImages?.map(img => {
+      try {
+        return urlFor(img).url() || '';
+      } catch (e) {
+        return '';
+      }
+    }).filter(Boolean) || [];
 
+    if (images.length === 0) {
+      let fallbackUrl = '';
+      if (project.heroDetailImage) {
+        try {
+          fallbackUrl = urlFor(project.heroDetailImage).url() || '';
+        } catch (e) {}
+      } else {
+        fallbackUrl = getThumbnailUrl(project);
+      }
+      return { hero: fallbackUrl, secondary: [], color: [], bw: [] };
+    }
 
+    return {
+      hero: images[0],
+      secondary: images.slice(1, 3), // next two
+      color: images.slice(3, 5),     // next two color
+      bw: images.slice(5)            // remainder
+    };
+  };
 
+  const preloadProjectGallery = (project) => {
+    if (!project) return;
+    const media = getLookbookImages(project);
+    const urls = [media.hero, ...media.secondary, ...media.color, ...media.bw].filter(Boolean);
+    if (urls.length > 0) preloadImages(urls, 480);
+  };
 
+  // 1. Build projects list
+  const featured = worksData?.portfolioSection?.featuredProjects?.map(project => {
+    if (!project) return null;
+    return {
+      id: project.slug?.current || project._id,
+      title: project.title || '',
+      category: project.category || '',
+      thumbnailImage: project.thumbnailImage,
+      heroDetailImage: project.heroDetailImage,
+      galleryImages: project.galleryImages || [],
+      serviceType: project.serviceType,
+      location: project.location,
+      year: project.year,
+      summaryQuote: project.summaryQuote,
+      highlightFeedback: project.highlightFeedback,
+      closingThought: project.closingThought,
+      ctaText: project.ctaText,
+      _id: project._id
+    };
+  }).filter(Boolean) || [];
 
+  const remaining = projects?.map(project => {
+    if (!project) return null;
+    return {
+      id: project.slug?.current || project._id,
+      title: project.title || '',
+      category: project.category || '',
+      thumbnailImage: project.thumbnailImage,
+      heroDetailImage: project.heroDetailImage,
+      galleryImages: project.galleryImages || [],
+      serviceType: project.serviceType,
+      location: project.location,
+      year: project.year,
+      summaryQuote: project.summaryQuote,
+      highlightFeedback: project.highlightFeedback,
+      closingThought: project.closingThought,
+      ctaText: project.ctaText,
+      _id: project._id
+    };
+  }).filter(p => p && !featured.some(f => f._id === p._id)) || [];
 
+  const list = [...featured, ...remaining];
 
-
-  const filterList = t?.filters || ['all', 'wedding', 'events', 'destination'];
-  const list = t?.list || [];
+  const filterList = worksData?.portfolioSection?.filterTabs || ['all', 'wedding', 'events', 'destination'];
   const targetProject = targetProjectId ? list.find((item) => item.id === targetProjectId) : null;
   const modalProject = activeProject || (dismissedTargetProjectId === targetProjectId ? null : targetProject);
 
   useEffect(() => {
-    if (modalProject?.id) {
-      preloadProjectGallery(modalProject.id);
+    if (modalProject) {
+      preloadProjectGallery(modalProject);
     }
   }, [modalProject?.id]);
 
-  if (!t) return null;
-
-  const scrollToSection = (id) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  if (!worksData && list.length === 0) {
+    return (
+      <div style={{ padding: '160px 0', textAlign: 'center', fontFamily: 'var(--font-body)' }}>
+        <p>{currentLang === 'vi' ? 'Đang tải dữ liệu...' : 'Loading content...'}</p>
+      </div>
+    );
+  }
 
   const filteredList = list.filter(project => {
     if (selectedFilter === 'all') return true;
@@ -122,21 +140,8 @@ export default function Showcase({ t, currentLang, setCurrentPage, targetProject
     return cat === filter;
   });
 
-  const closingText = t.ctaText || (currentLang === 'en' ? 'your wedding hasn\'t been planned yet. but your story already exists.' : 'đám cưới của bạn chưa được lập kế hoạch. nhưng câu chuyện của bạn đã hiện hữu.');
-  const closingBtn = t.ctaBtn || (currentLang === 'en' ? 'start planning your story' : 'bắt đầu kể câu chuyện của bạn');
-
-  // Specific lookbook images configuration for asymmetric layouts
-  const getLookbookImages = (projectId) => {
-    const images = SHOWCASE_GALLERIES[projectId] || [];
-    if (images.length === 0) return { hero: null, secondary: [], color: [], bw: [] };
-    
-    return {
-      hero: images[0],
-      secondary: images.slice(1, 3), // next two
-      color: images.slice(3, 5),     // next two color
-      bw: images.slice(5)            // remainder black & white
-    };
-  };
+  const closingText = getLocalizedText(worksData?.preFooterCtaSection?.headline) || (currentLang === 'en' ? 'your wedding hasn\'t been planned yet. but your story already exists.' : 'đám cưới của bạn chưa được lập kế hoạch. nhưng câu chuyện của bạn đã hiện hữu.');
+  const closingBtn = getLocalizedText(worksData?.preFooterCtaSection?.ctaButton?.label) || (currentLang === 'en' ? 'start planning your story' : 'bắt đầu kể câu chuyện của bạn');
 
   const closeLookbook = () => {
     setActiveProject(null);
@@ -150,10 +155,13 @@ export default function Showcase({ t, currentLang, setCurrentPage, targetProject
     setActiveProject(project);
   };
 
-  const activeDetails = modalProject ? LOOKBOOK_DETAILS[modalProject.id] : null;
-  const projectMeta = activeDetails ? (currentLang === 'vi' ? activeDetails.viMeta : activeDetails.meta) : '';
-  const projectQuote = activeDetails ? (currentLang === 'vi' ? activeDetails.viQuote : activeDetails.quote) : '';
-  const projectTestimonial = activeDetails ? (currentLang === 'vi' ? activeDetails.viTestimonial : activeDetails.testimonial) : '';
+  const projectMeta = modalProject ? `${getLocalizedText(modalProject.serviceType)} · ${modalProject.location || ''} · ${modalProject.year || ''}` : '';
+  const projectQuote = modalProject ? getLocalizedText(modalProject.summaryQuote) : '';
+  const projectTestimonial = modalProject ? getLocalizedText(modalProject.highlightFeedback) : '';
+
+  const pageLabel = getLocalizedText(worksData?.heroSection?.headline) || (currentLang === 'en' ? 'Our works' : 'Dự án');
+  const pageSubtext = getLocalizedText(worksData?.heroSection?.subheading) || '';
+  const pageTitle = getLocalizedText(worksData?.heroSection?.title) || '';
 
   return (
     <div id="showcase">
@@ -163,30 +171,48 @@ export default function Showcase({ t, currentLang, setCurrentPage, targetProject
         <div className="showcase-brutalist-shade" aria-hidden="true" />
         <div className="container showcase-brutalist-content">
           <div className="reveal-on-scroll showcase-hero-heading">
-            <span>{t.pageLabel || 'Our works'}</span>
-            {t.pageSubtext && <p>{t.pageSubtext}</p>}
+            <span>{pageLabel}</span>
+            {pageSubtext && <p>{pageSubtext}</p>}
           </div>
-          <div className="reveal-on-scroll showcase-brutalist-locations">
-            <div>
-              <span>North</span>
-              <p>Ha Noi<br />Ninh Binh<br />Hai Phong</p>
+
+          {worksData?.heroSection?.regions?.length > 0 ? (
+            <div className="reveal-on-scroll showcase-brutalist-locations">
+              {worksData.heroSection.regions.map((reg, idx) => (
+                <div key={idx}>
+                  <span>{getLocalizedText(reg.regionName)}</span>
+                  <p>
+                    {reg.locations?.map((loc, lIdx) => (
+                      <React.Fragment key={lIdx}>
+                        {getLocalizedText(loc)}
+                        {lIdx < reg.locations.length - 1 && <br />}
+                      </React.Fragment>
+                    ))}
+                  </p>
+                </div>
+              ))}
             </div>
-            <div>
-              <span>Central</span>
-              <p>Da Nang<br />Nha Trang<br />Phu Yen<br />Da Lat</p>
+          ) : (
+            <div className="reveal-on-scroll showcase-brutalist-locations">
+              <div>
+                <span>North</span>
+                <p>Ha Noi<br />Ninh Binh<br />Hai Phong</p>
+              </div>
+              <div>
+                <span>Central</span>
+                <p>Da Nang<br />Nha Trang<br />Phu Yen<br />Da Lat</p>
+              </div>
+              <div>
+                <span>South</span>
+                <p>Sai Gon<br />Vung Tau<br />Ninh Thuan<br />Binh Thuan</p>
+              </div>
             </div>
-            <div>
-              <span>South</span>
-              <p>Sai Gon<br />Vung Tau<br />Ninh Thuan<br />Binh Thuan</p>
-            </div>
-          </div>
-          <h1 className="reveal-on-scroll delay-150 showcase-brutalist-title">
-            {t.pageTitleLines?.length > 0 ? (
-              t.pageTitleLines.map((line) => <span key={line}>{line}</span>)
-            ) : (
-              <span>{t.pageTitle}</span>
-            )}
-          </h1>
+          )}
+
+          {pageTitle && (
+            <h1 className="reveal-on-scroll delay-150 showcase-brutalist-title">
+              <span>{pageTitle}</span>
+            </h1>
+          )}
         </div>
       </section>
 
@@ -238,14 +264,15 @@ export default function Showcase({ t, currentLang, setCurrentPage, targetProject
           ) : (
             <div className="showcase-editorial-grid">
               {filteredList.map((project, idx) => {
+                const thumbnailUrl = getThumbnailUrl(project);
                 return (
                   <div 
                     key={project.id}
                     className="reveal-on-scroll showcase-editorial-item"
                     style={{ transitionDelay: `${(idx % 3) * 60}ms`, marginBottom: '24px' }}
                     onClick={() => openLookbook(project)}
-                    onMouseEnter={() => preloadProjectGallery(project.id)}
-                    onFocus={() => preloadProjectGallery(project.id)}
+                    onMouseEnter={() => preloadProjectGallery(project)}
+                    onFocus={() => preloadProjectGallery(project)}
                   >
                     <div 
                       style={{
@@ -258,15 +285,17 @@ export default function Showcase({ t, currentLang, setCurrentPage, targetProject
                       }}
                       className="showcase-card-media-wrapper"
                     >
-                      <OptimizedImage
-                        src={HERO_BY_ID[project.id] || project.heroImg}
-                        alt={project.title}
-                        maxWidth={640}
-                        priority={true}
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                        className="showcase-grid-image"
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      />
+                      {thumbnailUrl && (
+                        <OptimizedImage
+                          src={thumbnailUrl}
+                          alt={project.title}
+                          maxWidth={640}
+                          priority={true}
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          className="showcase-grid-image"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      )}
                       {/* Hover Overlay - Clean title only */}
                       <div className="showcase-card-overlay">
                         <span className="showcase-card-title">
@@ -314,7 +343,7 @@ export default function Showcase({ t, currentLang, setCurrentPage, targetProject
           </h2>
           <button 
             className="text-action-link"
-            onClick={() => setCurrentPage ? setCurrentPage('contact') : scrollToSection('contact')}
+            onClick={() => setCurrentPage ? setCurrentPage('contact') : null}
             style={{
               color: 'var(--accent-secondary)'
             }}
@@ -326,7 +355,7 @@ export default function Showcase({ t, currentLang, setCurrentPage, targetProject
 
       {/* Editorial Lookbook Modal */}
       {modalProject && (() => {
-        const lbMedia = getLookbookImages(modalProject.id);
+        const lbMedia = getLookbookImages(modalProject);
         return (
           <div style={{
             position: 'fixed',
@@ -522,26 +551,24 @@ export default function Showcase({ t, currentLang, setCurrentPage, targetProject
                   </div>
                 )}
 
-                {/* Closing copy instead of monochrome footage */}
-                {lbMedia.bw.length > 0 && (
-                  <div className="lookbook-copy-cta">
+                {/* Closing thought and start buttons */}
+                <div className="lookbook-copy-cta">
+                  {modalProject.closingThought && (
                     <p>
-                      {currentLang === 'vi'
-                        ? 'Mỗi gallery là một lát cắt của cảm xúc thật, được giữ lại bằng nhịp điệu, chi tiết và con người trong ngày hôm đó.'
-                        : 'Each gallery is held together by real emotion, lived details, and the people who made the day unmistakably theirs.'}
+                      {getLocalizedText(modalProject.closingThought)}
                     </p>
-                    <button
-                      type="button"
-                      className="text-action-link"
-                      onClick={() => {
-                        closeLookbook();
-                        setCurrentPage ? setCurrentPage('contact') : scrollToSection('contact');
-                      }}
-                    >
-                      {currentLang === 'vi' ? 'bắt đầu câu chuyện của bạn' : 'start your story'}
-                    </button>
-                  </div>
-                )}
+                  )}
+                  <button
+                    type="button"
+                    className="text-action-link"
+                    onClick={() => {
+                      closeLookbook();
+                      setCurrentPage ? setCurrentPage('contact') : null;
+                    }}
+                  >
+                    {getLocalizedText(modalProject.ctaText) || (currentLang === 'vi' ? 'bắt đầu câu chuyện của bạn' : 'start your story')}
+                  </button>
+                </div>
 
               </div>
 
@@ -550,11 +577,11 @@ export default function Showcase({ t, currentLang, setCurrentPage, targetProject
                 <button 
                   onClick={() => {
                     closeLookbook();
-                    setCurrentPage ? setCurrentPage('contact') : scrollToSection('contact');
+                    setCurrentPage ? setCurrentPage('contact') : null;
                   }}
                   className="text-action-link"
                 >
-                  {currentLang === 'en' ? 'start planning your story' : 'bắt đầu kế hoạch của bạn'}
+                  {getLocalizedText(modalProject.ctaText) || (currentLang === 'en' ? 'start planning your story' : 'bắt đầu kế hoạch của bạn')}
                 </button>
               </div>
 

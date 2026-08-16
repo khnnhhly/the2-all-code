@@ -36,16 +36,83 @@ const MapPinIcon = ({ size = 16 }) => (
   </svg>
 );
 
-export default function Footer({ nav, footer, currentLang, onNavClick }) {
-  const f = footer || {};
+export default function Footer({ settingsData, currentLang, onNavClick }) {
+  
+  const getLocalizedText = (field) => {
+    if (!field) return '';
+    if (typeof field === 'string') return field;
+    return field[currentLang] || field.en || field.vi || '';
+  };
 
-  const navLinks = [
-    { id: 'home', label: nav.home },
-    { id: 'about', label: nav.about },
-    { id: 'services', label: nav.services },
-    { id: 'showcase', label: nav.showcase },
-    { id: 'contact', label: nav.contact },
+  // 1. Tagline
+  const tagline = getLocalizedText(settingsData?.footerBrandTagline) || (currentLang === 'vi' ? 'Lập kế hoạch đám cưới & phong cách hóa sự kiện.' : 'Bespoke wedding planning & event styling.');
+
+  // 2. Explore Links (Default fallback)
+  const defaultNav = {
+    en: { home: "Home", about: "About Us", services: "Services", showcase: "Our Works", contact: "Contact" },
+    vi: { home: "Trang chủ", about: "Về chúng tôi", services: "Dịch vụ", showcase: "Các dự án", contact: "Liên hệ" }
+  };
+  const activeNav = defaultNav[currentLang] || defaultNav.vi;
+
+  let exploreLinks = [
+    { id: 'home', label: activeNav.home },
+    { id: 'about', label: activeNav.about },
+    { id: 'services', label: activeNav.services },
+    { id: 'showcase', label: activeNav.showcase },
+    { id: 'contact', label: activeNav.contact },
   ];
+
+  if (settingsData?.exploreLinks?.length > 0) {
+    exploreLinks = settingsData.exploreLinks.map(item => {
+      const labelStr = getLocalizedText(item.label);
+      let pageId = 'home';
+      const url = item.url || '';
+      if (url.includes('about')) pageId = 'about';
+      else if (url.includes('services')) pageId = 'services';
+      else if (url.includes('works') || url.includes('showcase') || url.includes('portfolio')) pageId = 'showcase';
+      else if (url.includes('contact')) pageId = 'contact';
+      return { id: pageId, label: labelStr };
+    });
+  }
+
+  // 3. Services Links
+  let servicesLinks = [
+    { label: currentLang === 'en' ? 'Wedding planning' : 'Lập kế hoạch đám cưới', id: 'full-plan' },
+    { label: currentLang === 'en' ? 'Coordination' : 'Phối hợp thực hiện', id: 'coord' },
+    { label: currentLang === 'en' ? 'Decoration & Styling' : 'Ý tưởng & Phong cách', id: 'concept' },
+    { label: currentLang === 'en' ? 'Destination Wedding' : 'Đám cưới xa nhà', id: 'dest' },
+  ];
+
+  if (settingsData?.servicesLinks?.length > 0) {
+    servicesLinks = settingsData.servicesLinks.map(item => {
+      const labelStr = getLocalizedText(item.label);
+      let serviceHashId = '';
+      const url = item.url || '';
+      if (url.includes('#')) {
+        serviceHashId = url.split('#')[1] || '';
+      }
+      return { label: labelStr, id: serviceHashId || 'services' };
+    });
+  }
+
+  const servicesTitle = currentLang === 'en' ? 'Services' : 'Dịch vụ';
+  const exploreTitle = currentLang === 'en' ? 'Explore' : 'Khám phá';
+  const contactTitle = currentLang === 'en' ? 'Contact' : 'Liên hệ';
+
+  // 4. Contact Details
+  const email = settingsData?.email || 'thetwoplanner@gmail.com';
+  const phones = settingsData?.phones || [
+    { phoneNumber: '+84984898070', label: { en: 'Ly', vi: 'Ly' } },
+    { phoneNumber: '+84862366956', label: { en: 'Nhi', vi: 'Nhi' } }
+  ];
+
+  let instagramUrl = settingsData?.instagram || 'https://instagram.com/thetwo.planner';
+  if (instagramUrl && !instagramUrl.startsWith('http')) {
+    instagramUrl = `https://instagram.com/${instagramUrl}`;
+  }
+
+  const addressText = getLocalizedText(settingsData?.address) || (currentLang === 'vi' ? 'Dựa tại Việt Nam · Có mặt trên toàn thế giới' : 'Based in Vietnam · Available worldwide');
+  const copyright = getLocalizedText(settingsData?.copyright) || `© ${new Date().getFullYear()} The Two Planner. All rights reserved.`;
 
   const headingStyle = {
     fontFamily: 'var(--font-body)',
@@ -98,17 +165,19 @@ export default function Footer({ nav, footer, currentLang, onNavClick }) {
                 The Two Planner
               </span>
             </div>
-            <p style={bodyStyle}>
-              {f.tagline}
-            </p>
+            {tagline && (
+              <p style={bodyStyle}>
+                {tagline}
+              </p>
+            )}
           </div>
 
           {/* Col 2 — Navigation Explore */}
           <div>
-            <span style={headingStyle}>{currentLang === 'en' ? 'Explore' : 'Khám phá'}</span>
+            <span style={headingStyle}>{exploreTitle}</span>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px', padding: 0 }}>
-              {navLinks.map(link => (
-                <li key={link.id}>
+              {exploreLinks.map((link, idx) => (
+                <li key={link.id || idx}>
                   <button
                     style={{
                       border: 'none', background: 'none', padding: 0,
@@ -130,9 +199,9 @@ export default function Footer({ nav, footer, currentLang, onNavClick }) {
 
           {/* Col 3 — Clickable Services */}
           <div>
-            <span style={headingStyle}>{f.servicesTitle}</span>
+            <span style={headingStyle}>{servicesTitle}</span>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px', padding: 0 }}>
-              {(f.servicesList || []).map((svc, i) => (
+              {servicesLinks.map((svc, i) => (
                 <li key={i}>
                   <button
                     style={{
@@ -142,11 +211,16 @@ export default function Footer({ nav, footer, currentLang, onNavClick }) {
                       opacity: 0.8, transition: 'opacity var(--transition)',
                       textAlign: 'left', lineHeight: 1.4
                     }}
-                    onClick={() => onNavClick('services')}
+                    onClick={() => {
+                      if (svc.id && svc.id !== 'services') {
+                        window.sessionStorage.setItem('pendingServiceId', svc.id);
+                      }
+                      onNavClick('services');
+                    }}
                     onMouseEnter={e => e.currentTarget.style.opacity = 1}
                     onMouseLeave={e => e.currentTarget.style.opacity = 0.8}
                   >
-                    {svc}
+                    {svc.label}
                   </button>
                 </li>
               ))}
@@ -155,45 +229,53 @@ export default function Footer({ nav, footer, currentLang, onNavClick }) {
 
           {/* Col 4 — Contact & Socials */}
           <div>
-            <span style={headingStyle}>{f.contactTitle}</span>
+            <span style={headingStyle}>{contactTitle}</span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <a href={`mailto:${f.email}`} style={linkStyle}
-                onMouseEnter={e => e.currentTarget.style.opacity = 1}
-                onMouseLeave={e => e.currentTarget.style.opacity = 0.85}>
-                <EmailIcon size={15} />
-                <span>{f.email}</span>
-              </a>
-              <a href={`tel:${f.phoneLyTel || '+84984898070'}`} style={linkStyle}
-                onMouseEnter={e => e.currentTarget.style.opacity = 1}
-                onMouseLeave={e => e.currentTarget.style.opacity = 0.85}>
-                <PhoneIcon size={15} />
-                <span>{f.phoneLy}</span>
-              </a>
-              <a href={`tel:${f.phoneNhiTel || '+84862366956'}`} style={linkStyle}
-                onMouseEnter={e => e.currentTarget.style.opacity = 1}
-                onMouseLeave={e => e.currentTarget.style.opacity = 0.85}>
-                <PhoneIcon size={15} />
-                <span>{f.phoneNhi}</span>
-              </a>
-              <a href="https://instagram.com/thetwo.planner" target="_blank" rel="noopener noreferrer" style={linkStyle}
-                onMouseEnter={e => e.currentTarget.style.opacity = 1}
-                onMouseLeave={e => e.currentTarget.style.opacity = 0.85}>
-                <InstagramIcon size={15} />
-                <span>{f.instagram}</span>
-              </a>
+              {email && (
+                <a href={`mailto:${email}`} style={linkStyle}
+                  onMouseEnter={e => e.currentTarget.style.opacity = 1}
+                  onMouseLeave={e => e.currentTarget.style.opacity = 0.85}>
+                  <EmailIcon size={15} />
+                  <span>{email}</span>
+                </a>
+              )}
+
+              {phones.map((phone, i) => {
+                const pLabel = getLocalizedText(phone.label);
+                return (
+                  <a key={i} href={`tel:${phone.phoneNumber}`} style={linkStyle}
+                    onMouseEnter={e => e.currentTarget.style.opacity = 1}
+                    onMouseLeave={e => e.currentTarget.style.opacity = 0.85}>
+                    <PhoneIcon size={15} />
+                    <span>{phone.phoneNumber} {pLabel ? `(${pLabel})` : ''}</span>
+                  </a>
+                );
+              })}
+
+              {instagramUrl && (
+                <a href={instagramUrl} target="_blank" rel="noopener noreferrer" style={linkStyle}
+                  onMouseEnter={e => e.currentTarget.style.opacity = 1}
+                  onMouseLeave={e => e.currentTarget.style.opacity = 0.85}>
+                  <InstagramIcon size={15} />
+                  <span>{instagramUrl.replace('https://', '')}</span>
+                </a>
+              )}
+              
               <a href="https://facebook.com/thetwoplanner" target="_blank" rel="noopener noreferrer" style={linkStyle}
                 onMouseEnter={e => e.currentTarget.style.opacity = 1}
                 onMouseLeave={e => e.currentTarget.style.opacity = 0.85}>
                 <FacebookIcon size={15} />
-                <span>{f.facebook || 'The Two Planner'}</span>
+                <span>facebook.com/thetwoplanner</span>
               </a>
-              <div style={{ ...bodyStyle, display: 'flex', alignItems: 'flex-start', gap: '10px', marginTop: '4px' }}>
-                <MapPinIcon size={15} style={{ flexShrink: 0, marginTop: '2px' }} />
-                <div>
-                  <div>{f.location}</div>
-                  <div style={{ fontSize: '0.78rem', opacity: 0.7 }}>{f.locationSub}</div>
+
+              {addressText && (
+                <div style={{ ...bodyStyle, display: 'flex', alignItems: 'flex-start', gap: '10px', marginTop: '4px' }}>
+                  <MapPinIcon size={15} style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <div>
+                    <div>{addressText}</div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -211,9 +293,11 @@ export default function Footer({ nav, footer, currentLang, onNavClick }) {
             <span className="footer-signature-separator" aria-hidden="true">·</span>
             <span className="footer-signature-script">for you two</span>
           </p>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.72rem', color: 'var(--charcoal)', opacity: 0.5, letterSpacing: '0.08em', margin: 0, textTransform: 'none' }}>
-            {f.copyright}
-          </p>
+          {copyright && (
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.72rem', color: 'var(--charcoal)', opacity: 0.5, letterSpacing: '0.08em', margin: 0, textTransform: 'none' }}>
+              {copyright}
+            </p>
+          )}
         </div>
       </div>
     </footer>

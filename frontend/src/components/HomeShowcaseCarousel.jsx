@@ -1,10 +1,9 @@
 'use client';
 import { useRef, useState } from 'react';
 import OptimizedImage from './OptimizedImage';
-import { HOME_SHOWCASE_CAROUSEL } from '../content/homeAssets';
 
-export default function HomeShowcaseCarousel({ onViewAll, hint }) {
-  const showcaseImages = HOME_SHOWCASE_CAROUSEL;
+export default function HomeShowcaseCarousel({ onViewAll, hint, images }) {
+  const showcaseImages = images || [];
   const trackRef = useRef(null);
   const isDragging = useRef(false);
   const [dragging, setDragging] = useState(false);

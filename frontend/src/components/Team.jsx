@@ -2,79 +2,121 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
 import OptimizedImage from './OptimizedImage';
+import { urlFor } from '../lib/sanity';
 
-export default function Team({ t, currentLang }) {
+export default function Team({ aboutData, currentLang }) {
   const [activeMember, setActiveMember] = useState(null);
 
-  if (!t) return null;
+  const getLocalizedText = (field) => {
+    if (!field) return '';
+    if (typeof field === 'string') return field;
+    return field[currentLang] || field.en || field.vi || '';
+  };
 
-  const members = t.members || [];
+  if (!aboutData) return null;
+
+  const teamTitle = getLocalizedText(aboutData?.teamSection?.mainHeadline) || (currentLang === 'vi' ? 'Đội ngũ của chúng tôi' : 'Our Team');
+  const teamLabel = getLocalizedText(aboutData?.teamSection?.categoryTag) || (currentLang === 'vi' ? 'đội ngũ' : 'our team');
+
+  const members = aboutData?.teamSection?.members?.map(member => {
+    if (!member) return null;
+    let imgUrl = '';
+    if (member.portrait) {
+      try {
+        imgUrl = urlFor(member.portrait).url() || '';
+      } catch (e) {}
+    }
+    return {
+      name: member.fullName || '',
+      role: getLocalizedText(member.role),
+      stats: getLocalizedText(member.stats),
+      strengths: getLocalizedText(member.strengths),
+      bio1: getLocalizedText(member.bio1),
+      bio2: getLocalizedText(member.bio2),
+      bio3: getLocalizedText(member.bio3),
+      quote: getLocalizedText(member.quote),
+      img: imgUrl
+    };
+  }).filter(Boolean) || [];
+
+  const closingQuote = getLocalizedText(aboutData?.preFooterCtaSection?.headline);
+  const closingCta = getLocalizedText(aboutData?.preFooterCtaSection?.ctaButton?.label);
+  const closingLink = aboutData?.preFooterCtaSection?.ctaButton?.link || 'contact';
+
+  let preFooterBgUrl = '/assets/site-media/home-showcase-portrait-02.webp';
+  if (aboutData?.preFooterCtaSection?.backgroundImage) {
+    try {
+      preFooterBgUrl = urlFor(aboutData.preFooterCtaSection.backgroundImage).url() || preFooterBgUrl;
+    } catch (e) {}
+  }
 
   return (
     <div id="team">
       {/* Yearbook Editorial Collage Layout */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--white)', borderBottom: '1px solid var(--border-color)', padding: '120px 0' }}>
-        <div className="container" style={{ maxWidth: '1100px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          
-          {/* Our Team Header */}
-          <div className="reveal-on-scroll" style={{ textAlign: 'center', marginBottom: '56px' }}>
-            <span className="eyebrow">{currentLang === 'vi' ? 'đội ngũ' : 'our team'}</span>
-            <h2 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
-              color: 'var(--charcoal)',
-              fontWeight: 400,
-              marginTop: '12px',
-              textTransform: 'none'
-            }}>
-              {t.teamTitle}
-            </h2>
-          </div>
+      {members.length > 0 && (
+        <section className="section-padding" style={{ backgroundColor: 'var(--white)', borderBottom: '1px solid var(--border-color)', padding: '120px 0' }}>
+          <div className="container" style={{ maxWidth: '1100px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            
+            {/* Our Team Header */}
+            <div className="reveal-on-scroll" style={{ textAlign: 'center', marginBottom: '56px' }}>
+              <span className="eyebrow">{teamLabel}</span>
+              <h2 style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
+                color: 'var(--charcoal)',
+                fontWeight: 400,
+                marginTop: '12px',
+                textTransform: 'none'
+              }}>
+                {teamTitle}
+              </h2>
+            </div>
 
-          <div className="team-grid-container">
-            {members.map((member, i) => (
-              <button
-                key={member.name}
-                type="button"
-                className="team-collage-card reveal-on-scroll"
-                style={{ transitionDelay: `${i * 80}ms` }}
-                onClick={() => setActiveMember(member)}
-              >
-                <div className="team-collage-inner">
-                  <div className="team-collage-photo">
-                    {member.img && (
-                      <OptimizedImage
-                        src={member.img}
-                        alt={member.name}
-                        maxWidth={480}
-                        sizes="(max-width: 768px) 90vw, 270px"
-                        className="team-collage-image"
-                      />
-                    )}
-                    {member.strengths && (
-                      <div className="team-collage-keywords">
-                        {member.strengths.split(' · ').slice(0, 4).map((keyword) => (
-                          <span key={keyword}>{keyword}</span>
-                        ))}
-                      </div>
-                    )}
+            <div className="team-grid-container">
+              {members.map((member, i) => (
+                <button
+                  key={member.name}
+                  type="button"
+                  className="team-collage-card reveal-on-scroll"
+                  style={{ transitionDelay: `${i * 80}ms` }}
+                  onClick={() => setActiveMember(member)}
+                >
+                  <div className="team-collage-inner">
+                    <div className="team-collage-photo">
+                      {member.img && (
+                        <OptimizedImage
+                          src={member.img}
+                          alt={member.name}
+                          maxWidth={480}
+                          sizes="(max-width: 768px) 90vw, 270px"
+                          className="team-collage-image"
+                        />
+                      )}
+                      {member.strengths && (
+                        <div className="team-collage-keywords">
+                          {member.strengths.split(' · ').slice(0, 4).map((keyword) => (
+                            <span key={keyword}>{keyword}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <div className="team-collage-caption">
+                      <h3 className="team-collage-name">{member.name}</h3>
+                      <p className="team-collage-role">{member.role}</p>
+                    </div>
                   </div>
-                  <div className="team-collage-caption">
-                    <h3 className="team-collage-name">{member.name}</h3>
-                    <p className="team-collage-role">{member.role}</p>
-                  </div>
-                </div>
-              </button>
-            ))}
+                </button>
+              ))}
+            </div>
+            
           </div>
-          
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Dynamic Story / Testimonial Block */}
-      {t.closingQuote && (
+      {closingQuote && (
         <section style={{ 
-          backgroundImage: 'linear-gradient(rgba(20, 18, 18, 0.6), rgba(20, 18, 18, 0.6)), url(/assets/site-media/home-showcase-portrait-02.webp)',
+          backgroundImage: `linear-gradient(rgba(20, 18, 18, 0.6), rgba(20, 18, 18, 0.6)), url(${preFooterBgUrl})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           color: 'var(--white)', 
@@ -106,12 +148,13 @@ export default function Team({ t, currentLang }) {
                 fontWeight: 400
               }}
             >
-              "{t.closingQuote}"
+              "{closingQuote}"
             </h3>
-            {t.closingCta && (
+            {closingCta && (
               <button 
                 onClick={() => {
-                  const el = document.getElementById('contact');
+                  const targetId = closingLink.startsWith('/') ? closingLink.substring(1) : closingLink;
+                  const el = document.getElementById(targetId);
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
                 style={{
@@ -130,7 +173,7 @@ export default function Team({ t, currentLang }) {
                 onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
                 onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
               >
-                {t.closingCta}
+                {closingCta}
               </button>
             )}
           </div>
@@ -189,9 +232,9 @@ export default function Team({ t, currentLang }) {
                 zIndex: 10
               }}
             >
-              <X size={18} strokeWidth={1.5} style={{ color: 'var(--charcoal)' }} />
+              <span style={{ fontSize: '20px', color: 'var(--charcoal)', lineHeight: '1' }}>&times;</span>
             </button>
-
+ 
             {/* Modal Content */}
             <div 
               style={{
@@ -214,7 +257,7 @@ export default function Team({ t, currentLang }) {
                   </div>
                 )}
               </div>
-
+ 
               {/* Info & Bio details */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', justifyContent: 'center' }}>
                 <div>
@@ -230,7 +273,7 @@ export default function Team({ t, currentLang }) {
                     </div>
                   )}
                 </div>
-
+ 
                 {/* Strengths Tags */}
                 {activeMember.strengths && (
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
@@ -250,14 +293,14 @@ export default function Team({ t, currentLang }) {
                     ))}
                   </div>
                 )}
-
+ 
                 {/* Bio text paragraph stack */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', borderTop: '1px solid var(--border-muted)', paddingTop: '20px' }}>
                   {activeMember.bio1 && <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.92rem', color: 'var(--charcoal)', opacity: 0.85, lineHeight: 1.7, margin: 0 }}>{activeMember.bio1}</p>}
                   {activeMember.bio2 && <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.92rem', color: 'var(--charcoal)', opacity: 0.85, lineHeight: 1.7, margin: 0 }}>{activeMember.bio2}</p>}
                   {activeMember.bio3 && <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.92rem', color: 'var(--charcoal)', opacity: 0.85, lineHeight: 1.7, margin: 0 }}>{activeMember.bio3}</p>}
                 </div>
-
+ 
                 {/* Direct personal Quote */}
                 {activeMember.quote && (
                   <div style={{ borderLeft: '2px solid var(--accent-secondary)', paddingLeft: '16px', fontStyle: 'italic', marginTop: '8px' }}>

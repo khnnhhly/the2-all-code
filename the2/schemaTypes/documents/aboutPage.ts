@@ -193,6 +193,36 @@ export default defineType({
                     }),
                   ],
                 }),
+                defineField({
+                  name: 'stats',
+                  title: 'Stats / Experience',
+                  type: 'localeString',
+                }),
+                defineField({
+                  name: 'strengths',
+                  title: 'Strengths',
+                  type: 'localeString',
+                }),
+                defineField({
+                  name: 'bio1',
+                  title: 'Biography Paragraph 1',
+                  type: 'localeText',
+                }),
+                defineField({
+                  name: 'bio2',
+                  title: 'Biography Paragraph 2',
+                  type: 'localeText',
+                }),
+                defineField({
+                  name: 'bio3',
+                  title: 'Biography Paragraph 3',
+                  type: 'localeText',
+                }),
+                defineField({
+                  name: 'quote',
+                  title: 'Personal Quote',
+                  type: 'localeString',
+                }),
               ],
               preview: {
                 select: {

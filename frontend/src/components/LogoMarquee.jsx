@@ -1,9 +1,9 @@
 'use client';
-import { PARTNER_LOGOS } from '../imageAssets';
 import OptimizedImage from './OptimizedImage';
 
-export default function LogoMarquee({ label, stats }) {
-  const logos = [...PARTNER_LOGOS, ...PARTNER_LOGOS];
+export default function LogoMarquee({ label, stats, logos }) {
+  const logosList = logos || [];
+  const doubleLogos = [...logosList, ...logosList];
 
   return (
     <section className="partners-marquee-section" style={{
@@ -34,7 +34,7 @@ export default function LogoMarquee({ label, stats }) {
       </div>
       <div className="logo-marquee" aria-hidden="true">
         <div className="logo-marquee-track">
-          {logos.map((src, i) => (
+          {doubleLogos.map((src, i) => (
             <div key={i} className="logo-marquee-item">
               <OptimizedImage src={src} alt="" maxWidth={200} />
             </div>

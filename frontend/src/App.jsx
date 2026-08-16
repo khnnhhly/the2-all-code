@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Menu, X, Globe, ChevronDown, Heart, BookOpen, Search, CalendarDays, Palette, Rocket, Clock, Lightbulb, Trash2, MapPin, Check, XIcon } from 'lucide-react';
-import { translationData } from './translationData';
 import LogoSvg from './components/LogoSvg';
 import Home from './components/Home';
 import About from './components/About';
@@ -193,15 +192,13 @@ function JournalSection({ t, currentLang }) {
 
 // ─── Main App ───
 
-export default function App({ heroData }) {
+export default function App({ sanityData }) {
   const [lang, setLang] = useState('vi');
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesMenuOpen, setServicesMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState('home');
   const [showcaseProjectId, setShowcaseProjectId] = useState(null);
-
-  const t = translationData[lang];
 
   // ─── Scroll handler for navbar ───
   useEffect(() => {
@@ -270,13 +267,32 @@ export default function App({ heroData }) {
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, []);
 
-  const navItems = [
-    { id: 'home', label: t.nav.home },
-    { id: 'about', label: t.nav.about },
-    { id: 'services', label: t.nav.services },
-    { id: 'showcase', label: t.nav.showcase },
-    { id: 'contact', label: t.nav.contact },
+  const defaultNav = {
+    en: { home: "Home", about: "About Us", services: "Services", showcase: "Our Works", contact: "Contact" },
+    vi: { home: "Trang chủ", about: "Về chúng tôi", services: "Dịch vụ", showcase: "Các dự án", contact: "Liên hệ" }
+  };
+  const activeNav = defaultNav[lang] || defaultNav.vi;
+
+  let navItems = [
+    { id: 'home', label: activeNav.home },
+    { id: 'about', label: activeNav.about },
+    { id: 'services', label: activeNav.services },
+    { id: 'showcase', label: activeNav.showcase },
+    { id: 'contact', label: activeNav.contact },
   ];
+
+  if (sanityData?.settings?.headerNavigation?.length > 0) {
+    navItems = sanityData.settings.headerNavigation.map(item => {
+      const labelStr = item.label?.[lang] || item.label?.en || item.label?.vi || '';
+      let pageId = 'home';
+      const url = item.url || '';
+      if (url.includes('about')) pageId = 'about';
+      else if (url.includes('services')) pageId = 'services';
+      else if (url.includes('works') || url.includes('showcase') || url.includes('portfolio')) pageId = 'showcase';
+      else if (url.includes('contact')) pageId = 'contact';
+      return { id: pageId, label: labelStr };
+    });
+  }
 
   const linkColor = scrolled ? 'var(--charcoal)' : '#ffffff';
 
@@ -497,20 +513,20 @@ export default function App({ heroData }) {
 
       {/* ─── PAGE ROUTED CONTENT ─── */}
       <main>
-        {currentPage === 'home' && <Home t={t.home} currentLang={lang} setCurrentPage={handleNavClick} heroData={heroData} />}
+        {currentPage === 'home' && <Home homeData={sanityData?.home} testimonials={sanityData?.testimonials} projects={sanityData?.projects} currentLang={lang} setCurrentPage={handleNavClick} />}
         {currentPage === 'about' && (
           <>
-            <About t={t.about} currentLang={lang} setCurrentPage={handleNavClick} />
-            <Team t={t.about} currentLang={lang} setCurrentPage={handleNavClick} />
+            <About aboutData={sanityData?.about} currentLang={lang} setCurrentPage={handleNavClick} />
+            <Team aboutData={sanityData?.about} currentLang={lang} setCurrentPage={handleNavClick} />
           </>
         )}
-        {currentPage === 'services' && <Services t={t.services} currentLang={lang} setCurrentPage={handleNavClick} />}
-        {currentPage === 'showcase' && <Showcase t={t.showcase} currentLang={lang} setCurrentPage={handleNavClick} targetProjectId={showcaseProjectId} />}
-        {currentPage === 'contact' && <Contact t={t.contact} currentLang={lang} />}
+        {currentPage === 'services' && <Services servicesData={sanityData?.services} currentLang={lang} setCurrentPage={handleNavClick} />}
+        {currentPage === 'showcase' && <Showcase worksData={sanityData?.works} projects={sanityData?.projects} currentLang={lang} setCurrentPage={handleNavClick} targetProjectId={showcaseProjectId} />}
+        {currentPage === 'contact' && <Contact contactData={sanityData?.contact} currentLang={lang} />}
       </main>
 
       {/* ─── FOOTER ─── */}
-      <Footer nav={t.nav} footer={t.footer} currentLang={lang} onNavClick={handleNavClick} />
+      <Footer settingsData={sanityData?.settings} currentLang={lang} onNavClick={handleNavClick} />
 
       {/* ─── Global Responsive CSS ─── */}
       <style dangerouslySetInnerHTML={{__html: `
