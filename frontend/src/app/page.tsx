@@ -6,7 +6,7 @@ import App from '../App';
 
 async function getSanityData() {
   const query = `{
-    "settings": *[_type == "siteSettings"] | order(_id == "site.settings" desc, _updatedAt desc)[0] {
+    "settings": *[_type == "siteSettings"] | order((_id == "site.settings") desc, _updatedAt desc)[0] {
       ...,
       logo { asset-> },
       footerBrandLogo { asset-> },
@@ -27,7 +27,7 @@ async function getSanityData() {
       seoDescription { en, vi },
       seoImage { asset-> }
     },
-    "home": *[_type in ["homePage", "page"] && (_id == "site.home" || _id == "drafts.site.home" || slug.current == "home" || title match "Home*")] | order(_id == "site.home" desc, _updatedAt desc)[0] {
+    "home": *[_type in ["homePage", "page"] && (_id == "site.home" || _id == "drafts.site.home" || slug.current == "home" || title match "Home*")] | order((_id == "site.home") desc, _updatedAt desc)[0] {
       ...,
       heroSection {
         ...,
@@ -105,7 +105,7 @@ async function getSanityData() {
         ctaButtonText { en, vi }
       }
     },
-    "about": *[_type in ["aboutPage", "page"] && (_id in ["site.about", "drafts.site.about"] || slug.current == "about" || title match "About*")] | order(_id == "site.about" desc, _updatedAt desc)[0] {
+    "about": *[_type in ["aboutPage", "page"] && (_id in ["site.about", "drafts.site.about"] || slug.current == "about" || title match "About*")] | order((_id == "site.about") desc, _updatedAt desc)[0] {
       ...,
       heroSection {
         ...,
@@ -163,7 +163,7 @@ async function getSanityData() {
         }
       }
     },
-    "services": *[_type in ["servicesPage", "page"] && (_id == "site.services" || slug.current == "services" || title match "Services*")] | order(_id == "site.services" desc, _updatedAt desc)[0] {
+    "services": *[_type in ["servicesPage", "page"] && (_id == "site.services" || slug.current == "services" || title match "Services*")] | order((_id == "site.services") desc, _updatedAt desc)[0] {
       ...,
       heroSection {
         ...,
@@ -235,7 +235,7 @@ async function getSanityData() {
         }
       }
     },
-    "works": *[_type in ["worksPage", "page"] && (_id == "site.works" || slug.current == "works" || title match "Works*")] | order(_id == "site.works" desc, _updatedAt desc)[0] {
+    "works": *[_type in ["worksPage", "page"] && (_id == "site.works" || slug.current == "works" || title match "Works*")] | order((_id == "site.works") desc, _updatedAt desc)[0] {
       ...,
       heroSection {
         ...,
@@ -272,7 +272,7 @@ async function getSanityData() {
         }
       }
     },
-    "contact": *[_type in ["contactPage", "page"] && (_id == "site.contact" || slug.current == "contact" || title match "Contact*")] | order(_id == "site.contact" desc, _updatedAt desc)[0] {
+    "contact": *[_type in ["contactPage", "page"] && (_id == "site.contact" || slug.current == "contact" || title match "Contact*")] | order((_id == "site.contact") desc, _updatedAt desc)[0] {
       ...,
       heroSection {
         ...,
@@ -348,7 +348,7 @@ export default async function Home() {
   console.log(JSON.stringify(sanityData, null, 2));
   console.log("=============================");
 
-  if (!sanityData || !sanityData.home || !sanityData.settings) {
+  if (!sanityData || !sanityData.home) {
     return (
       <div style={{
         padding: '80px 24px',
