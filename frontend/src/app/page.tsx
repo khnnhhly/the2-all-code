@@ -27,7 +27,7 @@ async function getSanityData() {
       seoDescription { en, vi },
       seoImage { asset-> }
     },
-    "home": *[_type in ["homePage", "page"] && (_id == "site.home" || _id == "drafts.site.home" || slug.current == "home" || title match "Home*")] | order((_id == "site.home") desc, _updatedAt desc)[0] {
+    "home": *[_type in ["homePage", "page", "site.home", "home"] || title match "*Home*" || title match "*Trang chủ*"] | order(_updatedAt desc)[0] {
       ...,
       heroSection {
         ...,
@@ -35,19 +35,13 @@ async function getSanityData() {
         smallSubheading { en, vi },
         mainHeadline { en, vi },
         description { en, vi },
-        ctaButtons[] {
-          ...,
-          label { en, vi }
-        }
+        ctaButtons[] { ..., label { en, vi } }
       },
       letterSection {
         ...,
         scriptTitle { en, vi },
         subheading { en, vi },
-        paragraphs[] {
-          ...,
-          paragraphText { en, vi }
-        },
+        paragraphs[] { ..., paragraphText { en, vi } },
         closingSignOff { en, vi }
       },
       weddingServicesSection {
@@ -65,19 +59,12 @@ async function getSanityData() {
       eventServicesSection {
         ...,
         headerTitle { en, vi },
-        eventItems[] {
-          ...,
-          title { en, vi },
-          description { en, vi }
-        }
+        eventItems[] { ..., title { en, vi }, description { en, vi } }
       },
       statsAndPartnersSection {
         ...,
         partnerHeader { en, vi },
-        stats[] {
-          ...,
-          label { en, vi }
-        },
+        stats[] { ..., label { en, vi } },
         partnerLogos[] { asset->, alt { en, vi } }
       },
       showcaseSection {
@@ -86,10 +73,7 @@ async function getSanityData() {
         mainTitle { en, vi },
         instructionText { en, vi },
         gallery[] { asset->, alt { en, vi } },
-        ctaButton {
-          ...,
-          label { en, vi }
-        }
+        ctaButton { ..., label { en, vi } }
       },
       testimonialVideoSection {
         ...,
