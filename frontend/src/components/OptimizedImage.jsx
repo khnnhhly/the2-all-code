@@ -1,16 +1,18 @@
 'use client';
+
 export function imageDisplayUrl(src, maxWidth = 800) {
   if (!src || typeof src !== 'string') return src;
+  if (src.includes('cdn.sanity.io')) {
+    const separator = src.includes('?') ? '&' : '?';
+    return `${src}${separator}w=${maxWidth}&q=82&auto=format`;
+  }
   return src;
 }
 
 function imageSrcSet(src, widths = [480, 800, 1200, 1600, 2000]) {
-  if (!src || typeof src !== 'string' || !src.includes('i.ibb.co')) return undefined;
-  if (src.includes('i.ibb.co')) return undefined;
+  if (!src || typeof src !== 'string' || !src.includes('cdn.sanity.io')) return undefined;
   const base = src.split('?')[0];
-  const ext = base.split('.').pop()?.toLowerCase();
-  if (ext === 'png' || ext === 'gif') return undefined;
-  return widths.map((width) => `${base}?width=${width} ${width}w`).join(', ');
+  return widths.map((width) => `${base}?w=${width}&q=80&auto=format ${width}w`).join(', ');
 }
 
 export function preloadImages(sources, maxWidth = 320) {
