@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Menu, X, Globe, ChevronDown, Heart, BookOpen, Search, CalendarDays, Palette, Rocket, Clock, Lightbulb, Trash2, MapPin, Check, XIcon } from 'lucide-react';
 import LogoSvg from './components/LogoSvg';
+import { mergeSanityData } from './lib/fallback';
 import Home from './components/Home';
 import About from './components/About';
 import Team from './components/Team';
@@ -200,6 +201,8 @@ export default function App({ sanityData }) {
   const [currentPage, setCurrentPage] = useState('home');
   const [showcaseProjectId, setShowcaseProjectId] = useState(null);
 
+  const mergedData = mergeSanityData(sanityData, lang);
+
   // ─── Scroll handler for navbar ───
   useEffect(() => {
     const handleScroll = () => {
@@ -281,8 +284,8 @@ export default function App({ sanityData }) {
     { id: 'contact', label: activeNav.contact },
   ];
 
-  if (sanityData?.settings?.headerNavigation?.length > 0) {
-    navItems = sanityData.settings.headerNavigation.map(item => {
+  if (mergedData?.settings?.headerNavigation?.length > 0) {
+    navItems = mergedData.settings.headerNavigation.map(item => {
       const labelStr = item.label?.[lang] || item.label?.en || item.label?.vi || '';
       let pageId = 'home';
       const url = item.url || '';
@@ -513,20 +516,20 @@ export default function App({ sanityData }) {
 
       {/* ─── PAGE ROUTED CONTENT ─── */}
       <main>
-        {currentPage === 'home' && <Home homeData={sanityData?.home} testimonials={sanityData?.testimonials} projects={sanityData?.projects} currentLang={lang} setCurrentPage={handleNavClick} />}
+        {currentPage === 'home' && <Home homeData={mergedData.home} testimonials={mergedData.testimonials} projects={mergedData.projects} currentLang={lang} setCurrentPage={handleNavClick} />}
         {currentPage === 'about' && (
           <>
-            <About aboutData={sanityData?.about} currentLang={lang} setCurrentPage={handleNavClick} />
-            <Team aboutData={sanityData?.about} currentLang={lang} setCurrentPage={handleNavClick} />
+            <About aboutData={mergedData.about} currentLang={lang} setCurrentPage={handleNavClick} />
+            <Team aboutData={mergedData.about} currentLang={lang} setCurrentPage={handleNavClick} />
           </>
         )}
-        {currentPage === 'services' && <Services servicesData={sanityData?.services} currentLang={lang} setCurrentPage={handleNavClick} />}
-        {currentPage === 'showcase' && <Showcase worksData={sanityData?.works} projects={sanityData?.projects} currentLang={lang} setCurrentPage={handleNavClick} targetProjectId={showcaseProjectId} />}
-        {currentPage === 'contact' && <Contact contactData={sanityData?.contact} currentLang={lang} />}
+        {currentPage === 'services' && <Services servicesData={mergedData.services} currentLang={lang} setCurrentPage={handleNavClick} />}
+        {currentPage === 'showcase' && <Showcase worksData={mergedData.works} projects={mergedData.projects} currentLang={lang} setCurrentPage={handleNavClick} targetProjectId={showcaseProjectId} />}
+        {currentPage === 'contact' && <Contact contactData={mergedData.contact} currentLang={lang} />}
       </main>
 
       {/* ─── FOOTER ─── */}
-      <Footer settingsData={sanityData?.settings} currentLang={lang} onNavClick={handleNavClick} />
+      <Footer settingsData={mergedData.settings} currentLang={lang} onNavClick={handleNavClick} />
 
       {/* ─── Global Responsive CSS ─── */}
       <style dangerouslySetInnerHTML={{__html: `
