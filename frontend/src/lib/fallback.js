@@ -22,7 +22,7 @@ export function getFallbackData(currentLang) {
     home: {
       heroSection: {
         smallSubheading: 'the two · for you two',
-        mainHeadline: isVi ? 'Ngày cưới trọn vẹn, theo cách riêng của bạn' : 'Your wedding, lived your way',
+        mainHeadline: isVi ? 'Nơi câu chuyện của bạn được viết nên thành một dấu ấn trọn đời' : 'Where your story becomes a lifetime moment',
         description: isVi 
           ? 'Chúng tôi phác thảo và đồng hành thực hiện những chi tiết cảm xúc trong ngày trọng đại của bạn.'
           : 'We sketch, plan, and style intimate celebrations held together by real emotion.',
