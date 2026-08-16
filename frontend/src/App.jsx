@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { getFallbackData } from './lib/fallback';
 import { Menu, X, Globe, ChevronDown, Heart, BookOpen, Search, CalendarDays, Palette, Rocket, Clock, Lightbulb, Trash2, MapPin, Check, XIcon } from 'lucide-react';
 import LogoSvg from './components/LogoSvg';
 import Home from './components/Home';
@@ -200,6 +201,19 @@ export default function App({ sanityData, initialPage = 'home' }) {
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [showcaseProjectId, setShowcaseProjectId] = useState(null);
 
+  // Merge sanityData with fallbacks dynamically depending on language!
+  const fallback = getFallbackData(lang);
+  const mergedData = {
+    settings: sanityData?.settings ? { ...fallback.settings, ...sanityData.settings } : fallback.settings,
+    home: sanityData?.home ? { ...fallback.home, ...sanityData.home } : fallback.home,
+    about: sanityData?.about ? { ...fallback.about, ...sanityData.about } : fallback.about,
+    services: sanityData?.services ? { ...fallback.services, ...sanityData.services } : fallback.services,
+    works: sanityData?.works ? { ...fallback.works, ...sanityData.works } : fallback.works,
+    contact: sanityData?.contact ? { ...fallback.contact, ...sanityData.contact } : fallback.contact,
+    testimonials: sanityData?.testimonials?.length ? sanityData.testimonials : fallback.home.testimonialVideoSection ? [fallback.home.testimonialVideoSection] : [],
+    projects: sanityData?.projects?.length ? sanityData.projects : [],
+  };
+
   // ─── Browser Back/Forward navigation support ───
   useEffect(() => {
     const handlePopState = () => {
@@ -301,8 +315,8 @@ export default function App({ sanityData, initialPage = 'home' }) {
     { id: 'contact', label: activeNav.contact },
   ];
 
-  if (sanityData?.settings?.headerNavigation?.length > 0) {
-    navItems = sanityData.settings.headerNavigation.map(item => {
+  if (mergedData?.settings?.headerNavigation?.length > 0) {
+    navItems = mergedData.settings.headerNavigation.map(item => {
       const labelStr = item.label?.[lang] || item.label?.en || item.label?.vi || '';
       let pageId = 'home';
       const url = item.url || '';
@@ -533,20 +547,20 @@ export default function App({ sanityData, initialPage = 'home' }) {
 
       {/* ─── PAGE ROUTED CONTENT ─── */}
       <main>
-        {currentPage === 'home' && <Home homeData={sanityData?.home} testimonials={sanityData?.testimonials} projects={sanityData?.projects} currentLang={lang} setCurrentPage={handleNavClick} />}
+        {currentPage === 'home' && <Home homeData={mergedData?.home} testimonials={mergedData?.testimonials} projects={mergedData?.projects} currentLang={lang} setCurrentPage={handleNavClick} />}
         {currentPage === 'about' && (
           <>
-            <About aboutData={sanityData?.about} currentLang={lang} setCurrentPage={handleNavClick} />
-            <Team aboutData={sanityData?.about} currentLang={lang} setCurrentPage={handleNavClick} />
+            <About aboutData={mergedData?.about} currentLang={lang} setCurrentPage={handleNavClick} />
+            <Team aboutData={mergedData?.about} currentLang={lang} setCurrentPage={handleNavClick} />
           </>
         )}
-        {currentPage === 'services' && <Services servicesData={sanityData?.services} currentLang={lang} setCurrentPage={handleNavClick} />}
-        {currentPage === 'showcase' && <Showcase worksData={sanityData?.works} projects={sanityData?.projects} currentLang={lang} setCurrentPage={handleNavClick} targetProjectId={showcaseProjectId} />}
-        {currentPage === 'contact' && <Contact contactData={sanityData?.contact} currentLang={lang} />}
+        {currentPage === 'services' && <Services servicesData={mergedData?.services} currentLang={lang} setCurrentPage={handleNavClick} />}
+        {currentPage === 'showcase' && <Showcase worksData={mergedData?.works} projects={mergedData?.projects} currentLang={lang} setCurrentPage={handleNavClick} targetProjectId={showcaseProjectId} />}
+        {currentPage === 'contact' && <Contact contactData={mergedData?.contact} currentLang={lang} />}
       </main>
 
       {/* ─── FOOTER ─── */}
-      <Footer settingsData={sanityData?.settings} currentLang={lang} onNavClick={handleNavClick} />
+      <Footer settingsData={mergedData?.settings} currentLang={lang} onNavClick={handleNavClick} />
 
       {/* ─── Global Responsive CSS ─── */}
       <style dangerouslySetInnerHTML={{__html: `
