@@ -107,8 +107,11 @@ export async function getHomeData() {
       ctaText { en, vi }
     }
   }`;
+  console.log("SANITY CONFIG (Home):", process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'quhr7leo', process.env.NEXT_PUBLIC_SANITY_DATASET || 'production');
   try {
-    return await client.fetch(query);
+    const data = await client.fetch(query, {}, { next: { revalidate: 0 }, cache: 'no-store' });
+    console.log("HOME DATA FROM SANITY:", data?.home);
+    return data;
   } catch (err) {
     console.warn("Error fetching home data:", err);
     return null;
@@ -180,8 +183,11 @@ export async function getAboutData() {
       }
     }
   }`;
+  console.log("SANITY CONFIG (About):", process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'quhr7leo', process.env.NEXT_PUBLIC_SANITY_DATASET || 'production');
   try {
-    return await client.fetch(query);
+    const data = await client.fetch(query, {}, { next: { revalidate: 0 }, cache: 'no-store' });
+    console.log("ABOUT DATA FROM SANITY:", data?.about);
+    return data;
   } catch (err) {
     console.warn("Error fetching about data:", err);
     return null;
@@ -267,8 +273,11 @@ export async function getServicesData() {
       }
     }
   }`;
+  console.log("SANITY CONFIG (Services):", process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'quhr7leo', process.env.NEXT_PUBLIC_SANITY_DATASET || 'production');
   try {
-    return await client.fetch(query);
+    const data = await client.fetch(query, {}, { next: { revalidate: 0 }, cache: 'no-store' });
+    console.log("SERVICES DATA FROM SANITY:", data?.services);
+    return data;
   } catch (err) {
     console.warn("Error fetching services data:", err);
     return null;
@@ -330,8 +339,11 @@ export async function getWorksData() {
       ctaText { en, vi }
     }
   }`;
+  console.log("SANITY CONFIG (Works):", process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'quhr7leo', process.env.NEXT_PUBLIC_SANITY_DATASET || 'production');
   try {
-    return await client.fetch(query);
+    const data = await client.fetch(query, {}, { next: { revalidate: 0 }, cache: 'no-store' });
+    console.log("WORKS DATA FROM SANITY:", data?.works);
+    return data;
   } catch (err) {
     console.warn("Error fetching works data:", err);
     return null;
@@ -386,8 +398,11 @@ export async function getContactData() {
       }
     }
   }`;
+  console.log("SANITY CONFIG (Contact):", process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'quhr7leo', process.env.NEXT_PUBLIC_SANITY_DATASET || 'production');
   try {
-    return await client.fetch(query);
+    const data = await client.fetch(query, {}, { next: { revalidate: 0 }, cache: 'no-store' });
+    console.log("CONTACT DATA FROM SANITY:", data?.contact);
+    return data;
   } catch (err) {
     console.warn("Error fetching contact data:", err);
     return null;
