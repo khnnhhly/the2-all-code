@@ -192,13 +192,27 @@ function JournalSection({ t, currentLang }) {
 
 // ─── Main App ───
 
-export default function App({ sanityData }) {
+export default function App({ sanityData, initialPage = 'home' }) {
   const [lang, setLang] = useState('vi');
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesMenuOpen, setServicesMenuOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState('home');
+  const [currentPage, setCurrentPage] = useState(initialPage);
   const [showcaseProjectId, setShowcaseProjectId] = useState(null);
+
+  // ─── Browser Back/Forward navigation support ───
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      if (path === '/') setCurrentPage('home');
+      else if (path === '/about') setCurrentPage('about');
+      else if (path === '/services') setCurrentPage('services');
+      else if (path === '/works') setCurrentPage('showcase');
+      else if (path === '/contact') setCurrentPage('contact');
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   // ─── Scroll handler for navbar ───
   useEffect(() => {
@@ -265,6 +279,12 @@ export default function App({ sanityData }) {
     setMobileMenuOpen(false);
     setServicesMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'auto' });
+
+    // Change URL in browser path cleanly without reloading
+    const path = id === 'home' ? '/' : `/${id === 'showcase' ? 'works' : id}`;
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', path);
+    }
   }, []);
 
   const defaultNav = {
