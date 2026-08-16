@@ -6,7 +6,7 @@ import App from '../App';
 
 async function getSanityData() {
   const query = `{
-    "settings": *[_type == "siteSettings"] | order((_id == "site.settings") desc, _updatedAt desc)[0] {
+    "settings": *[_type == "siteSettings" && _id in ["site.settings", "drafts.site.settings"]] | order((_id == "site.settings") desc)[0] {
       ...,
       logo { asset-> },
       footerBrandLogo { asset-> },
@@ -27,7 +27,7 @@ async function getSanityData() {
       seoDescription { en, vi },
       seoImage { asset-> }
     },
-    "home": *[_type in ["homePage", "page", "site.home", "home"] || title match "*Home*" || title match "*Trang chủ*"] | order(_updatedAt desc)[0] {
+    "home": *[_type == "homePage" && _id in ["site.home", "drafts.site.home"]] | order((_id == "site.home") desc)[0] {
       ...,
       heroSection {
         ...,
@@ -89,7 +89,7 @@ async function getSanityData() {
         ctaButtonText { en, vi }
       }
     },
-    "about": *[_type in ["aboutPage", "page"] && (_id in ["site.about", "drafts.site.about"] || slug.current == "about" || title match "About*")] | order((_id == "site.about") desc, _updatedAt desc)[0] {
+    "about": *[_type == "aboutPage" && _id in ["site.about", "drafts.site.about"]] | order((_id == "site.about") desc)[0] {
       ...,
       heroSection {
         ...,
@@ -147,7 +147,7 @@ async function getSanityData() {
         }
       }
     },
-    "services": *[_type in ["servicesPage", "page"] && (_id == "site.services" || slug.current == "services" || title match "Services*")] | order((_id == "site.services") desc, _updatedAt desc)[0] {
+    "services": *[_type == "servicesPage" && _id in ["site.services", "drafts.site.services"]] | order((_id == "site.services") desc)[0] {
       ...,
       heroSection {
         ...,
@@ -219,7 +219,7 @@ async function getSanityData() {
         }
       }
     },
-    "works": *[_type in ["worksPage", "page"] && (_id == "site.works" || slug.current == "works" || title match "Works*")] | order((_id == "site.works") desc, _updatedAt desc)[0] {
+    "works": *[_type == "worksPage" && _id in ["site.works", "drafts.site.works"]] | order((_id == "site.works") desc)[0] {
       ...,
       heroSection {
         ...,
@@ -256,7 +256,7 @@ async function getSanityData() {
         }
       }
     },
-    "contact": *[_type in ["contactPage", "page"] && (_id == "site.contact" || slug.current == "contact" || title match "Contact*")] | order((_id == "site.contact") desc, _updatedAt desc)[0] {
+    "contact": *[_type == "contactPage" && _id in ["site.contact", "drafts.site.contact"]] | order((_id == "site.contact") desc)[0] {
       ...,
       heroSection {
         ...,
