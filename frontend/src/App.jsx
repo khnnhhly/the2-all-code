@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { getFallbackData } from './lib/fallback';
+import { client } from './lib/sanity';
 import { Menu, X, Globe, ChevronDown, Heart, BookOpen, Search, CalendarDays, Palette, Rocket, Clock, Lightbulb, Trash2, MapPin, Check, XIcon } from 'lucide-react';
 import LogoSvg from './components/LogoSvg';
 import Home from './components/Home';
@@ -201,17 +202,92 @@ export default function App({ sanityData, initialPage = 'home' }) {
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [showcaseProjectId, setShowcaseProjectId] = useState(null);
 
+  const [clientSanityData, setClientSanityData] = useState(sanityData);
+
+  useEffect(() => {
+    setClientSanityData(sanityData);
+  }, [sanityData]);
+
+  useEffect(() => {
+    const fetchRemaining = async () => {
+      try {
+        const query = `{
+          "settings": *[_type in ["siteSettings", "settings"] && (_id in ["site.settings", "drafts.site.settings", "settings"])] | order((_id == "site.settings") desc, _updatedAt desc)[0] {
+            ...,
+            logo { asset-> },
+            footerBrandLogo { asset-> },
+            headerNavigation[] { ..., label { en, vi } },
+            exploreLinks[] { ..., label { en, vi } },
+            servicesLinks[] { ..., label { en, vi } },
+            copyright { en, vi },
+            seoTitle { en, vi },
+            seoDescription { en, vi },
+            seoImage { asset-> }
+          },
+          "home": *[(_type in ["homePage", "page", "home"] || _id in ["site.home", "drafts.site.home", "home"]) && (_id in ["site.home", "drafts.site.home", "home"] || slug.current == "home" || title match "*Home*" || title match "*Trang chủ*")] | order((_id == "site.home") desc, _updatedAt desc)[0] {
+            ...,
+            heroSection { ..., backgroundImage { asset->, alt { en, vi } }, smallSubheading { en, vi }, mainHeadline { en, vi }, description { en, vi }, ctaButtons[] { ..., label { en, vi } } },
+            letterSection { ..., scriptTitle { en, vi }, subheading { en, vi }, paragraphs[] { ..., paragraphText { en, vi } }, closingSignOff { en, vi } },
+            weddingServicesSection { ..., mainHeader { en, vi }, categoryLabel { en, vi }, servicesList[] { ..., title { en, vi }, shortDescription { en, vi }, bgImage { asset->, alt { en, vi } }, scopeItems[] { en, vi } } },
+            eventServicesSection { ..., headerTitle { en, vi }, eventItems[] { ..., title { en, vi }, description { en, vi } } },
+            statsAndPartnersSection { ..., partnerHeader { en, vi }, stats[] { ..., label { en, vi } }, partnerLogos[] { asset->, alt { en, vi } } },
+            showcaseSection { ..., categoryTag { en, vi }, mainTitle { en, vi }, instructionText { en, vi }, gallery[] { asset->, alt { en, vi } }, ctaButton { ..., label { en, vi } } },
+            testimonialVideoSection { ..., quoteTitle { en, vi }, coupleDetails { en, vi }, coverImage { asset->, alt { en, vi } } },
+            preFooterCtaSection { ..., backgroundImage { asset->, alt { en, vi } }, bannerHeadline { en, vi }, bannerSubtext { en, vi }, ctaButtonText { en, vi } }
+          },
+          "about": *[(_type in ["aboutPage", "page", "about"] || _id in ["site.about", "drafts.site.about", "about"]) && (_id in ["site.about", "drafts.site.about", "about"] || slug.current == "about" || title match "*About*" || title match "*Giới thiệu*")] | order((_id == "site.about") desc, _updatedAt desc)[0] {
+            ...,
+            heroSection { ..., backgroundImage { asset->, alt { en, vi } }, headline { en, vi }, subheading { en, vi } },
+            missionVisionSection { ..., mission { ..., title { en, vi }, content { en, vi } }, vision { ..., title { en, vi }, content { en, vi } } },
+            testimonialsSection { ..., categoryTag { en, vi }, mainHeadline { en, vi }, testimonialCards[]-> { ..., cardImage { asset-> }, heroImage { asset-> }, gallery[] { asset-> } } },
+            teamSection { ..., categoryTag { en, vi }, mainHeadline { en, vi }, members[] { ..., role { en, vi }, portrait { asset->, alt { en, vi } }, stats { en, vi }, strengths { en, vi }, bio1 { en, vi }, bio2 { en, vi }, bio3 { en, vi }, quote { en, vi } } },
+            preFooterCtaSection { ..., backgroundImage { asset->, alt { en, vi } }, headline { en, vi }, ctaButton { ..., label { en, vi } } }
+          },
+          "services": *[(_type in ["servicesPage", "page", "services"] || _id in ["site.services", "drafts.site.services", "services"]) && (_id in ["site.services", "drafts.site.services", "services"] || slug.current == "services" || title match "*Service*" || title match "*Dịch vụ*")] | order((_id == "site.services") desc, _updatedAt desc)[0] {
+            ...,
+            heroSection { ..., heroImage { asset->, alt { en, vi } }, headline { en, vi }, subheading { en, vi } },
+            weddingCarouselSection { ..., sectionCategory { en, vi }, sectionHeadline { en, vi }, weddingServices[]-> { ..., title { en, vi }, shortDescription { en, vi }, cardImage { asset-> }, modalDetails { ..., tagline { en, vi }, fullDescription { en, vi }, whoThisIsFor[] { en, vi }, scopeOfWork[] { en, vi }, benefits[] { en, vi } } } },
+            eventCarouselSection { ..., sectionCategory { en, vi }, sectionHeadline { en, vi }, eventServices[]-> { ..., title { en, vi }, shortDescription { en, vi }, cardImage { asset-> }, modalDetails { ..., tagline { en, vi }, fullDescription { en, vi }, whoThisIsFor[] { en, vi }, scopeOfWork[] { en, vi }, benefits[] { en, vi } } } },
+            faqSection { ..., categoryTag { en, vi }, mainHeadline { en, vi }, subheading { en, vi }, weddingFaqs[] { ..., question { en, vi }, answer { en, vi } }, eventFaqs[] { ..., question { en, vi }, answer { en, vi } } },
+            preFooterCtaSection { ..., backgroundImage { asset->, alt { en, vi } }, headline { en, vi }, ctaButton { ..., label { en, vi } } }
+          },
+          "works": *[(_type in ["worksPage", "page", "works"] || _id in ["site.works", "drafts.site.works", "works"]) && (_id in ["site.works", "drafts.site.works", "works"] || slug.current == "works" || slug.current == "our-works" || title match "*Work*" || title match "*Dự án*")] | order((_id == "site.works") desc, _updatedAt desc)[0] {
+            ...,
+            heroSection { ..., heroImage { asset->, alt { en, vi } }, headline { en, vi }, subheading { en, vi }, regions[] { ..., regionName { en, vi }, venues[] { en, vi } } },
+            portfolioSection { ..., featuredProjects[]-> { ..., thumbnailImage { asset-> }, heroDetailImage { asset-> }, galleryImages[] { asset-> }, serviceType { en, vi }, summaryQuote { en, vi }, highlightFeedback { en, vi }, closingThought { en, vi }, ctaText { en, vi } } },
+            preFooterCtaSection { ..., backgroundImage { asset->, alt { en, vi } }, headline { en, vi }, ctaButton { ..., label { en, vi } } }
+          },
+          "contact": *[(_type in ["contactPage", "page", "contact"] || _id in ["site.contact", "drafts.site.contact", "contact"]) && (_id in ["site.contact", "drafts.site.contact", "contact"] || slug.current == "contact" || title match "*Contact*" || title match "*Liên hệ*")] | order((_id == "site.contact") desc, _updatedAt desc)[0] {
+            ...,
+            heroSection { ..., heroImage { asset->, alt { en, vi } }, title { en, vi }, subtitle { en, vi }, tagline { en, vi } },
+            formConfig { ..., formGreetingTitle { en, vi }, formGreetingText { en, vi }, eventTypeOptions[] { en, vi }, formFields { ..., fullNameLabel { en, vi }, partnerNameLabel { en, vi }, emailLabel { en, vi }, phoneLabel { en, vi }, eventDateLabel { en, vi }, eventDatePlaceholder { en, vi }, guestCountLabel { en, vi }, guestCountPlaceholder { en, vi }, locationLabel { en, vi }, budgetLabel { en, vi }, budgetPlaceholder { en, vi }, referralLabel { en, vi }, storyLabel { en, vi }, storyPlaceholder { en, vi } }, responseNotice { en, vi }, submitButtonLabel { en, vi } },
+            bottomBanner { ..., bgImage { asset->, alt { en, vi } }, headline { en, vi }, subtext { en, vi } }
+          },
+          "testimonials": *[_type == "testimonial"] { ..., cardImage { asset-> }, heroImage { asset-> }, gallery[] { asset-> } },
+          "projects": *[_type == "projectItem"] { ..., thumbnailImage { asset-> }, heroDetailImage { asset-> }, galleryImages[] { asset-> }, serviceType { en, vi }, summaryQuote { en, vi }, highlightFeedback { en, vi }, closingThought { en, vi }, ctaText { en, vi } }
+        }`;
+        const data = await client.fetch(query);
+        if (data) {
+          setClientSanityData(prev => ({ ...prev, ...data }));
+        }
+      } catch (err) {
+        console.warn("Client background fetch failed:", err);
+      }
+    };
+    fetchRemaining();
+  }, []);
+
   // Merge sanityData with fallbacks dynamically depending on language!
   const fallback = getFallbackData(lang);
   const mergedData = {
-    settings: sanityData?.settings ? { ...fallback.settings, ...sanityData.settings } : fallback.settings,
-    home: sanityData?.home ? { ...fallback.home, ...sanityData.home } : fallback.home,
-    about: sanityData?.about ? { ...fallback.about, ...sanityData.about } : fallback.about,
-    services: sanityData?.services ? { ...fallback.services, ...sanityData.services } : fallback.services,
-    works: sanityData?.works ? { ...fallback.works, ...sanityData.works } : fallback.works,
-    contact: sanityData?.contact ? { ...fallback.contact, ...sanityData.contact } : fallback.contact,
-    testimonials: sanityData?.testimonials?.length ? sanityData.testimonials : fallback.home.testimonialVideoSection ? [fallback.home.testimonialVideoSection] : [],
-    projects: sanityData?.projects?.length ? sanityData.projects : [],
+    settings: clientSanityData?.settings ? { ...fallback.settings, ...clientSanityData.settings } : fallback.settings,
+    home: clientSanityData?.home ? { ...fallback.home, ...clientSanityData.home } : fallback.home,
+    about: clientSanityData?.about ? { ...fallback.about, ...clientSanityData.about } : fallback.about,
+    services: clientSanityData?.services ? { ...fallback.services, ...clientSanityData.services } : fallback.services,
+    works: clientSanityData?.works ? { ...fallback.works, ...clientSanityData.works } : fallback.works,
+    contact: clientSanityData?.contact ? { ...fallback.contact, ...clientSanityData.contact } : fallback.contact,
+    testimonials: clientSanityData?.testimonials?.length ? clientSanityData.testimonials : fallback.home.testimonialVideoSection ? [fallback.home.testimonialVideoSection] : [],
+    projects: clientSanityData?.projects?.length ? clientSanityData.projects : [],
   };
 
   // ─── Browser Back/Forward navigation support ───
