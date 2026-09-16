@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { urlFor } from '../lib/sanity';
+import { getTitleStyle, getBodyStyle, getScriptStyle } from '../lib/typography';
 
 interface CTAButton {
   _key: string;
@@ -17,6 +18,7 @@ interface HeroData {
   mainHeadline?: { en?: string; vi?: string } | string;
   description?: { en?: string; vi?: string } | string;
   ctaButtons?: CTAButton[];
+  typography?: any;
 }
 
 interface HeroSectionProps {
@@ -100,19 +102,28 @@ export default function HeroSection({ heroData, lang = 'en', onCtaClick }: HeroS
         style={{ position: 'relative', zIndex: 2 }}
       >
         {subheading && (
-          <p className="hero-tagline hero-tagline--animate brand-preserve-case preserve-copy-case">
+          <p
+            className="hero-tagline hero-tagline--animate brand-preserve-case preserve-copy-case"
+            style={getScriptStyle(heroData?.typography)}
+          >
             {subheading}
           </p>
         )}
 
         {headline && (
-          <h1 className={`reveal-on-scroll delay-100 hero-home-title ${lang === 'vi' ? 'hero-home-title-vi' : 'hero-home-title-en'}`}>
+          <h1
+            className={`reveal-on-scroll delay-100 hero-home-title ${lang === 'vi' ? 'hero-home-title-vi' : 'hero-home-title-en'}`}
+            style={getTitleStyle(heroData?.typography)}
+          >
             {headline}
           </h1>
         )}
 
         {descriptionText && (
-          <div className="reveal-on-scroll delay-200 brand-preserve-case hero-home-subtext">
+          <div
+            className="reveal-on-scroll delay-200 brand-preserve-case hero-home-subtext"
+            style={getBodyStyle(heroData?.typography)}
+          >
             <p>{descriptionText}</p>
           </div>
         )}

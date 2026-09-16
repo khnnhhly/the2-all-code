@@ -27,7 +27,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&family=Mulish:ital,wght@0,300..900;1,300..900&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&subset=vietnamese,latin-ext&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Dancing+Script:wght@400;600;700&family=Great+Vibes&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Mrs+Saint+Delafield&family=Mulish:ital,wght@0,300..900;1,300..900&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&subset=vietnamese,latin-ext&display=swap"
           rel="stylesheet"
         />
       </head>

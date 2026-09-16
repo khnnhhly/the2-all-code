@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { X, ChevronDown } from 'lucide-react';
 import OptimizedImage from './OptimizedImage';
 import { urlFor } from '../lib/sanity';
+import { getTitleStyle, getBodyStyle } from '../lib/typography';
 
 function ServiceCarousel({ services, accentColor, onLearnMore, currentLang }) {
   const trackRef = useRef(null);
@@ -397,7 +398,10 @@ export default function Services({ servicesData, currentLang, setCurrentPage }) 
           <div className="services-intro-copy">
             <span className="eyebrow reveal-on-scroll services-intro-label">{label}</span>
             {title && (
-              <h1 className="reveal-on-scroll delay-100 services-intro-title">
+              <h1
+                className="reveal-on-scroll delay-100 services-intro-title"
+                style={getTitleStyle(servicesData?.heroSection?.typography)}
+              >
                 {title.split('\n').map((line, i) => (
                   <React.Fragment key={i}>
                     {line}
@@ -407,7 +411,10 @@ export default function Services({ servicesData, currentLang, setCurrentPage }) 
               </h1>
             )}
             {descText && (
-              <p className="reveal-on-scroll delay-200 services-intro-subtitle">
+              <p
+                className="reveal-on-scroll delay-200 services-intro-subtitle"
+                style={getBodyStyle(servicesData?.heroSection?.typography)}
+              >
                 {descText}
               </p>
             )}
@@ -425,13 +432,13 @@ export default function Services({ servicesData, currentLang, setCurrentPage }) 
               <div className="reveal-on-scroll services-staggered-panel services-staggered-panel--wedding">
                 <div style={{ marginBottom: '36px' }}>
                   <span className="eyebrow" style={{ display: 'inline-block', marginBottom: '8px' }}>{weddingSectionLabel}</span>
-                  <h2 style={{
+                  <h2 style={getTitleStyle(servicesData?.weddingCarouselSection?.typography, {
                     fontFamily: 'var(--font-display)',
                     fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
                     color: 'var(--charcoal)',
                     fontWeight: 400,
                     margin: 0
-                  }}>
+                  })}>
                     {weddingSectionTitle}
                   </h2>
                 </div>
@@ -449,13 +456,13 @@ export default function Services({ servicesData, currentLang, setCurrentPage }) 
               <div className="reveal-on-scroll services-staggered-panel services-staggered-panel--event">
                 <div style={{ marginBottom: '36px' }}>
                   <span className="eyebrow" style={{ display: 'inline-block', marginBottom: '8px' }}>{eventSectionLabel}</span>
-                  <h2 style={{
+                  <h2 style={getTitleStyle(servicesData?.eventCarouselSection?.typography, {
                     fontFamily: 'var(--font-display)',
                     fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
                     color: 'var(--charcoal)',
                     fontWeight: 400,
                     margin: 0
-                  }}>
+                  })}>
                     {eventSectionTitle}
                   </h2>
                 </div>
@@ -478,18 +485,18 @@ export default function Services({ servicesData, currentLang, setCurrentPage }) 
           <div className="container" style={{ maxWidth: '850px' }}>
             <div style={{ textAlign: 'center', marginBottom: '48px' }} className="reveal-on-scroll">
               <span className="eyebrow">{faqsLabel}</span>
-              <h2 style={{
+              <h2 style={getTitleStyle(servicesData?.faqSection?.typography, {
                 fontFamily: 'var(--font-display)',
                 fontSize: 'clamp(2rem, 4vw, 2.8rem)',
                 color: 'var(--charcoal)',
                 marginTop: '8px',
                 marginBottom: '12px',
                 fontWeight: 400
-              }}>
+              })}>
                 {faqsTitle}
               </h2>
               {faqsDescription && (
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'var(--text-muted)', margin: 0 }}>
+                <p style={getBodyStyle(servicesData?.faqSection?.typography, { fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'var(--text-muted)', margin: 0 })}>
                   {faqsDescription}
                 </p>
               )}
@@ -622,7 +629,7 @@ export default function Services({ servicesData, currentLang, setCurrentPage }) 
         }}>
           <div className="container reveal-on-scroll" style={{ maxWidth: '850px', margin: '0 auto' }}>
             {closingText && (
-              <p style={{
+              <p style={getTitleStyle(servicesData?.preFooterCtaSection?.typography, {
                 fontFamily: 'var(--font-display)',
                 fontStyle: 'italic',
                 fontSize: 'clamp(1.2rem, 3vw, 1.6rem)',
@@ -631,7 +638,7 @@ export default function Services({ servicesData, currentLang, setCurrentPage }) 
                 marginBottom: '32px',
                 fontWeight: 300,
                 opacity: 0.95
-              }}>
+              })}>
                 {closingText}
               </p>
             )}

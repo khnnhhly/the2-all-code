@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { CheckCircle, ArrowRight } from 'lucide-react';
 import LogoSvg from './LogoSvg';
 import { urlFor } from '../lib/sanity';
+import { getTitleStyle, getBodyStyle } from '../lib/typography';
 
 export default function Contact({ contactData, currentLang }) {
   const [formData, setFormData] = useState({
@@ -175,9 +176,9 @@ export default function Contact({ contactData, currentLang }) {
         <div className="contact-cinematic-grain" aria-hidden="true" />
         <div className="container contact-cinematic-content">
           <div className="contact-hero-copy reveal-on-scroll">
-            <h1 className="contact-hero-label">{pageLabel}</h1>
+            <h1 className="contact-hero-label" style={getTitleStyle(contactData?.heroSection?.typography)}>{pageLabel}</h1>
             {contactDesc && (
-              <p className="contact-hero-subtext">
+              <p className="contact-hero-subtext" style={getBodyStyle(contactData?.heroSection?.typography)}>
                 {contactDesc}
               </p>
             )}
@@ -207,7 +208,7 @@ export default function Contact({ contactData, currentLang }) {
                   <div className="contact-chat-name brand-preserve-case">The Two Planner</div>
                 </div>
               </div>
-              <div className="contact-chat-bubble">
+              <div className="contact-chat-bubble" style={getBodyStyle(contactData?.formConfig?.typography)}>
                 {chatBubbleText}
               </div>
               {!submitted && (
@@ -413,7 +414,7 @@ export default function Contact({ contactData, currentLang }) {
           }} />
 
           <div className="container reveal-on-scroll" style={{ position: 'relative', zIndex: 3, maxWidth: '800px', margin: '0 auto', padding: '0 24px' }}>
-            <p style={{
+            <p style={getTitleStyle(contactData?.bottomBanner?.typography, {
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(1.4rem, 3.5vw, 2.2rem)',
               fontStyle: 'italic',
@@ -422,16 +423,16 @@ export default function Contact({ contactData, currentLang }) {
               marginBottom: '20px',
               fontWeight: 400,
               textShadow: '0 2px 20px rgba(0, 0, 0, 0.4)'
-            }}>
+            })}>
               {closingText}
             </p>
-            <p style={{
+            <p style={getBodyStyle(contactData?.bottomBanner?.typography, {
               fontFamily: 'var(--font-body)',
               fontSize: '0.85rem',
               color: 'rgba(255, 255, 255, 0.75)',
               letterSpacing: '0.12em',
               textTransform: 'none'
-            }}>
+            })}>
               {closingSig}
             </p>
           </div>

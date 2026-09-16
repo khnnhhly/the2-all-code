@@ -1,7 +1,7 @@
-'use client';
 import React from 'react';
 import OptimizedImage from './OptimizedImage';
 import { urlFor } from '../lib/sanity';
+import { getTitleStyle, getBodyStyle } from '../lib/typography';
 
 export default function About({ aboutData, currentLang, setCurrentPage }) {
   const defaultHeroBg = 'https://i.ibb.co/xqCTPK63/Ghi-Ma-n-hi-nh-2026-06-02-lu-c-9-36-36-SA-online-video-cutter-com-1-1.gif';
@@ -70,8 +70,8 @@ export default function About({ aboutData, currentLang, setCurrentPage }) {
         <div className="about-video-hero-overlay" aria-hidden="true" />
         <div className="container about-video-hero-content">
           <div className="reveal-on-scroll about-video-hero-title">
-            <span className="about-video-hero-about">{pageLabel}</span>
-            <span className="about-video-hero-brand">{pageTitle}</span>
+            <span className="about-video-hero-about" style={getTitleStyle(aboutData?.heroSection?.typography)}>{pageLabel}</span>
+            <span className="about-video-hero-brand" style={getBodyStyle(aboutData?.heroSection?.typography)}>{pageTitle}</span>
           </div>
         </div>
       </section>
@@ -86,8 +86,8 @@ export default function About({ aboutData, currentLang, setCurrentPage }) {
         <div className="container">
           <div className="about-values-grid">
             <div className="reveal-on-scroll about-value-panel">
-              <span className="about-value-heading">{missionLabel}</span>
-              <p>
+              <span className="about-value-heading" style={getTitleStyle(aboutData?.missionVisionSection?.typography)}>{missionLabel}</span>
+              <p style={getBodyStyle(aboutData?.missionVisionSection?.typography)}>
                 {missionText.split('\n').map((line, i) => (
                   <React.Fragment key={i}>
                     {line}
@@ -97,8 +97,8 @@ export default function About({ aboutData, currentLang, setCurrentPage }) {
               </p>
             </div>
             <div className="reveal-on-scroll delay-150 about-value-panel">
-              <span className="about-value-heading">{visionLabel}</span>
-              <p>
+              <span className="about-value-heading" style={getTitleStyle(aboutData?.missionVisionSection?.typography)}>{visionLabel}</span>
+              <p style={getBodyStyle(aboutData?.missionVisionSection?.typography)}>
                 {visionText.split('\n').map((line, i) => (
                   <React.Fragment key={i}>
                     {line}
@@ -116,12 +116,12 @@ export default function About({ aboutData, currentLang, setCurrentPage }) {
           <div className="container" style={{ maxWidth: '1100px' }}>
             <div style={{ textAlign: 'center', marginBottom: '56px' }} className="reveal-on-scroll">
               <span className="eyebrow">{testimonialsTag}</span>
-              <h2 style={{
+              <h2 style={getTitleStyle(aboutData?.testimonialsSection?.typography, {
                 fontFamily: 'var(--font-display)',
                 fontSize: 'clamp(2rem, 4vw, 2.8rem)',
                 color: 'var(--charcoal)',
                 fontWeight: 400
-              }}>
+              })}>
                 {testimonialsTitle}
               </h2>
             </div>

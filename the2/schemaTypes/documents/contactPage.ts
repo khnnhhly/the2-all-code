@@ -46,6 +46,11 @@ export default defineType({
           title: 'Tagline',
           type: 'localeString',
         }),
+        defineField({
+          name: 'typography',
+          title: 'Cài đặt Font & Cỡ chữ (Typography)',
+          type: 'sectionTypography',
+        }),
       ],
     }),
 
@@ -103,6 +108,11 @@ export default defineType({
           title: 'Submit Button Label',
           type: 'localeString',
         }),
+        defineField({
+          name: 'typography',
+          title: 'Cài đặt Font & Cỡ chữ (Typography)',
+          type: 'sectionTypography',
+        }),
       ],
     }),
 
@@ -135,6 +145,11 @@ export default defineType({
           name: 'subtext',
           title: 'Subtext',
           type: 'localeString',
+        }),
+        defineField({
+          name: 'typography',
+          title: 'Cài đặt Font & Cỡ chữ (Typography)',
+          type: 'sectionTypography',
         }),
       ],
     }),

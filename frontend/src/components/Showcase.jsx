@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import OptimizedImage, { preloadImages } from './OptimizedImage';
 import { urlFor } from '../lib/sanity';
+import { getTitleStyle, getBodyStyle } from '../lib/typography';
 
 export default function Showcase({ worksData, projects, currentLang, setCurrentPage, targetProjectId }) {
   const [activeProject, setActiveProject] = useState(null);
@@ -189,8 +190,8 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
         <div className="showcase-brutalist-shade" aria-hidden="true" />
         <div className="container showcase-brutalist-content">
           <div className="reveal-on-scroll showcase-hero-heading">
-            <span>{pageLabel}</span>
-            {pageSubtext && <p>{pageSubtext}</p>}
+            <span style={getTitleStyle(worksData?.heroSection?.typography)}>{pageLabel}</span>
+            {pageSubtext && <p style={getBodyStyle(worksData?.heroSection?.typography)}>{pageSubtext}</p>}
           </div>
 
           {worksData?.heroSection?.regions?.length > 0 ? (
@@ -228,7 +229,7 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
 
           {pageTitle && (
             <h1 className="reveal-on-scroll delay-150 showcase-brutalist-title">
-              <span>{pageTitle}</span>
+              <span style={getTitleStyle(worksData?.heroSection?.typography)}>{pageTitle}</span>
             </h1>
           )}
         </div>
@@ -349,14 +350,14 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <h2 style={{
+          <h2 style={getTitleStyle(worksData?.preFooterCtaSection?.typography, {
             fontFamily: 'var(--font-display)',
             fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
             color: 'var(--charcoal)',
             lineHeight: 1.35,
             marginBottom: '36px',
             fontWeight: 400
-          }}>
+          })}>
             {closingText}
           </h2>
           <button 

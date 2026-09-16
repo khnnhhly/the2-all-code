@@ -88,6 +88,11 @@ export default defineType({
             }),
           ],
         }),
+        defineField({
+          name: 'typography',
+          title: 'Cài đặt Font & Cỡ chữ (Typography)',
+          type: 'sectionTypography',
+        }),
       ],
     }),
 
@@ -138,6 +143,11 @@ export default defineType({
           title: 'Closing Sign-Off',
           description: 'E.g., "Warm regards,"',
           type: 'localeString',
+        }),
+        defineField({
+          name: 'typography',
+          title: 'Cài đặt Font & Cỡ chữ (Typography)',
+          type: 'sectionTypography',
         }),
       ],
     }),
@@ -221,6 +231,11 @@ export default defineType({
             }),
           ],
         }),
+        defineField({
+          name: 'typography',
+          title: 'Cài đặt Font & Cỡ chữ (Typography)',
+          type: 'sectionTypography',
+        }),
       ],
     }),
 
@@ -257,6 +272,11 @@ export default defineType({
               },
             }),
           ],
+        }),
+        defineField({
+          name: 'typography',
+          title: 'Cài đặt Font & Cỡ chữ (Typography)',
+          type: 'sectionTypography',
         }),
       ],
     }),
@@ -311,6 +331,11 @@ export default defineType({
               ],
             }),
           ],
+        }),
+        defineField({
+          name: 'typography',
+          title: 'Cài đặt Font & Cỡ chữ (Typography)',
+          type: 'sectionTypography',
         }),
       ],
     }),
@@ -367,6 +392,11 @@ export default defineType({
             defineField({ name: 'link', title: 'Link (URL)', type: 'string' }),
           ],
         }),
+        defineField({
+          name: 'typography',
+          title: 'Cài đặt Font & Cỡ chữ (Typography)',
+          type: 'sectionTypography',
+        }),
       ],
     }),
 
@@ -405,6 +435,11 @@ export default defineType({
               type: 'localeString',
             }),
           ],
+        }),
+        defineField({
+          name: 'typography',
+          title: 'Cài đặt Font & Cỡ chữ (Typography)',
+          type: 'sectionTypography',
         }),
       ],
     }),
@@ -457,6 +492,11 @@ export default defineType({
           name: 'ctaButtonLink',
           title: 'CTA Button Link URL',
           type: 'string',
+        }),
+        defineField({
+          name: 'typography',
+          title: 'Cài đặt Font & Cỡ chữ (Typography)',
+          type: 'sectionTypography',
         }),
       ],
     }),

@@ -4,6 +4,7 @@ import navItem from './objects/navItem'
 import socialLink from './objects/socialLink'
 import regionGroup from './objects/regionGroup'
 import pageComponents from './objects/pageComponents'
+import sectionTypography from './objects/sectionTypography'
 
 // ACF Blocks
 import heroBlock from './objects/blocks/heroBlock'
@@ -31,6 +32,7 @@ export const schemaTypes = [
   socialLink,
   regionGroup,
   pageComponents,
+  sectionTypography,
 
   // Blocks
   heroBlock,

@@ -6,6 +6,7 @@ import HeroSection from './HeroSection';
 import HomeShowcaseCarousel from './HomeShowcaseCarousel';
 import HomeServiceRow from './HomeServiceRow';
 import { urlFor } from '../lib/sanity';
+import { getTitleStyle, getBodyStyle, getScriptStyle } from '../lib/typography';
 
 export default function Home({ homeData, testimonials, projects, currentLang, setCurrentPage }) {
   const [heroColorized, setHeroColorized] = useState(false);
@@ -155,6 +156,13 @@ export default function Home({ homeData, testimonials, projects, currentLang, se
   const closingText = getLocalizedText(homeData?.preFooterCtaSection?.bannerSubtext) || 'Based in Vietnam · available worldwide · thetwoplanner@gmail.com';
   const ctaTell = getLocalizedText(homeData?.preFooterCtaSection?.ctaButtonText) || (currentLang === 'vi' ? 'Hãy cho chúng tôi cơ hội được lắng nghe câu chuyện của bạn!' : 'Tell us your story');
 
+  const letterTypo = homeData?.letterSection?.typography;
+  const weddingTypo = homeData?.weddingServicesSection?.typography;
+  const eventTypo = homeData?.eventServicesSection?.typography;
+  const showcaseTypo = homeData?.showcaseSection?.typography;
+  const videoTypo = homeData?.testimonialVideoSection?.typography;
+  const ctaTypo = homeData?.preFooterCtaSection?.typography;
+
   return (
     <div id="home">
       {/* Hero */}
@@ -166,14 +174,19 @@ export default function Home({ homeData, testimonials, projects, currentLang, se
           <div className="reveal-on-scroll" style={{ display: 'flex', flexDirection: 'column', gap: '28px', alignItems: 'center' }}>
             {quoteParagraphs.length > 0 && (
               <div className="home-quote-body">
-                {quoteParagraphs.map((para, i) => (
-                  <p
-                    key={i}
-                    className={`${i === 0 ? 'home-quote-salutation' : ''}${i === quoteParagraphs.length - 1 ? ' home-quote-signoff' : ''}`.trim()}
-                  >
-                    {para}
-                  </p>
-                ))}
+                {quoteParagraphs.map((para, i) => {
+                  const isScript = i === 0 || i === quoteParagraphs.length - 1;
+                  const itemStyle = isScript ? getScriptStyle(letterTypo) : getBodyStyle(letterTypo);
+                  return (
+                    <p
+                      key={i}
+                      className={`${i === 0 ? 'home-quote-salutation' : ''}${i === quoteParagraphs.length - 1 ? ' home-quote-signoff' : ''}`.trim()}
+                      style={itemStyle}
+                    >
+                      {para}
+                    </p>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -186,18 +199,18 @@ export default function Home({ homeData, testimonials, projects, currentLang, se
           <div className="reveal-on-scroll" style={{ textAlign: 'center', marginBottom: '56px' }}>
             <span className="eyebrow">{servicesLabel}</span>
             {servicesTitle && (
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', color: 'var(--charcoal)', fontWeight: 400, margin: '12px 0' }}>
+              <h2 style={getTitleStyle(weddingTypo, { fontFamily: 'var(--font-display)', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', color: 'var(--charcoal)', fontWeight: 400, margin: '12px 0' })}>
                 {servicesTitle}
               </h2>
             )}
             {servicesSubtext && (
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto' }}>
+              <p style={getBodyStyle(weddingTypo, { fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto' })}>
                 {servicesSubtext}
               </p>
             )}
           </div>
 
-          <h3 className="home-services-group-title home-services-group-title--wedding">
+          <h3 className="home-services-group-title home-services-group-title--wedding" style={getTitleStyle(weddingTypo)}>
             {weddingServicesHeading}
           </h3>
           <div className="home-services-editorial">
@@ -213,7 +226,7 @@ export default function Home({ homeData, testimonials, projects, currentLang, se
 
           {eventServices.length > 0 && (
             <>
-              <h3 className="home-services-group-title home-services-group-title--event">
+              <h3 className="home-services-group-title home-services-group-title--event" style={getTitleStyle(eventTypo)}>
                 {eventServicesHeading}
               </h3>
               <div className="home-event-services-list">
@@ -243,11 +256,11 @@ export default function Home({ homeData, testimonials, projects, currentLang, se
           <div className="container" style={{ maxWidth: '1100px' }}>
             <div style={{ textAlign: 'center', marginBottom: '40px' }} className="reveal-on-scroll">
               <span className="eyebrow">{showcaseLabel}</span>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.6rem, 3.5vw, 2.4rem)', color: 'var(--charcoal)', fontWeight: 400, margin: '12px 0' }}>
+              <h2 style={getTitleStyle(showcaseTypo, { fontFamily: 'var(--font-display)', fontSize: 'clamp(1.6rem, 3.5vw, 2.4rem)', color: 'var(--charcoal)', fontWeight: 400, margin: '12px 0' })}>
                 {showcaseTitle}
               </h2>
               {showcaseSubtitle && (
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'var(--text-muted)', maxWidth: '560px', margin: '0 auto', lineHeight: 1.7 }}>
+                <p style={getBodyStyle(showcaseTypo, { fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'var(--text-muted)', maxWidth: '560px', margin: '0 auto', lineHeight: 1.7 })}>
                   {showcaseSubtitle}
                 </p>
               )}
@@ -272,25 +285,25 @@ export default function Home({ homeData, testimonials, projects, currentLang, se
       {cleanVideoUrl && (
         <section className="section-padding home-testimonials-video-section" style={{ backgroundColor: 'var(--white)', borderBottom: 0, paddingBottom: 0, overflow: 'hidden' }}>
           <div className="container" style={{ maxWidth: '1100px', textAlign: 'center', marginBottom: '32px' }}>
-            <p className="reveal-on-scroll" style={{
+            <p className="reveal-on-scroll" style={getTitleStyle(videoTypo, {
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(1.15rem, 2.5vw, 1.45rem)',
               color: 'var(--charcoal)',
               fontStyle: 'italic',
               lineHeight: 1.6,
               margin: '0 auto 28px'
-            }}>
+            })}>
               {videoIntro}
             </p>
             {videoCaption && (
-              <p className="reveal-on-scroll" style={{
+              <p className="reveal-on-scroll" style={getBodyStyle(videoTypo, {
                 fontFamily: 'var(--font-body)',
                 fontSize: '0.85rem',
                 color: 'var(--text-muted)',
                 letterSpacing: '0.06em',
                 margin: '0 auto',
                 maxWidth: '640px'
-              }}>
+              })}>
                 {videoCaption}
               </p>
             )}
@@ -309,11 +322,11 @@ export default function Home({ homeData, testimonials, projects, currentLang, se
           {closingLines.length > 0 && (
             <div className="home-closing-lines">
               {closingLines.map((line, i) => (
-                <p key={i}>{line}</p>
+                <p key={i} style={getTitleStyle(ctaTypo)}>{line}</p>
               ))}
             </div>
           )}
-          <p className="home-closing-meta">{closingText}</p>
+          <p className="home-closing-meta" style={getBodyStyle(ctaTypo)}>{closingText}</p>
           <button type="button" className="hero-cta-link hero-cta-link--on-image" onClick={() => setCurrentPage('contact')}>
             {ctaTell}
           </button>

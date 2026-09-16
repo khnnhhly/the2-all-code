@@ -48,6 +48,11 @@ export default defineType({
           title: 'Subheading',
           type: 'localeString',
         }),
+        defineField({
+          name: 'typography',
+          title: 'Cài đặt Font & Cỡ chữ (Typography)',
+          type: 'sectionTypography',
+        }),
       ],
     }),
 
@@ -100,6 +105,11 @@ export default defineType({
             }),
           ],
         }),
+        defineField({
+          name: 'typography',
+          title: 'Cài đặt Font & Cỡ chữ (Typography)',
+          type: 'sectionTypography',
+        }),
       ],
     }),
 
@@ -134,6 +144,11 @@ export default defineType({
               to: [{ type: 'testimonial' }],
             }),
           ],
+        }),
+        defineField({
+          name: 'typography',
+          title: 'Cài đặt Font & Cỡ chữ (Typography)',
+          type: 'sectionTypography',
         }),
       ],
     }),
@@ -234,6 +249,11 @@ export default defineType({
             }),
           ],
         }),
+        defineField({
+          name: 'typography',
+          title: 'Cài đặt Font & Cỡ chữ (Typography)',
+          type: 'sectionTypography',
+        }),
       ],
     }),
 
@@ -270,6 +290,11 @@ export default defineType({
             defineField({ name: 'label', title: 'Label', type: 'localeString', validation: (r) => r.required() }),
             defineField({ name: 'link', title: 'Link (URL)', type: 'string', validation: (r) => r.required() }),
           ],
+        }),
+        defineField({
+          name: 'typography',
+          title: 'Cài đặt Font & Cỡ chữ (Typography)',
+          type: 'sectionTypography',
         }),
       ],
     }),

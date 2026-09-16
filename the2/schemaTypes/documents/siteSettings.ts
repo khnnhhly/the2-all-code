@@ -150,6 +150,14 @@ export default defineType({
       type: 'localeString',
     }),
 
+    // Global Typography Settings
+    defineField({
+      name: 'typography',
+      title: 'Cài đặt Font & Cỡ chữ toàn website (Global Typography)',
+      description: 'Cài đặt kiểu font và kích thước mặc định cho toàn bộ trang (các phần riêng lẻ có thể ghi đè cài đặt này)',
+      type: 'sectionTypography',
+    }),
+
     // Meta SEO fields
     defineField({
       name: 'seoTitle',
