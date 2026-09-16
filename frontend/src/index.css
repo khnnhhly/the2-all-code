@@ -1,18 +1,17 @@
 /* ─────────────────────────────────────────────────────
    The TWO Planner — Quiet Luxury Design System
    ───────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&family=Mulish:wght@300;400&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap');
 :root {
   /* ── Color Palette ── */
   --bg-primary:       #ffffff;
   --bg-secondary:     #ffffff;
   --charcoal:         #2a2526;       /* Primary text - very dark gray/red */
-  --accent-primary:   #2f6f4e;
-  --accent-secondary: #2f6f4e;
-  --bg-neutral:       #99976d;       /* Olive sage — section backgrounds */
+  --accent-primary:   #8e0413;       /* Crimson Red */
+  --accent-secondary: #8e0413;
+  --bg-neutral:       #f6f3ee;       /* Soft warm cream — section backgrounds */
   --highlight:        #ffd570;       /* Champagne gold — sparingly */
   --white:            #ffffff;
-  --border-muted:     rgba(47, 111, 78, 0.14);
+  --border-muted:     rgba(142, 4, 19, 0.14);
   --text-muted:       #8a8f98;       /* Light gray for secondary text */
 
   /* Legacy aliases */
@@ -25,7 +24,7 @@
   /* ── Typography ── */
   --font-body:    'Mulish', 'Helvetica Neue', Arial, sans-serif;
   --font-display: 'Old Standard TT', Georgia, serif;
-  --font-hand:    'Mrs Saint Delafield', cursive;
+  --font-hand:    'Mrs Saint Delafield', cursive, 'Old Standard TT', serif;
 
   /* ── Motion ── */
   --transition:      0.3s ease;
@@ -93,7 +92,9 @@ body {
   letter-spacing: 0;
   overflow-x: hidden;
   font-size: 15px;
-  font-feature-settings: "calt", "kern", "liga", "ss03";
+  font-feature-settings: "calt", "kern", "liga";
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 /* ── Typography defaults ── */
@@ -101,7 +102,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 400;
   color: var(--accent-primary);
-  font-feature-settings: "calt", "kern", "liga", "ss03";
+  font-feature-settings: "calt", "kern", "liga";
   letter-spacing: 0;
 }
 
@@ -477,12 +478,6 @@ q,
 .parallax-slide .parallax-image {
   object-fit: cover !important;
 }
-.hero-video-bg {
-  background:
-    linear-gradient(rgba(18, 17, 16, 0.12), rgba(18, 17, 16, 0.22)),
-    url('/assets/site-media/services-hero-optimized.webp') center / cover no-repeat !important;
-  background-attachment: fixed !important;
-}
 .showcase-brutalist-bg {
   background-image: url('/assets/site-media/home-showcase-portrait-02.webp') !important;
 }
@@ -795,7 +790,8 @@ q,
 .about-testimonial-meta,
 .about-testimonial-quote {
   text-wrap: balance;
-  word-break: keep-all;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 .about-testimonial-quote {
   line-height: 1.28;
@@ -848,7 +844,7 @@ q,
 .services-list-section {
   background-color: var(--accent-primary) !important;
   background-image:
-    linear-gradient(rgba(47, 111, 78, 0.88), rgba(47, 111, 78, 0.92)),
+    linear-gradient(rgba(142, 4, 19, 0.88), rgba(142, 4, 19, 0.92)),
     url('https://i.ibb.co/Lz27BHWm/R-J-238.jpg') !important;
   background-size: cover !important;
   background-position: center !important;
@@ -1646,7 +1642,7 @@ q,
 .services-list-section {
   background-color: var(--accent-primary) !important;
   background-image:
-    linear-gradient(rgba(47, 111, 78, 0.88), rgba(47, 111, 78, 0.92)),
+    linear-gradient(rgba(142, 4, 19, 0.88), rgba(142, 4, 19, 0.92)),
     url('https://i.ibb.co/Lz27BHWm/R-J-238.jpg') !important;
   background-size: cover !important;
   background-position: center !important;
@@ -1754,7 +1750,7 @@ q,
 
 .services-list-section {
   background-image:
-    linear-gradient(rgba(47, 111, 78, 0.88), rgba(47, 111, 78, 0.92)),
+    linear-gradient(rgba(142, 4, 19, 0.88), rgba(142, 4, 19, 0.92)),
     url('https://i.ibb.co/tMWrnFtg/image.jpg') !important;
   background-size: cover !important;
   background-position: center !important;
@@ -1890,14 +1886,14 @@ q,
   align-items: center;
   justify-content: center;
   background: #fff;
-  border: 1px solid rgba(47, 111, 78, 0.12);
+  border: 1px solid rgba(142, 4, 19, 0.12);
   filter: none;
 }
 .contact-chat-bubble {
   max-width: 690px;
   background: #fff;
   color: var(--charcoal);
-  border: 1px solid rgba(47, 111, 78, 0.12);
+  border: 1px solid rgba(142, 4, 19, 0.12);
 }
 .contact-choice-grid {
   display: flex;
@@ -1908,7 +1904,7 @@ q,
   max-width: 720px;
 }
 .contact-choice-chip {
-  border: 1px solid rgba(47, 111, 78, 0.18);
+  border: 1px solid rgba(142, 4, 19, 0.18);
   background: #fff;
   color: var(--charcoal);
   border-radius: 999px;
@@ -2347,11 +2343,12 @@ li strong {
 
 /* Quote — keep on one line where possible */
 .quote-single-line {
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
-@media (max-width: 768px) {
+@media (min-width: 1024px) {
   .quote-single-line {
-    white-space: normal;
+    white-space: nowrap;
   }
 }
 
@@ -3710,10 +3707,22 @@ li strong {
   min-width: 0;
 }
 .about-testimonial-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
   font-family: var(--font-body);
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
+}
+.about-testimonial-meta strong {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--charcoal);
+  letter-spacing: 0.02em;
+  display: block;
+  margin-bottom: 2px;
 }
 .about-testimonial-quote {
   font-family: var(--font-display);
@@ -4023,11 +4032,13 @@ li strong {
 }
 
 .exp-title-single-line {
-  white-space: nowrap;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
-@media (max-width: 900px) {
+@media (min-width: 1200px) {
   .exp-title-single-line {
-    white-space: normal;
+    white-space: nowrap;
   }
 }
 
@@ -4851,7 +4862,7 @@ li strong {
 .services-list-section {
   background-color: var(--accent-primary) !important;
   background-image:
-    linear-gradient(rgba(47, 111, 78, 0.88), rgba(47, 111, 78, 0.92)),
+    linear-gradient(rgba(142, 4, 19, 0.88), rgba(142, 4, 19, 0.92)),
     url('https://i.ibb.co/Lz27BHWm/R-J-238.jpg') !important;
   background-size: cover !important;
   background-position: center !important;
@@ -5226,7 +5237,7 @@ button[style*='var(--accent-primary)'] { background-color: #5a5e27 !important; b
 
 
 /* Media recovery: ImgBB assets have a local visual fallback; page heroes use shipped media. */
-.hero-video-bg { overflow: hidden !important; background: #171514 !important; }
+.hero-video-bg { overflow: hidden !important; background-color: #171514 !important; }
 .hero-video-bg iframe { width: 100%; height: 100%; border: 0; pointer-events: none; transform: scale(1.12); }
 .about-video-hero-bg { background: url("/assets/site-media/home-showcase-portrait-01.webp") center / cover no-repeat; }
 .showcase-brutalist-bg { background-image: url("/assets/site-media/home-showcase-portrait-02.webp") !important; }

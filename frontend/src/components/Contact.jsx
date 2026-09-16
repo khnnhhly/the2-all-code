@@ -14,10 +14,13 @@ export default function Contact({ contactData, currentLang }) {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(false);
 
-  const getLocalizedText = (field) => {
-    if (!field) return '';
+  const getLocalizedText = (field, fallbackEn = '', fallbackVi = '') => {
+    if (!field) return currentLang === 'en' ? fallbackEn : fallbackVi;
     if (typeof field === 'string') return field;
-    return field[currentLang] || field.en || field.vi || '';
+    if (currentLang === 'en') {
+      return field.en || fallbackEn || field.vi || '';
+    }
+    return field.vi || fallbackVi || field.en || '';
   };
 
   if (!contactData) {
@@ -102,37 +105,44 @@ export default function Contact({ contactData, currentLang }) {
   };
 
   // 1. Text variables
-  const pageLabel = getLocalizedText(contactData?.heroSection?.headline) || (currentLang === 'en' ? 'Contact us' : 'Liên hệ');
-  const contactDesc = getLocalizedText(contactData?.heroSection?.subheading) || '';
-  const contactTitle = getLocalizedText(contactData?.heroSection?.description) || '';
+  const pageLabel = getLocalizedText(contactData?.heroSection?.title, 'Contact us', 'Liên hệ');
+  const contactDesc = getLocalizedText(contactData?.heroSection?.subtitle, 'Every great celebration begins with a conversation.', 'Hãy chia sẻ câu chuyện của bạn cùng The Two Planner.');
+  const contactTitle = getLocalizedText(contactData?.heroSection?.tagline, 'the two · for you two', 'the two · for you two');
 
-  const chatBubbleText = getLocalizedText(contactData?.formSection?.mainBubbleText) || "Hello! We are thrilled you're here. Let's design something unforgettable together. Tell us a bit about your dream day?";
-  const quickChoices = contactData?.formSection?.quickChoices?.map(x => getLocalizedText(x)) || [
-    'A romantic wedding',
-    'An intimate proposal',
-    'An anniv/private party',
-    'Something else!'
-  ];
+  const defaultGreetingEn = "Hello! We are thrilled you're here. Let's design something unforgettable together. Tell us a bit about your dream day?";
+  const defaultGreetingVi = "Chào bạn! Rất vui được đón tiếp. Hãy cùng nhau thiết kế nên những khoảnh khắc đáng nhớ. Hãy chia sẻ đôi chút về ngày mơ ước của bạn nhé?";
+  const chatBubbleText = getLocalizedText(contactData?.formConfig?.formGreetingText, defaultGreetingEn, defaultGreetingVi);
 
-  const successMsgTitle = getLocalizedText(contactData?.formSection?.successMessageTitle) || (currentLang === 'en' ? 'Thank you!' : 'Cảm ơn bạn!');
-  const successMsgDesc = getLocalizedText(contactData?.formSection?.successMessageDescription) || '';
-  const successMsgOutro = getLocalizedText(contactData?.formSection?.successMessageOutro) || '';
-  const formNote = getLocalizedText(contactData?.formSection?.notes) || '';
+  const rawChoices = contactData?.formConfig?.eventTypeOptions?.map(x => getLocalizedText(x)).filter(Boolean);
+  const quickChoices = (rawChoices && rawChoices.length > 0) ? rawChoices : (
+    currentLang === 'en'
+      ? ['A romantic wedding', 'An intimate proposal', 'An anniv/private party', 'Something else!']
+      : ['Đám cưới lãng mạn', 'Lời cầu hôn thân mật', 'Kỷ niệm / Tiệc riêng tư', 'Dịch vụ khác']
+  );
 
-  const closingText = getLocalizedText(contactData?.preFooterCtaSection?.headline);
-  const closingSig = getLocalizedText(contactData?.preFooterCtaSection?.subheading) || 'the two · for you two';
+  const successMsgTitle = currentLang === 'en' ? 'Thank you!' : 'Cảm ơn bạn!';
+  const successMsgDesc = getLocalizedText(
+    contactData?.formConfig?.responseNotice,
+    'We typically respond within 24–48 business hours.',
+    'Chúng tôi thường phản hồi trong vòng 24-48 giờ làm việc.'
+  );
+  const successMsgOutro = '';
+  const formNote = '';
+
+  const closingText = getLocalizedText(contactData?.bottomBanner?.headline, 'We are always listening', 'Chúng tôi luôn lắng nghe');
+  const closingSig = getLocalizedText(contactData?.bottomBanner?.subtext, 'the two · for you two', 'the two · for you two');
 
   let heroBgUrl = '/assets/site-media/home-showcase-portrait-03.webp';
-  if (contactData?.heroSection?.backgroundImage) {
+  if (contactData?.heroSection?.heroImage) {
     try {
-      heroBgUrl = urlFor(contactData.heroSection.backgroundImage).url() || heroBgUrl;
+      heroBgUrl = urlFor(contactData.heroSection.heroImage).url() || heroBgUrl;
     } catch (e) {}
   }
 
   let closingBgUrl = '/assets/site-media/home-showcase-portrait-03.webp';
-  if (contactData?.preFooterCtaSection?.backgroundImage) {
+  if (contactData?.bottomBanner?.bgImage) {
     try {
-      closingBgUrl = urlFor(contactData.preFooterCtaSection.backgroundImage).url() || closingBgUrl;
+      closingBgUrl = urlFor(contactData.bottomBanner.bgImage).url() || closingBgUrl;
     } catch (e) {}
   }
 

@@ -176,8 +176,21 @@ export function getFallbackData(currentLang) {
     works: {
       heroSection: {
         headline: isVi ? 'Các dự án' : 'Our works',
-        subheading: 'Love stories we had the privilege to write',
-        regions: []
+        subheading: isVi ? 'Những câu chuyện tình yêu mà chúng tôi vinh hạnh được đồng hành' : 'Love stories we had the privilege to write',
+        regions: [
+          {
+            regionName: isVi ? 'Miền Bắc' : 'North',
+            venues: isVi ? ['Hà Nội', 'Ninh Bình', 'Hải Phòng'] : ['Ha Noi', 'Ninh Binh', 'Hai Phong']
+          },
+          {
+            regionName: isVi ? 'Miền Trung' : 'Central',
+            venues: isVi ? ['Đà Nẵng', 'Nha Trang', 'Phú Yên', 'Đà Lạt'] : ['Da Nang', 'Nha Trang', 'Phu Yen', 'Da Lat']
+          },
+          {
+            regionName: isVi ? 'Miền Nam' : 'South',
+            venues: isVi ? ['Sài Gòn', 'Vũng Tàu', 'Ninh Thuận', 'Bình Thuận'] : ['Sai Gon', 'Vung Tau', 'Ninh Thuan', 'Binh Thuan']
+          }
+        ]
       },
       portfolioSection: {
         filterTabs: ['all', 'wedding', 'events', 'destination'],
@@ -192,26 +205,114 @@ export function getFallbackData(currentLang) {
     },
     contact: {
       heroSection: {
-        headline: isVi ? 'Liên hệ' : 'Contact us',
-        subheading: isVi ? 'Hãy chia sẻ câu chuyện của bạn' : 'Tell us your story'
+        title: isVi ? 'Liên hệ' : 'Contact us',
+        subtitle: isVi ? 'Hãy chia sẻ câu chuyện của bạn cùng The Two Planner.' : 'Every great celebration begins with a conversation.',
+        tagline: 'the two · for you two'
       },
-      formSection: {
-        mainBubbleText: isVi 
-          ? 'Chào bạn! Rất vui được đón tiếp. Hãy để lại lời nhắn nhé!' 
-          : 'Hello! We are thrilled you\'re here. Tell us a bit about your dream day?',
-        quickChoices: ['A romantic wedding', 'An intimate proposal', 'An anniv/private party'],
-        successMessageTitle: isVi ? 'Gửi thành công!' : 'Request Sent!',
-        successMessageDescription: isVi ? 'Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi sớm nhất.' : 'Thank you for reaching out. We will get back to you shortly.',
-        successMessageOutro: '',
-        notes: ''
+      formConfig: {
+        formGreetingTitle: isVi ? 'Lời chào' : 'Greeting',
+        formGreetingText: isVi 
+          ? 'Chào bạn! Rất vui được đón tiếp. Hãy cùng nhau thiết kế nên những khoảnh khắc đáng nhớ. Hãy chia sẻ đôi chút về ngày mơ ước của bạn nhé?'
+          : "Hello! We are thrilled you're here. Let's design something unforgettable together. Tell us a bit about your dream day?",
+        eventTypeOptions: isVi ? [
+          'Đám cưới lãng mạn',
+          'Lời cầu hôn thân mật',
+          'Kỷ niệm / Tiệc riêng tư',
+          'Dịch vụ khác'
+        ] : [
+          'A romantic wedding',
+          'An intimate proposal',
+          'An anniv/private party',
+          'Something else!'
+        ],
+        responseNotice: isVi ? 'Chúng tôi thường phản hồi trong vòng 24-48 giờ làm việc.' : 'We typically respond within 24–48 business hours.',
+        submitButtonLabel: isVi ? 'Gửi yêu cầu' : 'Send request'
       },
-      preFooterCtaSection: {
+      bottomBanner: {
         headline: isVi ? 'Chúng tôi luôn lắng nghe' : 'We are always listening',
-        subheading: 'thetwoplanner@gmail.com'
+        subtext: 'thetwoplanner@gmail.com'
       }
     },
     testimonials: [],
-    projects: []
+    projects: [
+      {
+        _id: 'project-1',
+        id: 'the-cliffside-vows',
+        title: 'The Cliffside Vows',
+        category: 'wedding',
+        serviceType: isVi ? 'Lập kế hoạch đám cưới toàn diện' : 'Full Wedding Planning',
+        location: 'Nha Trang',
+        year: '2025',
+        thumbnailImage: '/assets/site-media/home-showcase-portrait-01.webp',
+        heroDetailImage: '/assets/site-media/home-showcase-portrait-01.webp',
+        galleryImages: [
+          '/assets/site-media/home-showcase-portrait-01.webp',
+          '/assets/site-media/home-showcase-portrait-02.webp',
+          '/assets/site-media/home-showcase-portrait-03.webp',
+          '/assets/site-media/home-showcase-portrait-04.webp'
+        ],
+        summaryQuote: isVi ? 'Một hôn lễ tinh khôi giữa biển trời bao la.' : 'An intimate cliffside celebration bathed in golden sunset.',
+        highlightFeedback: isVi ? 'The Two Planner đã biến giấc mơ của chúng tôi thành hiện thực trọn vẹn từng chi tiết.' : 'The Two Planner turned our wildest dreams into an effortless reality.',
+        closingThought: isVi ? 'Khoảnh khắc trọn đời ghi dấu bằng sự chân thành.' : 'Timeless memories crafted with love and precision.'
+      },
+      {
+        _id: 'project-2',
+        id: 'serenade-in-pine',
+        title: 'Serenade in Pine',
+        category: 'destination',
+        serviceType: isVi ? 'Đám cưới xa nhà & Concept thiết kế' : 'Destination Wedding & Styling',
+        location: 'Da Lat',
+        year: '2025',
+        thumbnailImage: '/assets/site-media/home-showcase-portrait-02.webp',
+        heroDetailImage: '/assets/site-media/home-showcase-portrait-02.webp',
+        galleryImages: [
+          '/assets/site-media/home-showcase-portrait-02.webp',
+          '/assets/site-media/home-showcase-portrait-01.webp',
+          '/assets/site-media/home-showcase-portrait-03.webp'
+        ],
+        summaryQuote: isVi ? 'Khúc hoan ca giữa rừng thông mù sương lãng mạn.' : 'A misty pine forest symphony echoing tender promises.',
+        highlightFeedback: isVi ? 'Cảm xúc trọn vẹn và không gian tuyệt đẹp vượt ngoài mong đợi.' : 'Every detail felt authentic, intimate, and deeply ours.',
+        closingThought: isVi ? 'Đám cưới mang hơi thở thiên nhiên mộc mạc và sang trọng.' : 'Where rustic nature meets effortless luxury.'
+      },
+      {
+        _id: 'project-3',
+        id: 'heritage-elegance',
+        title: 'Heritage Elegance',
+        category: 'wedding',
+        serviceType: isVi ? 'Điều phối & Lên ý tưởng trang trí' : 'Day-of Coordination & Design',
+        location: 'Ha Noi',
+        year: '2024',
+        thumbnailImage: '/assets/site-media/home-showcase-portrait-03.webp',
+        heroDetailImage: '/assets/site-media/home-showcase-portrait-03.webp',
+        galleryImages: [
+          '/assets/site-media/home-showcase-portrait-03.webp',
+          '/assets/site-media/home-showcase-portrait-04.webp',
+          '/assets/site-media/home-showcase-portrait-01.webp'
+        ],
+        summaryQuote: isVi ? 'Nét thanh lịch truyền thống hòa quyện hơi thở đương đại.' : 'Timeless heritage woven into modern romantic charm.',
+        highlightFeedback: isVi ? 'Sự chu đáo của hai bạn planner khiến cả hai gia đình đều an tâm tuyệt đối.' : 'Our families were at complete peace thanks to the dedicated planning.',
+        closingThought: isVi ? 'Tình yêu và cội nguồn gặp gỡ trong sự trang trọng.' : 'Honoring legacy with sophisticated quiet luxury.'
+      },
+      {
+        _id: 'project-4',
+        id: 'midnight-reverie',
+        title: 'Midnight Reverie',
+        category: 'events',
+        serviceType: isVi ? 'Tổ chức tiệc thân mật & Lễ kỷ niệm' : 'Private Celebration & Anniversary',
+        location: 'Sai Gon',
+        year: '2024',
+        thumbnailImage: '/assets/site-media/home-showcase-portrait-04.webp',
+        heroDetailImage: '/assets/site-media/home-showcase-portrait-04.webp',
+        galleryImages: [
+          '/assets/site-media/home-showcase-portrait-04.webp',
+          '/assets/site-media/home-showcase-portrait-02.webp',
+          '/assets/site-media/home-showcase-portrait-03.webp'
+        ],
+        summaryQuote: isVi ? 'Dạ tiệc ánh nến lung linh dưới bầu trời đêm đô thị.' : 'Candlelit tables under an urban canopy of stars.',
+        highlightFeedback: isVi ? 'Một buổi tối không thể nào quên cho những người bạn thân thiết nhất.' : 'An unforgettable evening crafted with warmth and elegance.',
+        closingThought: isVi ? 'Những kỷ niệm sống mãi cùng thời gian.' : 'Memories that linger like soft music after midnight.'
+      }
+    ]
   };
 }
 
@@ -226,7 +327,7 @@ export function mergeSanityData(sanityData, currentLang) {
     services: { ...fallback.services, ...sanityData.services },
     works: { ...fallback.works, ...sanityData.works },
     contact: { ...fallback.contact, ...sanityData.contact },
-    testimonials: sanityData.testimonials || fallback.testimonials,
-    projects: sanityData.projects || fallback.projects
+    testimonials: sanityData.testimonials?.length ? sanityData.testimonials : fallback.testimonials,
+    projects: sanityData.projects?.length ? sanityData.projects : fallback.projects
   };
 }

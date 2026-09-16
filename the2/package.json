@@ -10,7 +10,8 @@
     "deploy-graphql": "sanity graphql deploy",
     "dev": "sanity dev",
     "start": "sanity start",
-    "migrate:content": "sanity exec migration/scripts/importContent.js --with-user-token"
+    "migrate:content": "sanity exec migration/scripts/importContent.js --with-user-token",
+    "normalize:singletons": "sanity exec migration/scripts/normalizeSingletons.js --with-user-token"
   },
   "keywords": [
     "sanity"
@@ -19,10 +20,10 @@
     "@sanity/client": "^7.23.2",
     "@sanity/icons": "^5.2.1",
     "@sanity/image-url": "^2.1.1",
-    "@sanity/vision": "^6.5.0",
+    "@sanity/vision": "^6.13.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "sanity": "^6.5.0",
+    "sanity": "^6.13.2",
     "styled-components": "^6.1.18"
   },
   "devDependencies": {

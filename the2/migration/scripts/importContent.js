@@ -41,6 +41,8 @@ async function run() {
   for (const source of data.projects || []) { const x = await images(source); await client.createOrReplace({_id: projectIds.get(source.slug), _type: 'project', ...x, story: pt(x.story), services: (source.serviceSlugs || []).map((s) => ref(serviceIds.get(s))).filter(Boolean)}) }
   const home = await images(data.home || {}); await client.createOrReplace({_id: 'site.home', _type: 'homePage', ...home, introduction: pt(home.introduction), featuredServices: (data.home?.featuredServiceSlugs || []).map((s) => ref(serviceIds.get(s))).filter(Boolean), featuredProjects: (data.home?.featuredProjectSlugs || []).map((s) => ref(projectIds.get(s))).filter(Boolean)})
   const about = await images(data.about || {}); await client.createOrReplace({_id: 'site.about', _type: 'aboutPage', ...about, story: pt(about.story)})
+  if (data.servicesPage && !Array.isArray(data.servicesPage)) { const servicesPage = await images(data.servicesPage); await client.createOrReplace({_id: 'site.services', _type: 'servicesPage', ...servicesPage}) }
+  if (data.worksPage && !Array.isArray(data.worksPage)) { const worksPage = await images(data.worksPage); await client.createOrReplace({_id: 'site.works', _type: 'worksPage', ...worksPage}) }
   await client.createOrReplace({_id: 'site.contact', _type: 'contactPage', ...(await images(data.contact || {}))})
   await client.createOrReplace({_id: 'site.settings', _type: 'siteSettings', ...(await images(data.settings || {}))})
   await client.createOrReplace({_id: 'site.navigation', _type: 'navigation', ...(data.navigation || {})})

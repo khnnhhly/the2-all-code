@@ -286,9 +286,10 @@ export default function Services({ servicesData, currentLang, setCurrentPage }) 
   const mapServiceItem = (item) => {
     if (!item) return null;
     let imgUrl = '';
-    if (item.cardImage) {
+    const image = item.cardImage || item.image;
+    if (image) {
       try {
-        imgUrl = urlFor(item.cardImage).url() || '';
+        imgUrl = urlFor(image).url() || '';
       } catch (e) {}
     }
     const serviceId = getServiceId(item);
@@ -376,9 +377,10 @@ export default function Services({ servicesData, currentLang, setCurrentPage }) 
   }
 
   let heroBgUrl = '/assets/site-media/services-hero-optimized.webp';
-  if (servicesData?.heroSection?.heroImage) {
+  const serviceHeroImage = servicesData?.heroSection?.heroImage || servicesData?.heroImage;
+  if (serviceHeroImage) {
     try {
-      heroBgUrl = urlFor(servicesData.heroSection.heroImage).url() || heroBgUrl;
+      heroBgUrl = urlFor(serviceHeroImage).url() || heroBgUrl;
     } catch (e) {}
   }
 

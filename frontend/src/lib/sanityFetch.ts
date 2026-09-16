@@ -27,11 +27,12 @@ export async function getHomeData() {
       ...,
       ${settingsFields}
     },
-    "home": *[(_type in ["homePage", "page", "home"] || _id in ["site.home", "drafts.site.home", "home"]) && (_id in ["site.home", "drafts.site.home", "home"] || slug.current == "home" || title match "*Home*" || title match "*Trang chủ*")] | order((_id == "site.home") desc, _updatedAt desc)[0] {
+    "home": *[(_type == "homePage" || (_type in ["page", "home"] && (_id in ["site.home", "drafts.site.home", "home"] || slug.current == "home" || title match "*Home*" || title match "*Trang chủ*")))] | order((_id == "site.home") desc, _updatedAt desc)[0] {
       ...,
       heroSection {
         ...,
         backgroundImage { asset->, alt { en, vi } },
+        heroImage { asset->, alt { en, vi } },
         smallSubheading { en, vi },
         mainHeadline { en, vi },
         description { en, vi },
@@ -124,7 +125,7 @@ export async function getAboutData() {
       ...,
       ${settingsFields}
     },
-    "about": *[(_type in ["aboutPage", "page", "about"] || _id in ["site.about", "drafts.site.about", "about"]) && (_id in ["site.about", "drafts.site.about", "about"] || slug.current == "about" || title match "*About*" || title match "*Giới thiệu*")] | order((_id == "site.about") desc, _updatedAt desc)[0] {
+    "about": *[(_type == "aboutPage" || (_type in ["page", "about"] && (_id in ["site.about", "drafts.site.about", "about"] || slug.current == "about" || title match "*About*" || title match "*Giới thiệu*")))] | order((_id == "site.about") desc, _updatedAt desc)[0] {
       ...,
       heroSection {
         ...,
@@ -200,7 +201,7 @@ export async function getServicesData() {
       ...,
       ${settingsFields}
     },
-    "services": *[(_type in ["servicesPage", "page", "services"] || _id in ["site.services", "drafts.site.services", "services"]) && (_id in ["site.services", "drafts.site.services", "services"] || slug.current == "services" || title match "*Service*" || title match "*Dịch vụ*")] | order((_id == "site.services") desc, _updatedAt desc)[0] {
+    "services": *[(_type == "servicesPage" || (_type in ["page", "services"] && (_id in ["site.services", "drafts.site.services", "services"] || slug.current == "services" || title match "*Service*" || title match "*Dịch vụ*")))] | order((_id == "site.services") desc, _updatedAt desc)[0] {
       ...,
       heroSection {
         ...,
@@ -290,7 +291,7 @@ export async function getWorksData() {
       ...,
       ${settingsFields}
     },
-    "works": *[(_type in ["worksPage", "page", "works"] || _id in ["site.works", "drafts.site.works", "works"]) && (_id in ["site.works", "drafts.site.works", "works"] || slug.current == "works" || slug.current == "our-works" || title match "*Work*" || title match "*Dự án*")] | order((_id == "site.works") desc, _updatedAt desc)[0] {
+    "works": *[(_type == "worksPage" || (_type in ["page", "works"] && (_id in ["site.works", "drafts.site.works", "works"] || slug.current == "works" || slug.current == "our-works" || title match "*Work*" || title match "*Dự án*")))] | order((_id == "site.works") desc, _updatedAt desc)[0] {
       ...,
       heroSection {
         ...,
@@ -356,7 +357,7 @@ export async function getContactData() {
       ...,
       ${settingsFields}
     },
-    "contact": *[(_type in ["contactPage", "page", "contact"] || _id in ["site.contact", "drafts.site.contact", "contact"]) && (_id in ["site.contact", "drafts.site.contact", "contact"] || slug.current == "contact" || title match "*Contact*" || title match "*Liên hệ*")] | order((_id == "site.contact") desc, _updatedAt desc)[0] {
+    "contact": *[(_type == "contactPage" || (_type in ["page", "contact"] && (_id in ["site.contact", "drafts.site.contact", "contact"] || slug.current == "contact" || title match "*Contact*" || title match "*Liên hệ*")))] | order((_id == "site.contact") desc, _updatedAt desc)[0] {
       ...,
       heroSection {
         ...,

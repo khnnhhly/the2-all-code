@@ -52,7 +52,8 @@ export default function Footer({ settingsData, currentLang, onNavClick }) {
     en: { home: "Home", about: "About Us", services: "Services", showcase: "Our Works", contact: "Contact" },
     vi: { home: "Trang chủ", about: "Về chúng tôi", services: "Dịch vụ", showcase: "Các dự án", contact: "Liên hệ" }
   };
-  const activeNav = defaultNav[currentLang] || defaultNav.vi;
+  const activeNav = defaultNav[currentLang] || defaultNav.en;
+  const pageIdToNavKey = { home: 'home', about: 'about', services: 'services', showcase: 'showcase', contact: 'contact' };
 
   let exploreLinks = [
     { id: 'home', label: activeNav.home },
@@ -64,13 +65,16 @@ export default function Footer({ settingsData, currentLang, onNavClick }) {
 
   if (settingsData?.exploreLinks?.length > 0) {
     exploreLinks = settingsData.exploreLinks.map(item => {
-      const labelStr = getLocalizedText(item.label);
       let pageId = 'home';
       const url = item.url || '';
       if (url.includes('about')) pageId = 'about';
       else if (url.includes('services')) pageId = 'services';
       else if (url.includes('works') || url.includes('showcase') || url.includes('portfolio')) pageId = 'showcase';
       else if (url.includes('contact')) pageId = 'contact';
+
+      const sanityLabel = item.label?.[currentLang];
+      const fallbackLabel = activeNav[pageIdToNavKey[pageId]] || '';
+      const labelStr = sanityLabel || fallbackLabel || getLocalizedText(item.label);
       return { id: pageId, label: labelStr };
     });
   }

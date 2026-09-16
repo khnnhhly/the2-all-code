@@ -35,15 +35,18 @@ export default function HeroSection({ heroData, lang = 'en', onCtaClick }: HeroS
   }, []);
 
   useEffect(() => {
-    if (heroData?.backgroundImage) {
+    const image = heroData?.backgroundImage || (heroData as any)?.heroImage;
+    if (image) {
       try {
-        const url = urlFor(heroData.backgroundImage).url();
+        const url = urlFor(image).url();
         if (url) {
           setBgUrl(url);
         }
       } catch (err) {
         console.error('Error generating image URL from Sanity asset:', err);
       }
+    } else {
+      setBgUrl('');
     }
   }, [heroData]);
 

@@ -49,7 +49,9 @@ export default function About({ aboutData, currentLang, setCurrentPage }) {
     const projectId = item._id ? (item._id.replace('drafts.', '').split('.')[1] || item._id.replace('drafts.', '')) : '';
     return {
       couple: item.title || '',
-      meta: `${item.serviceCategory || ''} · ${item.location || ''} · ${item.year || ''}`,
+      serviceCategory: item.serviceCategory || '',
+      location: item.location || '',
+      year: item.year || '',
       img: imgUrl,
       projectId: projectId,
       quote: item.highlightQuote || item.shortQuote || ''
@@ -144,7 +146,12 @@ export default function About({ aboutData, currentLang, setCurrentPage }) {
                     )}
                   </div>
                   <div className="about-testimonial-copy">
-                    <div className="about-testimonial-meta">{item.couple} · {item.meta}</div>
+                    <div className="about-testimonial-meta">
+                      <strong>{item.couple}</strong>
+                      <span>{item.serviceCategory}</span>
+                      <span>{item.location}</span>
+                      <span>{item.year}</span>
+                    </div>
                     <div className="about-testimonial-quote">{item.quote}</div>
                   </div>
                 </button>

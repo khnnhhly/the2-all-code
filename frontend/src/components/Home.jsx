@@ -29,6 +29,9 @@ export default function Home({ homeData, testimonials, projects, currentLang, se
     );
   }
 
+  const heroSectionData = homeData?.heroSection || {};
+  const heroImage = heroSectionData.backgroundImage || heroSectionData.heroImage || homeData?.heroImage;
+
   const navigateToServiceDetail = (service) => {
     if (service?.id) {
       window.sessionStorage.setItem('pendingServiceId', service.id);
@@ -155,7 +158,7 @@ export default function Home({ homeData, testimonials, projects, currentLang, se
   return (
     <div id="home">
       {/* Hero */}
-      <HeroSection heroData={homeData.heroSection} lang={currentLang} onCtaClick={setCurrentPage} />
+      <HeroSection heroData={{ ...heroSectionData, backgroundImage: heroImage || heroSectionData.backgroundImage || heroSectionData.heroImage }} lang={currentLang} onCtaClick={setCurrentPage} />
 
       {/* Quote */}
       <section className="section-padding home-showcase-section" style={{ backgroundColor: 'var(--white)', borderBottom: '1px solid var(--border-color)' }}>

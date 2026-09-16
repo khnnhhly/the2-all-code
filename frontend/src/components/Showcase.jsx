@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import OptimizedImage, { preloadImages } from './OptimizedImage';
 import { urlFor } from '../lib/sanity';
@@ -9,13 +9,18 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
   const [dismissedTargetProjectId, setDismissedTargetProjectId] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState('all');
 
-  const getLocalizedText = (field) => {
-    if (!field) return '';
+  const getLocalizedText = (field, fallbackEn = '', fallbackVi = '') => {
+    if (!field) return currentLang === 'en' ? fallbackEn : fallbackVi;
     if (typeof field === 'string') return field;
-    return field[currentLang] || field.en || field.vi || '';
+    if (currentLang === 'en') {
+      return field.en || fallbackEn || field.vi || '';
+    }
+    return field.vi || fallbackVi || field.en || '';
   };
 
   const getThumbnailUrl = (project) => {
+    if (!project) return '';
+    if (typeof project.thumbnailImage === 'string') return project.thumbnailImage;
     if (project?.thumbnailImage) {
       try {
         return urlFor(project.thumbnailImage).url() || '';
@@ -27,6 +32,7 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
   const getLookbookImages = (project) => {
     if (!project) return { hero: null, secondary: [], color: [], bw: [] };
     const images = project.galleryImages?.map(img => {
+      if (typeof img === 'string') return img;
       try {
         return urlFor(img).url() || '';
       } catch (e) {
@@ -36,7 +42,9 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
 
     if (images.length === 0) {
       let fallbackUrl = '';
-      if (project.heroDetailImage) {
+      if (typeof project.heroDetailImage === 'string') {
+        fallbackUrl = project.heroDetailImage;
+      } else if (project.heroDetailImage) {
         try {
           fallbackUrl = urlFor(project.heroDetailImage).url() || '';
         } catch (e) {}
