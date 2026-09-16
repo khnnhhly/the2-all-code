@@ -319,7 +319,10 @@ function mergeSanityData(fallback, sanity) {
     works: mergeSanityData(fallback.works, clientSanityData?.works),
     contact: mergeSanityData(fallback.contact, clientSanityData?.contact),
     testimonials: clientSanityData?.testimonials?.length ? clientSanityData.testimonials : fallback.home.testimonialVideoSection ? [fallback.home.testimonialVideoSection] : [],
-    projects: clientSanityData?.projects?.length ? clientSanityData.projects : fallback.projects,
+    projects: clientSanityData?.projects?.length ? [
+      ...clientSanityData.projects,
+      ...fallback.projects.filter(fp => !clientSanityData.projects.some(sp => sp.title?.toLowerCase() === fp.title?.toLowerCase() || sp._id === fp._id))
+    ] : fallback.projects,
   };
 
   // ─── Browser Back/Forward navigation support ───
@@ -356,11 +359,23 @@ function mergeSanityData(fallback, sanity) {
       });
     }, { threshold: 0.1 });
 
-    const timer = setTimeout(() => {
-      document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
-    }, 100);
+    const observeElements = () => {
+      document.querySelectorAll('.reveal-on-scroll:not(.revealed)').forEach(el => observer.observe(el));
+    };
 
-    return () => { clearTimeout(timer); observer.disconnect(); };
+    observeElements();
+    const timer = setTimeout(observeElements, 100);
+
+    const mutObserver = new MutationObserver(() => {
+      observeElements();
+    });
+    mutObserver.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+      mutObserver.disconnect();
+    };
   }, [lang, currentPage]); // re-trigger on lang or page change
 
   useEffect(() => {

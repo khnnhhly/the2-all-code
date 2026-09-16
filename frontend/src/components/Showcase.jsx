@@ -122,6 +122,16 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
     }
   }, [modalProject?.id]);
 
+  // Ensure newly rendered project cards after filter changes are visible immediately
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      document.querySelectorAll('.showcase-editorial-item').forEach(el => {
+        el.classList.add('revealed');
+      });
+    }, 20);
+    return () => clearTimeout(timer);
+  }, [selectedFilter, list.length]);
+
   if (!worksData && list.length === 0) {
     return (
       <div style={{ padding: '160px 0', textAlign: 'center', fontFamily: 'var(--font-body)' }}>
@@ -131,19 +141,19 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
   }
 
   const filteredList = list.filter(project => {
-    if (selectedFilter === 'all') return true;
+    if (!selectedFilter || selectedFilter === 'all' || selectedFilter === 'tất cả') return true;
 
-    const cat = project.category ? project.category.toLowerCase() : '';
-    const filter = selectedFilter.toLowerCase();
+    const cat = (project.category || '').toLowerCase().trim();
+    const filter = (selectedFilter || '').toLowerCase().trim();
 
     if (filter === 'wedding' || filter === 'đám cưới') {
-      return cat === 'wedding' || cat === 'đám cưới';
+      return cat === 'wedding' || cat === 'đám cưới' || cat.includes('wed') || cat.includes('cưới');
     }
     if (filter === 'events' || filter === 'sự kiện') {
-      return cat === 'events' || cat === 'sự kiện' || cat === 'event' || cat === 'các sự kiện khác';
+      return cat === 'events' || cat === 'sự kiện' || cat === 'event' || cat.includes('event') || cat.includes('kiện');
     }
-    if (filter === 'destination') {
-      return cat === 'destination' || cat === 'đám cưới xa nhà';
+    if (filter === 'destination' || filter === 'đám cưới xa nhà') {
+      return cat === 'destination' || cat === 'đám cưới xa nhà' || cat.includes('dest');
     }
     return cat === filter;
   });
@@ -276,7 +286,7 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
                 return (
                   <div 
                     key={project.id}
-                    className="reveal-on-scroll showcase-editorial-item"
+                    className="reveal-on-scroll revealed showcase-editorial-item"
                     style={{ transitionDelay: `${(idx % 3) * 60}ms`, marginBottom: '24px' }}
                     onClick={() => openLookbook(project)}
                     onMouseEnter={() => preloadProjectGallery(project)}
