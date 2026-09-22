@@ -157,7 +157,10 @@ export default function Footer({ settingsData, currentLang, onNavClick }) {
           {/* Col 1 — Brand Logo & Tagline */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', gridColumn: 'span 1' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'flex-start' }}>
-              <LogoSvg size={92} color="var(--accent-primary)" armColor="var(--charcoal)" />
+              <LogoSvg
+                size={92}
+                src={settingsData?.footerBrandLogo?.asset?.url || settingsData?.logo?.asset?.url || '/logo-brand.png'}
+              />
               <span className="brand-preserve-case" style={{
                 fontFamily: 'var(--font-display)',
                 fontSize: '11px',

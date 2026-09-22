@@ -140,7 +140,7 @@ export default function Contact({ contactData, currentLang }) {
     } catch (e) {}
   }
 
-  let closingBgUrl = '/assets/site-media/home-showcase-portrait-03.webp';
+  let closingBgUrl = '/assets/site-media/home-showcase-portrait-04.webp';
   if (contactData?.bottomBanner?.bgImage) {
     try {
       closingBgUrl = urlFor(contactData.bottomBanner.bgImage).url() || closingBgUrl;
@@ -387,10 +387,14 @@ export default function Contact({ contactData, currentLang }) {
       </section>
 
       {/* Closing Line — with background image overlay */}
-      {closingText && (
+      {(closingText || closingBgUrl) && (
         <section style={{
           position: 'relative',
           padding: '140px 0',
+          minHeight: '380px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           textAlign: 'center',
           overflow: 'hidden',
           backgroundColor: 'var(--charcoal)'

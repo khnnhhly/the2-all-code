@@ -180,13 +180,22 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
 
   const pageLabel = getLocalizedText(worksData?.heroSection?.headline) || (currentLang === 'en' ? 'Our works' : 'Dự án');
   const pageSubtext = getLocalizedText(worksData?.heroSection?.subheading) || '';
-  const pageTitle = getLocalizedText(worksData?.heroSection?.title) || '';
+  let worksHeroBgUrl = '';
+  if (worksData?.heroSection?.heroImage) {
+    try {
+      worksHeroBgUrl = urlFor(worksData.heroSection.heroImage).url() || '';
+    } catch (e) {}
+  }
 
   return (
     <div id="showcase">
       {/* Showcase Hero */}
       <section className="showcase-brutalist-hero">
-        <div className="showcase-brutalist-bg" aria-hidden="true" />
+        <div 
+          className="showcase-brutalist-bg"
+          style={worksHeroBgUrl ? { backgroundImage: `url(${worksHeroBgUrl})` } : {}}
+          aria-hidden="true" 
+        />
         <div className="showcase-brutalist-shade" aria-hidden="true" />
         <div className="container showcase-brutalist-content">
           <div className="reveal-on-scroll showcase-hero-heading">
@@ -296,7 +305,7 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
                     <div 
                       style={{
                         position: 'relative',
-                        aspectRatio: idx === 0 ? '16/10' : '4/5',
+                        aspectRatio: '4/5',
                         cursor: 'pointer',
                         borderRadius: '4px',
                         overflow: 'hidden',
@@ -312,7 +321,7 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
                           priority={true}
                           sizes="(max-width: 768px) 100vw, 33vw"
                           className="showcase-grid-image"
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }}
                         />
                       )}
                       {/* Hover Overlay - Clean title only */}
@@ -457,13 +466,13 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
 
                 {/* Hero Image */}
                 {lbMedia.hero && (
-                  <div style={{ width: '100%', height: '480px', overflow: 'hidden', borderRadius: '2px', position: 'relative' }}>
+                  <div style={{ width: '100%', maxHeight: '560px', overflow: 'hidden', borderRadius: '2px', position: 'relative', display: 'flex', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.02)' }}>
                     <OptimizedImage
                       src={lbMedia.hero}
                       alt={modalProject.title}
                       maxWidth={960}
                       priority
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      style={{ width: '100%', height: 'auto', maxHeight: '560px', objectFit: 'cover', objectPosition: 'center 20%' }}
                     />
                   </div>
                 )}

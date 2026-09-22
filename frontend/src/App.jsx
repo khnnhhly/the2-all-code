@@ -481,15 +481,14 @@ function mergeSanityData(fallback, sanity) {
             display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, gap: '4px'
           }}>
             <LogoSvg
-              size={scrolled || currentPage !== 'home' ? 74 : 92}
-              color={scrolled || currentPage !== 'home' ? 'var(--accent-primary)' : '#ffffff'}
-              armColor={scrolled || currentPage !== 'home' ? 'var(--charcoal)' : '#ffffff'}
+              size={scrolled || currentPage !== 'home' ? 58 : 72}
+              src={activeData?.settings?.logo?.asset?.url || '/logo-brand.png'}
             />
             <span className="brand-preserve-case" style={{
               fontFamily: 'var(--font-display)',
-              fontSize: '10px',
-              fontWeight: 300,
-              letterSpacing: '0.15em',
+              fontSize: '11px',
+              fontWeight: 400,
+              letterSpacing: '0.12em',
               textTransform: 'none',
               color: scrolled || currentPage !== 'home' ? 'var(--charcoal)' : '#ffffff',
               transition: 'color var(--transition)'

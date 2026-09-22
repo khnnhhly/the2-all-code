@@ -512,9 +512,9 @@ export default function Services({ servicesData, currentLang, setCurrentPage }) 
                   <button
                     onClick={() => { setActiveFaqTab('wedding'); setExpandedFaq(null); }}
                     style={{
-                      backgroundColor: activeFaqTab === 'wedding' ? '#5a5e27' : 'transparent',
-                      border: '1.5px solid #5a5e27',
-                      color: activeFaqTab === 'wedding' ? '#ffffff' : '#5a5e27',
+                      backgroundColor: activeFaqTab === 'wedding' ? 'var(--accent-primary)' : 'transparent',
+                      border: '1.5px solid var(--accent-primary)',
+                      color: activeFaqTab === 'wedding' ? '#ffffff' : 'var(--accent-primary)',
                       fontFamily: 'var(--font-body)',
                       fontSize: '0.85rem',
                       fontWeight: 300,
@@ -532,9 +532,9 @@ export default function Services({ servicesData, currentLang, setCurrentPage }) 
                   <button
                     onClick={() => { setActiveFaqTab('event'); setExpandedFaq(null); }}
                     style={{
-                      backgroundColor: activeFaqTab === 'event' ? '#5a5e27' : 'transparent',
-                      border: '1.5px solid #5a5e27',
-                      color: activeFaqTab === 'event' ? '#ffffff' : '#5a5e27',
+                      backgroundColor: activeFaqTab === 'event' ? 'var(--accent-primary)' : 'transparent',
+                      border: '1.5px solid var(--accent-primary)',
+                      color: activeFaqTab === 'event' ? '#ffffff' : 'var(--accent-primary)',
                       fontFamily: 'var(--font-body)',
                       fontSize: '0.85rem',
                       fontWeight: 300,
@@ -555,7 +555,7 @@ export default function Services({ servicesData, currentLang, setCurrentPage }) 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }} className="reveal-on-scroll">
               {(faqData[activeFaqTab] || []).map((faq, i) => {
                 const isOpen = expandedFaq === i;
-                const accentColor = '#5a5e27';
+                const accentColor = 'var(--accent-primary)';
                 return (
                   <div 
                     key={i} 

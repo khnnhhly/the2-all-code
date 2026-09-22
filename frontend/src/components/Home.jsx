@@ -130,6 +130,8 @@ export default function Home({ homeData, testimonials, projects, currentLang, se
     bannerHeadline.split('\n').forEach(line => {
       if (line.trim()) closingLines.push(line.trim());
     });
+  } else {
+    closingLines.push(currentLang === 'vi' ? 'Hãy kể câu chuyện của bạn cho chúng tôi' : 'Let us write your happy ever after');
   }
 
   let closingCtaBgUrl = '';
@@ -316,7 +318,7 @@ export default function Home({ homeData, testimonials, projects, currentLang, se
 
       {/* Closing CTA */}
       <section className="home-closing-cta">
-        {closingCtaBgUrl && <div className="home-closing-cta-bg" aria-hidden="true" style={{ backgroundImage: `url(${closingCtaBgUrl})` }} />}
+        <div className="home-closing-cta-bg" aria-hidden="true" style={closingCtaBgUrl ? { backgroundImage: `url(${closingCtaBgUrl})` } : {}} />
         <div className="home-closing-cta-overlay" />
         <div className="container reveal-on-scroll home-closing-cta-inner">
           {closingLines.length > 0 && (
