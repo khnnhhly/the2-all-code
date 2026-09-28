@@ -5430,3 +5430,26 @@ button[style*='var(--accent-primary)'] { background-color: #8e0413 !important; b
 #home-04 .home-service-panel-bg img {
   object-position: center 72%;
 }
+
+/* Focus was removed outright to get rid of the blue browser ring, which leaves
+   keyboard users with no indication of where they are. :focus-visible restores
+   a branded ring for keyboard navigation only — a mouse click still shows
+   nothing, so the original intent is preserved. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.nav-link-btn:focus-visible,
+.hero-cta-link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+/* On a dark hero the crimson ring disappears; use white there. */
+.hero-home :focus-visible,
+.about-video-hero :focus-visible,
+.showcase-brutalist-hero :focus-visible,
+.contact-cinematic-hero :focus-visible,
+.prefooter-cta :focus-visible {
+  outline-color: #fff;
+}
