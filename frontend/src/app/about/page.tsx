@@ -1,5 +1,20 @@
 export const revalidate = 300;
 
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'About Us | The Two Planner',
+  description: 'Meet the planners behind The Two Planner — our mission, our team, and the couples we have walked beside.',
+  alternates: { canonical: '/about' },
+  openGraph: {
+    title: 'About Us | The Two Planner',
+    description: 'Meet the planners behind The Two Planner — our mission, our team, and the couples we have walked beside.',
+    url: '/about',
+    type: 'website',
+  },
+};
+
+
 import App from '../../App';
 import { getAboutData } from '../../lib/sanityFetch';
 

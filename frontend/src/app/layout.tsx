@@ -4,8 +4,23 @@ import "../index.css";
 import "../App.css";
 
 export const metadata: Metadata = {
-  title: "The Two Planner | Premium Wedding & Event Planning",
+  metadataBase: new URL('https://thetwo.site'),
+  title: {
+    default: "The Two Planner | Premium Wedding & Event Planning",
+    template: "%s",
+  },
   description: "At The Two Planner, we believe every great wedding begins with two souls in love and two planners who truly care.",
+  alternates: { canonical: '/' },
+  openGraph: {
+    type: 'website',
+    siteName: 'The Two Planner',
+    locale: 'en_US',
+    alternateLocale: ['vi_VN'],
+    title: "The Two Planner | Premium Wedding & Event Planning",
+    description: "At The Two Planner, we believe every great wedding begins with two souls in love and two planners who truly care.",
+    url: '/',
+  },
+  twitter: { card: 'summary_large_image' },
   icons: {
     icon: [
       { url: '/favicon.ico' },

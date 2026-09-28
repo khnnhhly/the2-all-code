@@ -63,14 +63,34 @@ function withTransform(url: string): string {
   return `${url}?w=${DEFAULT_IMAGE_WIDTH}&q=${DEFAULT_IMAGE_QUALITY}&${format}`;
 }
 
+/** A Sanity asset ref encodes the format, e.g. `image-abc123-1728x960-gif`. */
+export function isGifSource(source: any): boolean {
+  if (!source) return false;
+  if (typeof source === 'string') return source.split('?')[0].toLowerCase().endsWith('.gif');
+  const asset = source.asset ?? source;
+  if (typeof asset?.extension === 'string') return asset.extension.toLowerCase() === 'gif';
+  if (typeof asset?.url === 'string') return asset.url.split('?')[0].toLowerCase().endsWith('.gif');
+  if (typeof asset?._ref === 'string') return asset._ref.toLowerCase().endsWith('-gif');
+  return false;
+}
+
+/**
+ * Sized builder that never asks for `auto=format` on a GIF — see withTransform.
+ * Animated sources are flattened to their first frame.
+ */
+export function buildImageUrl(source: any, width = DEFAULT_IMAGE_WIDTH, quality = DEFAULT_IMAGE_QUALITY): string {
+  try {
+    const builder = urlFor(source).width(width).quality(quality);
+    return (isGifSource(source) ? builder.format('webp').frame(1) : builder.auto('format')).url() || '';
+  } catch (e) {
+    return '';
+  }
+}
+
 export function getImageUrl(source: any): string {
   if (!source) return '';
   if (typeof source === 'string') return withTransform(source);
   if (source.asset?.url) return withTransform(source.asset.url);
   if (source.url) return withTransform(source.url);
-  try {
-    return urlFor(source).width(DEFAULT_IMAGE_WIDTH).quality(DEFAULT_IMAGE_QUALITY).auto('format').url() || '';
-  } catch (e) {
-    return '';
-  }
+  return buildImageUrl(source);
 }

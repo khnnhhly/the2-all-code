@@ -1,10 +1,17 @@
 'use client';
 
+// `auto=format` re-encodes an animated GIF as animated webp, which can come back
+// larger than the source — the About Us hero is a 27MB GIF that auto=format
+// turns into 16.6MB. Ask for a single webp frame instead: 110KB.
+function formatParams(src) {
+  return src.split('?')[0].toLowerCase().endsWith('.gif') ? 'fm=webp&frame=1' : 'auto=format';
+}
+
 export function imageDisplayUrl(src, maxWidth = 800) {
   if (!src || typeof src !== 'string') return src;
   if (src.includes('cdn.sanity.io')) {
     const separator = src.includes('?') ? '&' : '?';
-    return `${src}${separator}w=${maxWidth}&q=82&auto=format`;
+    return `${src}${separator}w=${maxWidth}&q=82&${formatParams(src)}`;
   }
   return src;
 }
@@ -12,7 +19,8 @@ export function imageDisplayUrl(src, maxWidth = 800) {
 function imageSrcSet(src, widths = [480, 800, 1200, 1600, 2000]) {
   if (!src || typeof src !== 'string' || !src.includes('cdn.sanity.io')) return undefined;
   const base = src.split('?')[0];
-  return widths.map((width) => `${base}?w=${width}&q=80&auto=format ${width}w`).join(', ');
+  const format = formatParams(src);
+  return widths.map((width) => `${base}?w=${width}&q=80&${format} ${width}w`).join(', ');
 }
 
 export function preloadImages(sources, maxWidth = 320) {

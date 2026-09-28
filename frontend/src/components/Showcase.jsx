@@ -175,7 +175,7 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
         <div className="showcase-brutalist-shade" aria-hidden="true" />
         <div className="container showcase-brutalist-content">
           <div className="reveal-on-scroll showcase-hero-heading">
-            <span style={getTitleStyle(worksData?.heroSection?.typography)}>{pageLabel}</span>
+            <h1 style={getTitleStyle(worksData?.heroSection?.typography)}>{pageLabel}</h1>
             {pageSubtext && <p style={getBodyStyle(worksData?.heroSection?.typography)}>{pageSubtext}</p>}
           </div>
 

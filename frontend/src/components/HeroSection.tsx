@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { urlFor } from '../lib/sanity';
+import { buildImageUrl } from '../lib/sanity';
 import { getTitleStyle, getBodyStyle, getScriptStyle } from '../lib/typography';
 
 interface CTAButton {
@@ -52,12 +52,7 @@ export default function HeroSection({ heroData, lang = 'en', onCtaClick }: HeroS
   const finalBgUrl = useMemo(() => {
     const image = heroData?.backgroundImage || (heroData as any)?.heroImage;
     if (!image) return fallbackUrl;
-    try {
-      return urlFor(image).width(1920).quality(78).auto('format').url() || fallbackUrl;
-    } catch (err) {
-      console.error('Error generating image URL from Sanity asset:', err);
-      return fallbackUrl;
-    }
+    return buildImageUrl(image, 1920, 78) || fallbackUrl;
   }, [heroData]);
 
   // Discoverable by the preload scanner; a CSS background alone is found only

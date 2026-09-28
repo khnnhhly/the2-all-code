@@ -71,7 +71,7 @@ export default function About({ aboutData, currentLang, setCurrentPage }) {
         <div className="about-video-hero-overlay" aria-hidden="true" />
         <div className="container about-video-hero-content">
           <div className="reveal-on-scroll about-video-hero-title">
-            <span className="about-video-hero-about" style={getTitleStyle(aboutData?.heroSection?.typography)}>{pageLabel}</span>
+            <h1 className="about-video-hero-about" style={getTitleStyle(aboutData?.heroSection?.typography)}>{pageLabel}</h1>
             <span className="about-video-hero-brand" style={getBodyStyle(aboutData?.heroSection?.typography)}>{pageTitle}</span>
           </div>
         </div>

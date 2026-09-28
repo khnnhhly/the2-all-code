@@ -5391,3 +5391,35 @@ button[style*='var(--accent-primary)'] { background-color: #8e0413 !important; b
 }
 .drive-video-poster:hover .drive-video-play { transform: translate(-50%, -50%) scale(1.06); }
 .drive-video-poster:focus-visible { outline: 3px solid var(--accent-primary); outline-offset: -3px; }
+
+/* The Contact hero paints its photo straight onto the section with no scrim,
+   so its white copy sat on a bright wedding photo and was unreadable. About Us
+   and Our Works already have one; give Contact the same treatment. */
+.contact-cinematic-hero {
+  position: relative;
+  isolation: isolate;
+}
+.contact-cinematic-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(0, 0, 0, 0.10), rgba(0, 0, 0, 0.52) 70%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.58));
+}
+
+/* About Us and Our Works had no <h1> — the page name was a <span>. Promoting it
+   keeps the same look but gives each page one top-level heading. */
+.about-video-hero-about,
+.showcase-hero-heading h1 {
+  margin: 0;
+  font-weight: inherit;
+}
+.showcase-hero-heading h1 {
+  display: block;
+  font-family: var(--font-hand);
+  font-size: clamp(3.25rem, 8.1vw, 6.25rem);
+  line-height: 0.82;
+  color: rgba(255, 255, 255, 0.94);
+}
