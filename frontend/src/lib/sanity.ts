@@ -36,7 +36,7 @@ export const client = createClient({
   projectId: sanityConfig.projectId,
   dataset: sanityConfig.dataset,
   apiVersion: '2026-07-19',
-  useCdn: false,
+  useCdn: true,
   token: sanityToken,
   perspective: 'published',
 });
@@ -49,13 +49,27 @@ export function urlFor(source: any) {
   return builder.image(image || source);
 }
 
+const DEFAULT_IMAGE_WIDTH = 1600;
+const DEFAULT_IMAGE_QUALITY = 75;
+
+// Sanity's `asset.url` is the untouched original. For this dataset that means
+// camera-resolution files — several over 3MB, one 13MB — going straight into a
+// CSS background-image. Always ask the CDN for a sized, re-encoded copy.
+function withTransform(url: string): string {
+  if (!url.includes('cdn.sanity.io') || url.includes('?')) return url;
+  // `auto=format` on an animated GIF re-encodes to animated webp and can come
+  // back several times larger than the original, so flatten those to one frame.
+  const format = url.toLowerCase().endsWith('.gif') ? 'fm=webp&frame=1' : 'auto=format';
+  return `${url}?w=${DEFAULT_IMAGE_WIDTH}&q=${DEFAULT_IMAGE_QUALITY}&${format}`;
+}
+
 export function getImageUrl(source: any): string {
   if (!source) return '';
-  if (typeof source === 'string') return source;
-  if (source.asset?.url) return source.asset.url;
-  if (source.url) return source.url;
+  if (typeof source === 'string') return withTransform(source);
+  if (source.asset?.url) return withTransform(source.asset.url);
+  if (source.url) return withTransform(source.url);
   try {
-    return urlFor(source).url() || '';
+    return urlFor(source).width(DEFAULT_IMAGE_WIDTH).quality(DEFAULT_IMAGE_QUALITY).auto('format').url() || '';
   } catch (e) {
     return '';
   }

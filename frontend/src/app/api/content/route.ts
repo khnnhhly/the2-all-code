@@ -8,8 +8,7 @@ import {
 } from '../../../lib/sanityFetch'
 import {sanityConfig} from '../../../lib/sanity'
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+export const revalidate = 300
 
 export async function GET() {
   try {
@@ -34,7 +33,7 @@ export async function GET() {
       },
       {
         headers: {
-          'Cache-Control': 'no-store, max-age=0',
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=3600',
           'X-Sanity-Project': sanityConfig.projectId,
           'X-Sanity-Dataset': sanityConfig.dataset,
           'X-Sanity-Read-Token': sanityConfig.hasReadToken ? 'configured' : 'missing',

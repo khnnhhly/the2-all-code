@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isValidSignature, SIGNATURE_HEADER_NAME } from '@sanity/webhook';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 const SANITY_WEBHOOK_SECRET = process.env.SANITY_WEBHOOK_SECRET;
 
@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
 
     // Revalidate the pages
     // Since we are revalidating, we can revalidate the home page or all pages
+    revalidateTag('sanity', 'max');
     revalidatePath('/', 'layout');
 
     return NextResponse.json({ revalidated: true, now: Date.now(), type: docType });

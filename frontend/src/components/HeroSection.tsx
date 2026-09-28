@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { urlFor } from '../lib/sanity';
 import { getTitleStyle, getBodyStyle, getScriptStyle } from '../lib/typography';
 
@@ -29,32 +30,39 @@ interface HeroSectionProps {
 
 export default function HeroSection({ heroData, lang = 'en', onCtaClick }: HeroSectionProps) {
   const [heroColorized, setHeroColorized] = useState(false);
-  const [bgUrl, setBgUrl] = useState<string>('');
 
   useEffect(() => {
     const tmr = setTimeout(() => setHeroColorized(true), 1400);
     return () => clearTimeout(tmr);
   }, []);
 
-  useEffect(() => {
+  // Fallback image if backgroundImage is not set in Sanity.
+  //
+  // The source is a 29MB animated GIF, and every visitor currently gets it
+  // because the Sanity hero image is unset. Served as a single frame in webp it
+  // is 89KB. `auto=format` is deliberately not used here: on an animated GIF it
+  // re-encodes to animated webp and returns 89MB.
+  const fallbackUrl =
+    'https://cdn.sanity.io/images/quhr7leo/production/852f4f61e673cbaf5759790b8fe3157b097147f9-1728x960.gif' +
+    '?w=1920&q=80&fm=webp&frame=1';
+
+  // Resolved during render, not in an effect: this is the LCP image, and
+  // deriving it after hydration made every visitor load the fallback GIF first
+  // and the real image second.
+  const finalBgUrl = useMemo(() => {
     const image = heroData?.backgroundImage || (heroData as any)?.heroImage;
-    if (image) {
-      try {
-        const url = urlFor(image).url();
-        if (url) {
-          setBgUrl(url);
-        }
-      } catch (err) {
-        console.error('Error generating image URL from Sanity asset:', err);
-      }
-    } else {
-      setBgUrl('');
+    if (!image) return fallbackUrl;
+    try {
+      return urlFor(image).width(1920).quality(78).auto('format').url() || fallbackUrl;
+    } catch (err) {
+      console.error('Error generating image URL from Sanity asset:', err);
+      return fallbackUrl;
     }
   }, [heroData]);
 
-  // Fallback image if backgroundImage is null or not yet loaded
-  const fallbackUrl = 'https://cdn.sanity.io/images/quhr7leo/production/852f4f61e673cbaf5759790b8fe3157b097147f9-1728x960.gif';
-  const finalBgUrl = bgUrl || fallbackUrl;
+  // Discoverable by the preload scanner; a CSS background alone is found only
+  // after the stylesheet parses.
+  ReactDOM.preload(finalBgUrl, { as: 'image', fetchPriority: 'high' });
 
   // Localized text helpers
   const getLocalizedText = (field: any) => {

@@ -49,7 +49,7 @@ export default function OptimizedImage({
   const displaySrc = imageDisplayUrl(src, maxWidth);
   const resolvedSizes = sizes || `(max-width: 768px) ${Math.min(maxWidth, 480)}px, ${maxWidth}px`;
   const resolvedSrcSet = imageSrcSet(src);
-  const imageLoading = loading || (priority ? 'eager' : 'eager');
+  const imageLoading = loading || (priority ? 'eager' : 'lazy');
   return (
     <img
       src={displaySrc}
