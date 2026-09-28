@@ -7,7 +7,7 @@ echo "The browser will open at http://localhost:3000"
 echo
 
 (sleep 3 && open "http://localhost:3000") &
-npm run dev -- --host 127.0.0.1 --port 3000
+npm run dev -- --port 3000 --hostname 127.0.0.1
 
 echo
 echo "Server stopped. You can close this window."
