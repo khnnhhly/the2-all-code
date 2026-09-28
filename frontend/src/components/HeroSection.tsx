@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { buildImageUrl } from '../lib/sanity';
+import { heroVideoFor } from '../lib/heroVideo';
 import { getTitleStyle, getBodyStyle, getScriptStyle } from '../lib/typography';
 
 interface CTAButton {
@@ -55,9 +56,11 @@ export default function HeroSection({ heroData, lang = 'en', onCtaClick }: HeroS
     return buildImageUrl(image, 1920, 78) || fallbackUrl;
   }, [heroData]);
 
+  const heroVideo = heroVideoFor(finalBgUrl);
+
   // Discoverable by the preload scanner; a CSS background alone is found only
-  // after the stylesheet parses.
-  ReactDOM.preload(finalBgUrl, { as: 'image', fetchPriority: 'high' });
+  // after the stylesheet parses. With a video the still is just the poster.
+  ReactDOM.preload(finalBgUrl, { as: 'image', fetchPriority: heroVideo ? 'low' : 'high' });
 
   // Localized text helpers
   const getLocalizedText = (field: any) => {
@@ -72,21 +75,37 @@ export default function HeroSection({ heroData, lang = 'en', onCtaClick }: HeroS
 
   return (
     <section className="hero-home" style={{ position: 'relative', overflow: 'hidden' }}>
-      {/* Background Image Container */}
-      <div
-        className={`hero-video-bg${heroColorized ? ' hero-video-bg--color' : ''} hero-video-bg--ready`}
-        style={{
-          backgroundImage: `url(${finalBgUrl})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          position: 'absolute',
-          inset: 0,
-          zIndex: 0,
-          width: '100%',
-          height: '100%'
-        }}
-        aria-hidden="true"
-      />
+      {/* Background — an h264 re-encode when the source is an animated hero,
+          otherwise the still image. */}
+      {heroVideo ? (
+        <video
+          className={`hero-video-bg${heroColorized ? ' hero-video-bg--color' : ''} hero-video-bg--ready`}
+          style={{ position: 'absolute', inset: 0, zIndex: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+          src={heroVideo}
+          poster={finalBgUrl}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+        />
+      ) : (
+        <div
+          className={`hero-video-bg${heroColorized ? ' hero-video-bg--color' : ''} hero-video-bg--ready`}
+          style={{
+            backgroundImage: `url(${finalBgUrl})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            position: 'absolute',
+            inset: 0,
+            zIndex: 0,
+            width: '100%',
+            height: '100%'
+          }}
+          aria-hidden="true"
+        />
+      )}
 
       {/* Dark Overlay with custom opacity if specified */}
       <div 

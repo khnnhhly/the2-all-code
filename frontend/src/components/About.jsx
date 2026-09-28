@@ -1,6 +1,7 @@
 import React from 'react';
 import OptimizedImage from './OptimizedImage';
 import { urlFor } from '../lib/sanity';
+import { heroVideoFor } from '../lib/heroVideo';
 import { getTitleStyle, getBodyStyle } from '../lib/typography';
 
 export default function About({ aboutData, currentLang, setCurrentPage }) {
@@ -59,13 +60,28 @@ export default function About({ aboutData, currentLang, setCurrentPage }) {
   }).filter(Boolean) || [];
 
   const testimonialsTitle = getLocalizedText(aboutData?.testimonialsSection?.mainHeadline) || (currentLang === 'vi' ? 'Từ những trái tim đã tin tưởng chúng tôi' : "From the bottom of our clients' hearts");
+  const heroVideo = heroVideoFor(heroBgUrl);
+
   const testimonialsTag = getLocalizedText(aboutData?.testimonialsSection?.categoryTag) || (currentLang === 'vi' ? 'đánh giá từ khách hàng' : 'testimonials');
 
   return (
     <div id="about">
       <section className="about-video-hero">
         <div className="about-video-hero-bg" aria-hidden="true">
-          <OptimizedImage src={heroBgUrl} alt="" maxWidth={1200} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          {heroVideo ? (
+            <video
+              src={heroVideo}
+              poster={heroBgUrl}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          ) : (
+            <OptimizedImage src={heroBgUrl} alt="" maxWidth={1200} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          )}
         </div>
         <div className="about-video-hero-overlay" aria-hidden="true" />
         <div className="container about-video-hero-content">
