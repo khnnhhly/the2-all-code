@@ -39,16 +39,7 @@ export default function Team({ aboutData, currentLang }) {
     };
   }).filter(Boolean) || [];
 
-  const closingQuote = getLocalizedText(aboutData?.preFooterCtaSection?.headline);
-  const closingCta = getLocalizedText(aboutData?.preFooterCtaSection?.ctaButton?.label);
-  const closingLink = aboutData?.preFooterCtaSection?.ctaButton?.link || 'contact';
 
-  let preFooterBgUrl = '/assets/site-media/home-showcase-portrait-02.webp';
-  if (aboutData?.preFooterCtaSection?.backgroundImage) {
-    try {
-      preFooterBgUrl = urlFor(aboutData.preFooterCtaSection.backgroundImage).url() || preFooterBgUrl;
-    } catch (e) {}
-  }
 
   return (
     <div id="team">
@@ -113,72 +104,6 @@ export default function Team({ aboutData, currentLang }) {
         </section>
       )}
 
-      {/* Dynamic Story / Testimonial Block */}
-      {closingQuote && (
-        <section style={{ 
-          backgroundImage: `linear-gradient(rgba(20, 18, 18, 0.6), rgba(20, 18, 18, 0.6)), url(${preFooterBgUrl})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          color: 'var(--white)', 
-          padding: '140px 0',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minHeight: '380px',
-          position: 'relative'
-        }}>
-          <div className="container reveal-on-scroll" style={{ 
-            maxWidth: '850px', 
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1
-          }}>
-            <h3 
-              className="about-closing-quote"
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
-                color: 'var(--white)',
-                marginBottom: '32px',
-                textAlign: 'center',
-                lineHeight: 1.3,
-                fontWeight: 400
-              }}
-            >
-              "{closingQuote}"
-            </h3>
-            {closingCta && (
-              <button 
-                onClick={() => {
-                  const targetId = closingLink.startsWith('/') ? closingLink.substring(1) : closingLink;
-                  const el = document.getElementById(targetId);
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }}
-                style={{
-                  backgroundColor: '#ffffff',
-                  color: 'var(--accent-primary)',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  fontWeight: 300,
-                  padding: '14px 36px',
-                  borderRadius: '4px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  letterSpacing: '0.04em',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
-                onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-              >
-                {closingCta}
-              </button>
-            )}
-          </div>
-        </section>
-      )}
 
       {/* Team Member Bio Modal */}
       {activeMember && (

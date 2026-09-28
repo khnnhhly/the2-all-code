@@ -10,6 +10,7 @@ import Services from './components/Services';
 import Showcase from './components/Showcase';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import PreFooterCta from './components/PreFooterCta';
 import './App.css';
 
 // ─── Inline Section Components ───
@@ -641,6 +642,8 @@ function mergeSanityData(fallback, sanity) {
           <>
             <About aboutData={mergedData?.about} currentLang={lang} setCurrentPage={handleNavClick} />
             <Team aboutData={mergedData?.about} currentLang={lang} setCurrentPage={handleNavClick} />
+            {/* After Our Team, so About Us ends on the same CTA as the other pages. */}
+            <PreFooterCta data={mergedData?.about?.preFooterCtaSection} lang={lang} onCtaClick={handleNavClick} />
           </>
         )}
         {currentPage === 'services' && <Services servicesData={mergedData?.services} currentLang={lang} setCurrentPage={handleNavClick} />}

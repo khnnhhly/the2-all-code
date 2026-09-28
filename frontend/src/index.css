@@ -5423,3 +5423,10 @@ button[style*='var(--accent-primary)'] { background-color: #8e0413 !important; b
   line-height: 0.82;
   color: rgba(255, 255, 255, 0.94);
 }
+
+/* The Destination Wedding panel uses a portrait 2432x3648 photo in a 1440x900
+   box, so cover() crops 1260px vertically and the couple — low in the frame —
+   fell outside the window. Bias the crop downwards to bring them back. */
+#home-04 .home-service-panel-bg img {
+  object-position: center 72%;
+}

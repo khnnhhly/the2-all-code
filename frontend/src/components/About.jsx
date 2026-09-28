@@ -1,7 +1,6 @@
 import React from 'react';
 import OptimizedImage from './OptimizedImage';
 import { urlFor } from '../lib/sanity';
-import PreFooterCta from './PreFooterCta';
 import { getTitleStyle, getBodyStyle } from '../lib/typography';
 
 export default function About({ aboutData, currentLang, setCurrentPage }) {
@@ -163,11 +162,6 @@ export default function About({ aboutData, currentLang, setCurrentPage }) {
           </div>
         </section>
       )}
-      <PreFooterCta
-        data={aboutData?.preFooterCtaSection}
-        lang={currentLang}
-        onCtaClick={setCurrentPage}
-      />
     </div>
   );
 }
