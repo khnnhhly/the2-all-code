@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { CheckCircle, ArrowRight } from 'lucide-react';
 import LogoSvg from './LogoSvg';
-import { urlFor } from '../lib/sanity';
+import { urlFor, getImageUrl } from '../lib/sanity';
 import { getTitleStyle, getBodyStyle } from '../lib/typography';
 
 export default function Contact({ contactData, currentLang }) {
@@ -112,7 +112,7 @@ export default function Contact({ contactData, currentLang }) {
 
   const defaultGreetingEn = "Hello! We are thrilled you're here. Let's design something unforgettable together. Tell us a bit about your dream day?";
   const defaultGreetingVi = "Chào bạn! Rất vui được đón tiếp. Hãy cùng nhau thiết kế nên những khoảnh khắc đáng nhớ. Hãy chia sẻ đôi chút về ngày mơ ước của bạn nhé?";
-  const chatBubbleText = getLocalizedText(contactData?.formConfig?.formGreetingText, defaultGreetingEn, defaultGreetingVi);
+  const chatBubbleText = getLocalizedText(contactData?.formConfig?.formGreetingText || contactData?.formConfig?.formGreetingTitle, defaultGreetingEn, defaultGreetingVi);
 
   const rawChoices = contactData?.formConfig?.eventTypeOptions?.map(x => getLocalizedText(x)).filter(Boolean);
   const quickChoices = (rawChoices && rawChoices.length > 0) ? rawChoices : (
@@ -124,41 +124,35 @@ export default function Contact({ contactData, currentLang }) {
   const successMsgTitle = currentLang === 'en' ? 'Thank you!' : 'Cảm ơn bạn!';
   const successMsgDesc = getLocalizedText(
     contactData?.formConfig?.responseNotice,
-    'We typically respond within 24–48 business hours.',
-    'Chúng tôi thường phản hồi trong vòng 24-48 giờ làm việc.'
+    'We typically respond within 1 to 2 business days.',
+    'The Two thường phản hồi trong vòng 1–2 ngày làm việc.'
   );
   const successMsgOutro = '';
   const formNote = '';
 
-  const closingText = getLocalizedText(contactData?.bottomBanner?.headline, 'We are always listening', 'Chúng tôi luôn lắng nghe');
+  const closingText = getLocalizedText(contactData?.bottomBanner?.headline, "Let's create your happily ever after together!", 'Hãy để chúng tôi đồng hành cùng bạn vẽ nên câu chuyện cổ tích đời thực!');
   const closingSig = getLocalizedText(contactData?.bottomBanner?.subtext, 'the two · for you two', 'the two · for you two');
 
-  let heroBgUrl = '/assets/site-media/home-showcase-portrait-03.webp';
-  if (contactData?.heroSection?.heroImage) {
-    try {
-      heroBgUrl = urlFor(contactData.heroSection.heroImage).url() || heroBgUrl;
-    } catch (e) {}
-  }
+  const heroBgUrl = getImageUrl(contactData?.heroSection?.heroImage) || '/assets/site-media/home-showcase-portrait-03.webp';
+  const closingBgUrl = getImageUrl(contactData?.bottomBanner?.bgImage) || '/assets/site-media/home-showcase-portrait-04.webp';
 
-  let closingBgUrl = '/assets/site-media/home-showcase-portrait-04.webp';
-  if (contactData?.bottomBanner?.bgImage) {
-    try {
-      closingBgUrl = urlFor(contactData.bottomBanner.bgImage).url() || closingBgUrl;
-    } catch (e) {}
-  }
-
-  // 2. Field Label Translations
-  const labelName = currentLang === 'en' ? 'your name' : 'tên của bạn';
-  const labelPartner = currentLang === 'en' ? "partner's name" : 'tên của bạn đời';
-  const labelEmail = currentLang === 'en' ? 'email address' : 'địa chỉ email';
-  const labelPhone = currentLang === 'en' ? 'phone number' : 'số điện thoại';
-  const labelDate = currentLang === 'en' ? 'wedding date' : 'ngày cưới';
-  const labelGuests = currentLang === 'en' ? 'estimated guest count' : 'số lượng khách dự kiến';
-  const labelLoc = currentLang === 'en' ? 'wedding location' : 'địa điểm tổ chức';
-  const labelBudget = currentLang === 'en' ? 'estimated budget' : 'ngân sách dự kiến';
-  const labelHear = currentLang === 'en' ? 'how did you hear about us?' : 'bạn biết đến chúng tôi qua đâu?';
-  const labelStory = currentLang === 'en' ? 'your story (or message for us)' : 'câu chuyện của bạn (hoặc lời nhắn gửi)';
-  const labelSubmit = currentLang === 'en' ? 'Send request' : 'Gửi yêu cầu';
+  // 2. Field Label & Placeholder Translations from Sanity
+  const ff = contactData?.formConfig?.formFields;
+  const labelName = getLocalizedText(ff?.fullNameLabel, 'your name', 'Tên bạn là');
+  const labelPartner = getLocalizedText(ff?.partnerNameLabel, "partner's name", 'Tên của "mảnh ghép còn lại" của bạn');
+  const labelEmail = getLocalizedText(ff?.emailLabel, 'email address', 'Địa chỉ email của bạn');
+  const labelPhone = getLocalizedText(ff?.phoneLabel, 'phone number', 'Số điện thoại của bạn');
+  const labelDate = getLocalizedText(ff?.eventDateLabel, 'wedding date', 'Ngày cưới hoặc ngày tổ chức tiệc (nếu có)');
+  const placeholderDate = getLocalizedText(ff?.eventDatePlaceholder, 'eg. Autumn 2027', 'ví dụ: Mùa Thu/ Tháng 9/ 2027');
+  const labelGuests = getLocalizedText(ff?.guestCountLabel, 'estimated guest count', 'Số lượng khách dự kiến');
+  const placeholderGuests = getLocalizedText(ff?.guestCountPlaceholder, 'eg. 100 - 150 guests', 'ví dụ: 100 - 150 khách');
+  const labelLoc = getLocalizedText(ff?.locationLabel, 'wedding location', 'Địa điểm dự kiến');
+  const labelBudget = getLocalizedText(ff?.budgetLabel, 'estimated budget', 'Ngân sách dự kiến');
+  const placeholderBudget = getLocalizedText(ff?.budgetPlaceholder, 'eg. flexible / 500M VND', 'ví dụ: thoải mái / 500 triệu');
+  const labelHear = getLocalizedText(ff?.referralLabel, 'how did you hear about us?', 'Bạn biết The Two qua đâu');
+  const labelStory = getLocalizedText(ff?.storyLabel, 'your story (or message for us)', 'Kể The Two nghe câu chuyện của hai bạn: Hai bạn là ai? Và hai bạn muốn mọi người cảm nhận điều gì trong ngày đặc biệt ấy?');
+  const placeholderStory = getLocalizedText(ff?.storyPlaceholder, 'Tell us your idea...', 'Kể The Two nghe nhé...');
+  const labelSubmit = getLocalizedText(contactData?.formConfig?.submitButtonLabel, 'Send your story', 'Gửi The Two');
 
   const scrollToForm = () => {
     document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -289,13 +283,13 @@ export default function Contact({ contactData, currentLang }) {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }} className="form-row">
                   <div>
                     <label style={labelStyle}>{labelDate}</label>
-                    <input type="text" name="date" placeholder={currentLang === 'en' ? 'e.g. Autumn 2026' : 'Ví dụ: Mùa thu 2026'} value={formData.date} onChange={handleChange} style={inputStyle}
+                    <input type="text" name="date" placeholder={placeholderDate} value={formData.date} onChange={handleChange} style={inputStyle}
                       onFocus={e => e.target.style.borderBottom = '1px solid var(--accent-secondary)'}
                       onBlur={e => e.target.style.borderBottom = '1px solid var(--border-muted)'} />
                   </div>
                   <div>
                     <label style={labelStyle}>{labelGuests}</label>
-                    <input type="text" name="guests" placeholder={currentLang === 'en' ? 'e.g. 100 - 150 guests' : 'Ví dụ: 100 - 150 khách'} value={formData.guests} onChange={handleChange} style={inputStyle}
+                    <input type="text" name="guests" placeholder={placeholderGuests} value={formData.guests} onChange={handleChange} style={inputStyle}
                       onFocus={e => e.target.style.borderBottom = '1px solid var(--accent-secondary)'}
                       onBlur={e => e.target.style.borderBottom = '1px solid var(--border-muted)'} />
                   </div>
@@ -310,7 +304,7 @@ export default function Contact({ contactData, currentLang }) {
                   </div>
                   <div>
                     <label style={labelStyle}>{labelBudget}</label>
-                    <input type="text" name="budget" placeholder={currentLang === 'en' ? 'e.g. flexible / 500M VND' : 'Ví dụ: linh hoạt / 500 triệu'} value={formData.budget} onChange={handleChange} style={inputStyle}
+                    <input type="text" name="budget" placeholder={placeholderBudget} value={formData.budget} onChange={handleChange} style={inputStyle}
                       onFocus={e => e.target.style.borderBottom = '1px solid var(--accent-secondary)'}
                       onBlur={e => e.target.style.borderBottom = '1px solid var(--border-muted)'} />
                   </div>
@@ -328,7 +322,7 @@ export default function Contact({ contactData, currentLang }) {
                 <div>
                   <label style={labelStyle}>{labelStory} *</label>
                   <textarea name="story" required rows={5} value={formData.story} onChange={handleChange}
-                    placeholder={currentLang === 'en' ? 'Tell us your idea...' : 'Lễ cưới của chúng mình dự kiến sẽ diễn ra tại...'}
+                    placeholder={placeholderStory}
                     style={{
                       ...inputStyle,
                       border: '1px solid var(--border-muted)',

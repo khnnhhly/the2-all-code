@@ -195,6 +195,23 @@ function JournalSection({ t, currentLang }) {
 
 export default function App({ sanityData, initialPage = 'home' }) {
   const [lang, setLang] = useState('en');
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('the2_lang');
+      if (saved === 'en' || saved === 'vi') {
+        setLang(saved);
+      }
+    } catch (e) {}
+  }, []);
+
+  const handleSetLang = (newLang) => {
+    setLang(newLang);
+    try {
+      localStorage.setItem('the2_lang', newLang);
+    } catch (e) {}
+  };
+
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesMenuOpen, setServicesMenuOpen] = useState(false);
@@ -319,10 +336,7 @@ function mergeSanityData(fallback, sanity) {
     works: mergeSanityData(fallback.works, clientSanityData?.works),
     contact: mergeSanityData(fallback.contact, clientSanityData?.contact),
     testimonials: clientSanityData?.testimonials?.length ? clientSanityData.testimonials : fallback.home.testimonialVideoSection ? [fallback.home.testimonialVideoSection] : [],
-    projects: clientSanityData?.projects?.length ? [
-      ...clientSanityData.projects,
-      ...fallback.projects.filter(fp => !clientSanityData.projects.some(sp => sp.title?.toLowerCase() === fp.title?.toLowerCase() || sp._id === fp._id))
-    ] : fallback.projects,
+    projects: clientSanityData?.projects?.length ? clientSanityData.projects : (fallback.projects || []),
   };
 
   // ─── Browser Back/Forward navigation support ───
@@ -482,7 +496,7 @@ function mergeSanityData(fallback, sanity) {
           }}>
             <LogoSvg
               size={scrolled || currentPage !== 'home' ? 58 : 72}
-              src={activeData?.settings?.logo?.asset?.url || '/logo-brand.png'}
+              src={mergedData?.settings?.logo?.asset?.url || '/logo-brand.png'}
             />
             <span className="brand-preserve-case" style={{
               fontFamily: 'var(--font-display)',
@@ -533,7 +547,7 @@ function mergeSanityData(fallback, sanity) {
             {/* Language toggle — two separate buttons side-by-side */}
             <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
               <button
-                onClick={() => setLang('en')}
+                onClick={() => handleSetLang('en')}
                 style={{
                   background: 'transparent',
                   border: 'none',
@@ -556,7 +570,7 @@ function mergeSanityData(fallback, sanity) {
                 opacity: 0.42
               }}>|</span>
               <button
-                onClick={() => setLang('vi')}
+                onClick={() => handleSetLang('vi')}
                 style={{
                   background: 'transparent',
                   border: 'none',
@@ -636,7 +650,7 @@ function mergeSanityData(fallback, sanity) {
               </span>
               <button
                 type="button"
-                onClick={() => { setLang('en'); setMobileMenuOpen(false); }}
+                onClick={() => { handleSetLang('en'); setMobileMenuOpen(false); }}
                 style={{
                   background: lang === 'en' ? '#ffffff' : 'transparent',
                   border: '1.5px solid rgba(255,255,255,0.5)',
@@ -654,7 +668,7 @@ function mergeSanityData(fallback, sanity) {
               </button>
               <button
                 type="button"
-                onClick={() => { setLang('vi'); setMobileMenuOpen(false); }}
+                onClick={() => { handleSetLang('vi'); setMobileMenuOpen(false); }}
                 style={{
                   background: lang === 'vi' ? '#ffffff' : 'transparent',
                   border: '1.5px solid rgba(255,255,255,0.5)',

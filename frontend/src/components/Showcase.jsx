@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import OptimizedImage, { preloadImages } from './OptimizedImage';
-import { urlFor } from '../lib/sanity';
+import { urlFor, getImageUrl } from '../lib/sanity';
 import { getTitleStyle, getBodyStyle } from '../lib/typography';
 
 export default function Showcase({ worksData, projects, currentLang, setCurrentPage, targetProjectId }) {
@@ -21,37 +21,15 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
 
   const getThumbnailUrl = (project) => {
     if (!project) return '';
-    if (typeof project.thumbnailImage === 'string') return project.thumbnailImage;
-    if (project?.thumbnailImage) {
-      try {
-        return urlFor(project.thumbnailImage).url() || '';
-      } catch (e) {}
-    }
-    return '';
+    return getImageUrl(project.thumbnailImage) || getImageUrl(project.heroDetailImage) || '';
   };
 
   const getLookbookImages = (project) => {
     if (!project) return { hero: null, secondary: [], color: [], bw: [] };
-    const images = project.galleryImages?.map(img => {
-      if (typeof img === 'string') return img;
-      try {
-        return urlFor(img).url() || '';
-      } catch (e) {
-        return '';
-      }
-    }).filter(Boolean) || [];
+    const images = project.galleryImages?.map(img => getImageUrl(img)).filter(Boolean) || [];
 
     if (images.length === 0) {
-      let fallbackUrl = '';
-      if (typeof project.heroDetailImage === 'string') {
-        fallbackUrl = project.heroDetailImage;
-      } else if (project.heroDetailImage) {
-        try {
-          fallbackUrl = urlFor(project.heroDetailImage).url() || '';
-        } catch (e) {}
-      } else {
-        fallbackUrl = getThumbnailUrl(project);
-      }
+      const fallbackUrl = getImageUrl(project.heroDetailImage) || getThumbnailUrl(project);
       return { hero: fallbackUrl, secondary: [], color: [], bw: [] };
     }
 
@@ -180,12 +158,9 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
 
   const pageLabel = getLocalizedText(worksData?.heroSection?.headline) || (currentLang === 'en' ? 'Our works' : 'Dự án');
   const pageSubtext = getLocalizedText(worksData?.heroSection?.subheading) || '';
-  let worksHeroBgUrl = '';
-  if (worksData?.heroSection?.heroImage) {
-    try {
-      worksHeroBgUrl = urlFor(worksData.heroSection.heroImage).url() || '';
-    } catch (e) {}
-  }
+  const pageTitle = getLocalizedText(worksData?.heroSection?.title) || '';
+  const worksHeroBgUrl = getImageUrl(worksData?.heroSection?.heroImage) || '/assets/site-media/home-showcase-portrait-02.webp';
+  const preFooterBgUrl = getImageUrl(worksData?.preFooterCtaSection?.backgroundImage);
 
   return (
     <div id="showcase">
@@ -345,8 +320,11 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
 
       {/* Closing CTA */}
       <section className="section-padding" style={{ 
-        backgroundColor: 'var(--white)', 
-        color: 'var(--charcoal)',
+        backgroundImage: preFooterBgUrl ? `linear-gradient(rgba(20, 20, 20, 0.55), rgba(20, 20, 20, 0.75)), url(${preFooterBgUrl})` : undefined,
+        backgroundColor: preFooterBgUrl ? undefined : 'var(--white)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        color: preFooterBgUrl ? '#ffffff' : 'var(--charcoal)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -362,7 +340,7 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
           <h2 style={getTitleStyle(worksData?.preFooterCtaSection?.typography, {
             fontFamily: 'var(--font-display)',
             fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
-            color: 'var(--charcoal)',
+            color: preFooterBgUrl ? '#ffffff' : 'var(--charcoal)',
             lineHeight: 1.35,
             marginBottom: '36px',
             fontWeight: 400
@@ -373,7 +351,8 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
             className="text-action-link"
             onClick={() => setCurrentPage ? setCurrentPage('contact') : null}
             style={{
-              color: 'var(--accent-secondary)'
+              color: preFooterBgUrl ? '#ffffff' : 'var(--accent-secondary)',
+              borderBottomColor: preFooterBgUrl ? '#ffffff' : undefined
             }}
           >
             {closingBtn}

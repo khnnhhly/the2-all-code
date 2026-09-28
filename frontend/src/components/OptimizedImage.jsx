@@ -41,6 +41,7 @@ export default function OptimizedImage({
   priority = false,
   maxWidth = 800,
   sizes,
+  loading,
   ...rest
 }) {
   if (!src) return null;
@@ -48,6 +49,7 @@ export default function OptimizedImage({
   const displaySrc = imageDisplayUrl(src, maxWidth);
   const resolvedSizes = sizes || `(max-width: 768px) ${Math.min(maxWidth, 480)}px, ${maxWidth}px`;
   const resolvedSrcSet = imageSrcSet(src);
+  const imageLoading = loading || (priority ? 'eager' : 'eager');
   return (
     <img
       src={displaySrc}
@@ -55,7 +57,7 @@ export default function OptimizedImage({
       alt={alt}
       className={className}
       style={style}
-      loading={priority ? 'eager' : 'lazy'}
+      loading={imageLoading}
       decoding="async"
       fetchPriority={priority ? 'high' : 'auto'}
       sizes={resolvedSizes}

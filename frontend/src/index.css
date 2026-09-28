@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&family=Mulish:ital,wght@0,300..900;1,300..900&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&subset=latin,vietnamese&display=swap');
+
 /* ─────────────────────────────────────────────────────
    The TWO Planner — Quiet Luxury Design System
    ───────────────────────────────────────────────────── */
@@ -323,10 +325,7 @@ q,
 .contact-cinematic-hero {
   min-height: clamp(520px, 72svh, 760px) !important;
   align-items: center !important;
-  background-color: #1a3a5c !important;
-  background-image:
-    linear-gradient(rgba(26, 58, 92, 0.34), rgba(26, 58, 92, 0.52)),
-    url('https://i.ibb.co/fd5Y1WJ9/MER01647-2.jpg') !important;
+  background-color: var(--bg-primary) !important;
   background-size: cover !important;
   background-position: center 54% !important;
   filter: none !important;
@@ -476,27 +475,14 @@ q,
 .parallax-slide .parallax-image {
   object-fit: cover !important;
 }
-.showcase-brutalist-bg {
-  background-image: url('/assets/site-media/home-showcase-portrait-02.webp') !important;
-}
-.contact-cinematic-hero {
-  background-image:
-    linear-gradient(rgba(26, 58, 92, 0.34), rgba(26, 58, 92, 0.52)),
-    url('/assets/site-media/home-showcase-portrait-04.webp') !important;
-}
-.services-staggered-panel--wedding::before,
-.services-staggered-panel--event::before {
-  background-image: url('/assets/site-media/services-hero-optimized.webp') !important;
-}
-.home-closing-cta-bg {
-  background-image: url('/assets/site-media/home-showcase-portrait-02.webp') !important;
-}
 .showcase-brutalist-title {
   font-size: clamp(1.24rem, 1.9vw, 1.46rem) !important;
 }
 .contact-hero-cta-text {
   flex-direction: row !important;
-  white-space: nowrap !important;
+  white-space: normal !important;
+  text-wrap: pretty;
+  word-break: break-word;
   font-size: clamp(0.72rem, 1.9vw, 1.6rem) !important;
 }
 
@@ -504,10 +490,7 @@ q,
 .contact-cinematic-hero {
   min-height: clamp(520px, 72svh, 760px) !important;
   align-items: center !important;
-  background-color: #1a3a5c !important;
-  background-image:
-    linear-gradient(rgba(26, 58, 92, 0.34), rgba(26, 58, 92, 0.52)),
-    url('https://i.ibb.co/fd5Y1WJ9/MER01647-2.jpg') !important;
+  background-color: var(--bg-primary) !important;
   background-size: cover !important;
   background-position: center 54% !important;
   filter: none !important;
@@ -555,7 +538,8 @@ q,
   font-style: italic;
   line-height: 1.18;
   text-align: center;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: break-word;
   transition: color 0.25s ease, border-color 0.25s ease, opacity 0.25s ease;
 }
 .contact-hero-cta-text:hover,
@@ -654,7 +638,8 @@ q,
 .home-closing-cta h2,
 .about-video-hero + section + section + section h3,
 .services-page section h3 {
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 .team-collage-photo {
   aspect-ratio: 4 / 5 !important;
@@ -663,13 +648,9 @@ q,
   object-fit: cover !important;
   object-position: center center !important;
 }
-.showcase-hero-heading p {
-  display: none !important;
-}
 .contact-cinematic-hero {
-  background:
-    linear-gradient(rgba(0,0,0,0.34), rgba(0,0,0,0.58)),
-    url('https://i.ibb.co/fd5Y1WJ9/MER01647-2.jpg') center / cover !important;
+  background-size: cover !important;
+  background-position: center !important;
 }
 .contact-hero-grid {
   min-height: calc(100svh - 220px);
@@ -1047,10 +1028,7 @@ q,
 .contact-cinematic-hero {
   min-height: clamp(520px, 72svh, 760px) !important;
   align-items: center !important;
-  background-color: #1a3a5c !important;
-  background-image:
-    linear-gradient(rgba(26, 58, 92, 0.34), rgba(26, 58, 92, 0.52)),
-    url('https://i.ibb.co/fd5Y1WJ9/MER01647-2.jpg') !important;
+  background-color: var(--bg-primary) !important;
   background-size: cover !important;
   background-position: center 54% !important;
   filter: none !important;
@@ -1283,10 +1261,7 @@ q,
 .contact-cinematic-hero {
   min-height: clamp(520px, 72svh, 760px) !important;
   align-items: center !important;
-  background-color: #1a3a5c !important;
-  background-image:
-    linear-gradient(rgba(26, 58, 92, 0.34), rgba(26, 58, 92, 0.52)),
-    url('https://i.ibb.co/fd5Y1WJ9/MER01647-2.jpg') !important;
+  background-color: var(--bg-primary) !important;
   background-size: cover !important;
   background-position: center 54% !important;
   filter: none !important;
@@ -1413,7 +1388,8 @@ q,
 }
 .hero-label-single {
   display: inline-block !important;
-  white-space: nowrap !important;
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
   font-family: var(--font-display) !important;
   font-style: italic !important;
   font-size: 1em !important;
@@ -2087,7 +2063,8 @@ li strong {
 }
 
 .contact-title-single-line {
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 @media (max-width: 900px) {
   .contact-title-single-line {
@@ -2259,7 +2236,7 @@ li strong {
 }
 .cta-button:hover {
   transform: scale(1.02);
-  background-color: #24573d;
+  background-color: #8e0413;
 }
 
 /* Mobile-specific overrides */
@@ -2335,14 +2312,14 @@ li strong {
   line-height: 1;
 }
 
-/* Quote — keep on one line where possible */
+/* Quote — natural line wrapping */
 .quote-single-line {
   white-space: normal;
   overflow-wrap: break-word;
 }
 @media (min-width: 1024px) {
   .quote-single-line {
-    white-space: nowrap;
+    white-space: normal;
   }
 }
 
@@ -2613,7 +2590,8 @@ li strong {
 }
 
 .philosophy-title-single-line {
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 @media (max-width: 900px) {
   .philosophy-title-single-line {
@@ -2758,7 +2736,8 @@ li strong {
 }
 
 .team-title-single-line {
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 @media (max-width: 900px) {
   .team-title-single-line {
@@ -2935,7 +2914,8 @@ li strong {
   letter-spacing: 0;
   opacity: 0;
   display: inline-block;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: break-word;
   overflow: hidden;
   -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 52%, transparent 72%);
   mask-image: linear-gradient(90deg, #000 0%, #000 52%, transparent 72%);
@@ -2981,7 +2961,8 @@ li strong {
 }
 .hero-title-line {
   display: block;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 @media (max-width: 768px) {
   .hero-title-line {
@@ -2989,7 +2970,7 @@ li strong {
   }
 }
 .hero-title-line2-nobreak {
-  white-space: nowrap;
+  white-space: normal;
   display: inline-block;
 }
 .hero-cta-links {
@@ -3711,12 +3692,15 @@ li strong {
   letter-spacing: 0.04em;
 }
 .about-testimonial-meta strong {
-  font-weight: 700;
+  font-weight: 700 !important;
   font-size: 1.05rem;
   color: var(--charcoal);
   letter-spacing: 0.02em;
-  display: block;
+  display: block !important;
   margin-bottom: 2px;
+}
+.about-testimonial-meta span {
+  display: block !important;
 }
 .about-testimonial-quote {
   font-family: var(--font-display);
@@ -4032,7 +4016,7 @@ li strong {
 }
 @media (min-width: 1200px) {
   .exp-title-single-line {
-    white-space: nowrap;
+    white-space: normal;
   }
 }
 
@@ -4295,10 +4279,8 @@ li strong {
 .showcase-brutalist-bg {
   position: absolute;
   inset: 0;
-  background-image: url('https://i.ibb.co/FLDg8hYF/MER01852.jpg');
   background-size: cover;
   background-position: center;
-  filter: grayscale(100%) contrast(1.18);
   opacity: 0.82;
 }
 .showcase-brutalist-shade {
@@ -4355,10 +4337,8 @@ li strong {
   display: flex;
   align-items: center;
   overflow: hidden;
-  background:
-    linear-gradient(rgba(0,0,0,0.34), rgba(0,0,0,0.62)),
-    url('https://i.ibb.co/fd5Y1WJ9/MER01647-2.jpg') center / cover;
-  filter: grayscale(100%) contrast(1.08);
+  background-size: cover;
+  filter: none;
 }
 .contact-cinematic-grain {
   position: absolute;
@@ -5061,10 +5041,7 @@ li strong {
 .contact-cinematic-hero {
   min-height: clamp(520px, 72svh, 760px) !important;
   align-items: center !important;
-  background-color: #1a3a5c !important;
-  background-image:
-    linear-gradient(rgba(26, 58, 92, 0.34), rgba(26, 58, 92, 0.52)),
-    url('https://i.ibb.co/fd5Y1WJ9/MER01647-2.jpg') !important;
+  background-color: var(--bg-primary) !important;
   background-size: cover !important;
   background-position: center 54% !important;
   filter: none !important;
@@ -5170,12 +5147,15 @@ li strong {
 }
 .contact-hero-cta-text {
   flex-direction: row !important;
-  white-space: nowrap !important;
+  white-space: normal !important;
+  text-wrap: pretty;
+  word-break: break-word;
   font-size: clamp(0.72rem, 1.9vw, 1.6rem) !important;
 }
 @media (min-width: 768px) {
   .about-closing-quote {
-    white-space: nowrap !important;
+    white-space: normal !important;
+    text-wrap: pretty;
   }
 }
 
@@ -5209,10 +5189,10 @@ li strong {
 
 /* 15 July restoration: original media, red typography and olive action surfaces. */
 :root {
-  --accent-primary: #7f1d1d;
-  --accent-secondary: #7f1d1d;
-  --red: #7f1d1d;
-  --border-muted: rgba(127, 29, 29, .16);
+  --accent-primary: #8e0413;
+  --accent-secondary: #8e0413;
+  --red: #8e0413;
+  --border-muted: rgba(142, 4, 19, .16);
 }
 .showcase-works-section { background-color: var(--bg-primary) !important; }
 .contact-chat-section { background-color: #8e0413 !important; }
@@ -5228,13 +5208,9 @@ button[style*='var(--accent-primary)'] { background-color: #8e0413 !important; b
 @media (max-width: 640px) { .home-showcase-carousel-slide { flex-basis: 72vw !important; } }
 
 
-/* Media recovery: ImgBB assets have a local visual fallback; page heroes use shipped media. */
+/* Shipped media support */
 .hero-video-bg { overflow: hidden !important; background-color: #171514 !important; }
 .hero-video-bg iframe { width: 100%; height: 100%; border: 0; pointer-events: none; transform: scale(1.12); }
-.about-video-hero-bg { background: url("/assets/site-media/home-showcase-portrait-01.webp") center / cover no-repeat; }
-.showcase-brutalist-bg { background-image: url("/assets/site-media/home-showcase-portrait-02.webp"); }
-.contact-cinematic-hero { background-image: linear-gradient(rgba(20, 20, 20, 0.4), rgba(20, 20, 20, 0.5)), url("/assets/site-media/home-showcase-portrait-04.webp"); }
-.home-closing-cta-bg { background-image: url("/assets/site-media/home-showcase-portrait-03.webp"); }
 .hero-cta-link--primary { background: transparent !important; border: 0 !important; color: #fff !important; font-weight: 300 !important; box-shadow: none !important; }
 .home-service-panel-cta { color: #fff !important; font-weight: 300 !important; box-shadow: none !important; }
 .home-service-panel-cta span { font-weight: 300 !important; color: currentColor !important; }

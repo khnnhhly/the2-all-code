@@ -146,11 +146,13 @@ export default function About({ aboutData, currentLang, setCurrentPage }) {
                     )}
                   </div>
                   <div className="about-testimonial-copy">
-                    <div className="about-testimonial-meta">
-                      <strong>{item.couple}</strong>
-                      <span>{item.serviceCategory}</span>
-                      <span>{item.location}</span>
-                      <span>{item.year}</span>
+                    <div className="about-testimonial-meta" style={{ display: 'flex', flexDirection: 'column', gap: '3px', alignItems: 'flex-start' }}>
+                      <strong style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--charcoal)', display: 'block', marginBottom: '2px' }}>
+                        {item.couple}
+                      </strong>
+                      {item.serviceCategory && <span style={{ display: 'block' }}>{item.serviceCategory}</span>}
+                      {item.location && <span style={{ display: 'block' }}>{item.location}</span>}
+                      {item.year && <span style={{ display: 'block' }}>{item.year}</span>}
                     </div>
                     <div className="about-testimonial-quote">{item.quote}</div>
                   </div>

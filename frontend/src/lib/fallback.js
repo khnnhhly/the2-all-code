@@ -104,14 +104,14 @@ export function getFallbackData(currentLang) {
         mission: {
           title: isVi ? 'Sứ mệnh' : 'Mission',
           content: isVi 
-            ? 'Mang lại những ngày kỷ niệm chân thực nhất, nơi tình yêu của hai bạn được tôn vinh một cách tự nhiên.'
-            : 'To craft authentic celebrations where your love story takes center stage naturally.'
+            ? 'The Two mong muốn sẽ biến mỗi câu chuyện thành một cột mốc đáng nhớ, nơi cảm xúc được kết nối với những lựa chọn tinh tế và được thực hiện chỉn chu đến từng chi tiết'
+            : 'We turn each story into a milestone that is both meaningful and well-executed, bridging emotions with clear, purposeful decisions'
         },
         vision: {
           title: isVi ? 'Tầm nhìn' : 'Vision',
           content: isVi
-            ? 'Trở thành người bạn đồng hành tin cậy cho những cặp đôi tìm kiếm sự tinh tế, ấm áp và ý nghĩa.'
-            : 'To be the trusted companion for couples seeking sophistication, warmth, and meaning.'
+            ? 'The Two tin rằng một đám cưới đẹp không cần đi theo khuôn mẫu. Từ câu chuyện của hai bạn, mỗi ý tưởng được phát triển có chủ đích, sáng tạo có định hướng và tinh giản trong từng chi tiết để mọi thứ vừa đủ đẹp, vừa đủ riêng.'
+            : 'We move beyond templated events toward thoughtful, structured creativity, delivering intentional designs with clarity and simplicity in every process'
         }
       },
       testimonialsSection: {
