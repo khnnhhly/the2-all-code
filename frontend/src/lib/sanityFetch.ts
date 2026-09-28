@@ -301,6 +301,7 @@ export async function getWorksData() {
         regions[] {
           ...,
           regionName { en, vi },
+          locations[] { en, vi },
           venues[] { en, vi }
         }
       },

@@ -4843,9 +4843,10 @@ li strong {
   background-attachment: fixed !important;
 }
 .showcase-brutalist-bg {
-  background-size: min(100vw, 1320px) auto !important;
+  background-color: var(--bg-primary) !important;
+  background-size: cover !important;
   background-repeat: no-repeat !important;
-  background-position: center 44% !important;
+  background-position: center 50% !important;
 }
 .showcase-brutalist-content {
   grid-template-rows: 1fr auto !important;
