@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { X, ChevronDown } from 'lucide-react';
 import OptimizedImage from './OptimizedImage';
 import { urlFor } from '../lib/sanity';
+import PreFooterCta from './PreFooterCta';
 import { getTitleStyle, getBodyStyle } from '../lib/typography';
 
 function ServiceCarousel({ services, accentColor, onLearnMore, currentLang }) {
@@ -271,13 +272,34 @@ export default function Services({ servicesData, currentLang, setCurrentPage }) 
     return field[currentLang] || field.en || field.vi || '';
   };
 
+  // English service names are entered in Sanity in sentence case ("Wedding
+  // planning"); they read as proper names here, so title-case them for display.
+  // Vietnamese is left alone — capitalising every word is wrong in Vietnamese.
+  const MINOR_WORDS = new Set(['and', 'or', 'the', 'a', 'an', 'of', 'for', 'to', 'in', 'on', 'with']);
+  const toTitleCase = (value) =>
+    value
+      .split(/(\s+)/)
+      .map((part, i) => {
+        if (!part.trim()) return part;
+        const lower = part.toLowerCase();
+        if (i > 0 && MINOR_WORDS.has(lower)) return lower;
+        return lower.charAt(0).toUpperCase() + lower.slice(1);
+      })
+      .join('');
+
+  const localizedServiceName = (field) => {
+    const text = getLocalizedText(field);
+    return currentLang === 'en' ? toTitleCase(text) : text;
+  };
+
   const getServiceId = (item) => {
     const titleEn = item.title?.en?.toLowerCase() || '';
     if (titleEn.includes('planning')) return 'full-plan';
     if (titleEn.includes('coordination')) return 'coord';
     if (titleEn.includes('decoration')) return 'concept';
     if (titleEn.includes('destination')) return 'dest';
-    if (titleEn.includes('anniversary')) return 'anniv';
+    // "Annniversary" is misspelled in Sanity, so match the shared prefix.
+    if (titleEn.includes('nniversary')) return 'anniv';
     if (titleEn.includes('proposal')) return 'proposal';
     if (titleEn.includes('birthday')) return 'birthday';
     if (titleEn.includes('reveal')) return 'reveal';
@@ -296,7 +318,7 @@ export default function Services({ servicesData, currentLang, setCurrentPage }) 
     const serviceId = getServiceId(item);
     return {
       id: serviceId,
-      name: getLocalizedText(item.title),
+      name: localizedServiceName(item.title),
       desc: getLocalizedText(item.shortDescription),
       overview: getLocalizedText(item.modalDetails?.fullDescription) || getLocalizedText(item.shortDescription),
       img: imgUrl,
@@ -366,16 +388,6 @@ export default function Services({ servicesData, currentLang, setCurrentPage }) 
   const faqsLabel = getLocalizedText(servicesData?.faqSection?.categoryTag) || 'FAQs';
   const faqsTitle = getLocalizedText(servicesData?.faqSection?.mainHeadline) || (currentLang === 'en' ? 'Common Questions' : 'Câu hỏi thường gặp');
   const faqsDescription = getLocalizedText(servicesData?.faqSection?.subheading) || '';
-
-  const closingText = getLocalizedText(servicesData?.preFooterCtaSection?.headline);
-  const closingCta = getLocalizedText(servicesData?.preFooterCtaSection?.ctaButton?.label);
-
-  let preFooterBgUrl = '/assets/site-media/home-showcase-portrait-02.webp';
-  if (servicesData?.preFooterCtaSection?.backgroundImage) {
-    try {
-      preFooterBgUrl = urlFor(servicesData.preFooterCtaSection.backgroundImage).url() || preFooterBgUrl;
-    } catch (e) {}
-  }
 
   let heroBgUrl = '/assets/site-media/services-hero-optimized.webp';
   const serviceHeroImage = servicesData?.heroSection?.heroImage || servicesData?.heroImage;
@@ -616,57 +628,11 @@ export default function Services({ servicesData, currentLang, setCurrentPage }) 
         </section>
       )}
 
-      {/* Closing CTA */}
-      {(closingText || closingCta) && (
-        <section style={{ 
-          backgroundImage: `linear-gradient(rgba(42, 42, 42, 0.7), rgba(42, 42, 42, 0.7)), url(${preFooterBgUrl})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
-          color: '#ffffff', 
-          padding: '120px 0', 
-          textAlign: 'center' 
-        }}>
-          <div className="container reveal-on-scroll" style={{ maxWidth: '850px', margin: '0 auto' }}>
-            {closingText && (
-              <p style={getTitleStyle(servicesData?.preFooterCtaSection?.typography, {
-                fontFamily: 'var(--font-display)',
-                fontStyle: 'italic',
-                fontSize: 'clamp(1.2rem, 3vw, 1.6rem)',
-                color: '#ffffff',
-                lineHeight: 1.6,
-                marginBottom: '32px',
-                fontWeight: 300,
-                opacity: 0.95
-              })}>
-                {closingText}
-              </p>
-            )}
-            {closingCta && (
-              <button
-                onClick={() => setCurrentPage('contact')}
-                style={{
-                  backgroundColor: '#ffffff',
-                  color: 'var(--accent-primary)',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '1rem',
-                  fontWeight: 300,
-                  padding: '16px 40px',
-                  borderRadius: '4px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  letterSpacing: '0.04em',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
-                onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-              >
-                {closingCta}
-              </button>
-            )}
-          </div>
-        </section>
-      )}
+      <PreFooterCta
+        data={servicesData?.preFooterCtaSection}
+        lang={currentLang}
+        onCtaClick={setCurrentPage}
+      />
 
       {/* Service Detail Modal */}
       {activeModal && (

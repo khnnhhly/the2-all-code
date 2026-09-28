@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import OptimizedImage, { preloadImages } from './OptimizedImage';
 import { urlFor, getImageUrl } from '../lib/sanity';
+import PreFooterCta from './PreFooterCta';
 import { getTitleStyle, getBodyStyle } from '../lib/typography';
 
 export default function Showcase({ worksData, projects, currentLang, setCurrentPage, targetProjectId }) {
@@ -318,47 +319,11 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
         </div>
       </section>
 
-      {/* Closing CTA */}
-      <section className="section-padding" style={{ 
-        backgroundImage: preFooterBgUrl ? `linear-gradient(rgba(20, 20, 20, 0.55), rgba(20, 20, 20, 0.75)), url(${preFooterBgUrl})` : undefined,
-        backgroundColor: preFooterBgUrl ? undefined : 'var(--white)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        color: preFooterBgUrl ? '#ffffff' : 'var(--charcoal)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center'
-      }}>
-        <div className="container reveal-on-scroll" style={{ 
-          maxWidth: '850px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <h2 style={getTitleStyle(worksData?.preFooterCtaSection?.typography, {
-            fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
-            color: preFooterBgUrl ? '#ffffff' : 'var(--charcoal)',
-            lineHeight: 1.35,
-            marginBottom: '36px',
-            fontWeight: 400
-          })}>
-            {closingText}
-          </h2>
-          <button 
-            className="text-action-link"
-            onClick={() => setCurrentPage ? setCurrentPage('contact') : null}
-            style={{
-              color: preFooterBgUrl ? '#ffffff' : 'var(--accent-secondary)',
-              borderBottomColor: preFooterBgUrl ? '#ffffff' : undefined
-            }}
-          >
-            {closingBtn}
-          </button>
-        </div>
-      </section>
+      <PreFooterCta
+        data={worksData?.preFooterCtaSection}
+        lang={currentLang}
+        onCtaClick={setCurrentPage}
+      />
 
       {/* Editorial Lookbook Modal */}
       {modalProject && (() => {

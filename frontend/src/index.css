@@ -5215,3 +5215,179 @@ button[style*='var(--accent-primary)'] { background-color: #8e0413 !important; b
 .hero-cta-link--primary { background: transparent !important; border: 0 !important; color: #fff !important; font-weight: 300 !important; box-shadow: none !important; }
 .home-service-panel-cta { color: #fff !important; font-weight: 300 !important; box-shadow: none !important; }
 .home-service-panel-cta span { font-weight: 300 !important; color: currentColor !important; }
+
+/* ─────────────────────────────────────────────────────
+   Full-viewport heroes — About Us, Services, Our Works, Contact
+   The navbar is position:fixed and so takes no layout space:
+   a 100svh hero is exactly "navbar + hero = one screen", which is
+   what Our Works already did correctly. The previous clamp() caps
+   (780px / 820px / 760px) left 162–252px of the next section
+   showing at 1440x900. Homepage is deliberately untouched.
+   ───────────────────────────────────────────────────── */
+.about-video-hero,
+.services-intro-section,
+.contact-cinematic-hero,
+.showcase-brutalist-hero {
+  min-height: 100svh !important;
+  height: auto !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Clear the 91px fixed navbar so the copy stays optically centred. */
+.about-video-hero-content,
+.services-intro-container,
+.contact-cinematic-content {
+  padding-top: clamp(96px, 11vh, 132px) !important;
+  padding-bottom: clamp(48px, 7vh, 88px) !important;
+  width: 100%;
+}
+
+/* Background must cover the taller box without letterboxing. */
+.about-video-hero-bg,
+.about-video-hero-bg img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* Per-page focal points so the couple is never behind the copy. */
+.about-video-hero-bg img { object-position: center 38% !important; }
+.contact-cinematic-hero { background-position: center 42% !important; }
+.showcase-brutalist-bg  { background-position: center 30% !important; }
+
+/* ── Our Works: headline was 120px tall and ate 492px of a 900px screen ── */
+.showcase-hero-heading span {
+  font-size: clamp(3.25rem, 8.1vw, 6.25rem);
+}
+.showcase-hero-heading p {
+  font-size: clamp(0.88rem, 1.3vw, 1.02rem);
+}
+
+/* ── Homepage headline: balance the two lines instead of leaving
+      a single orphaned word on line 2. ── */
+.hero-home-title {
+  text-wrap: balance;
+}
+
+/* ─────────────────────────────────────────────────────
+   Shared closing CTA (PreFooterCta) — About Us, Services,
+   Our Works, Contact. One set of rules so the four pages
+   cannot drift apart again.
+   ───────────────────────────────────────────────────── */
+.prefooter-cta {
+  position: relative;
+  padding: 118px 0;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  background-color: var(--charcoal);
+}
+.prefooter-cta-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  /* Below centre, so the couple sits lower in the frame without cropping heads. */
+  background-position: center 34%;
+}
+.prefooter-cta-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(20, 18, 18, 0.45), rgba(20, 18, 18, 0.68));
+}
+.prefooter-cta-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.prefooter-cta-headline {
+  font-family: var(--font-display);
+  /* A step up from the old clamp(1.2rem, 3vw, 1.8rem). */
+  font-size: clamp(1.45rem, 3.4vw, 2.15rem);
+  font-style: italic;
+  color: #fff;
+  line-height: 1.4;
+  font-weight: 400;
+  margin: 0 0 30px;
+  text-wrap: balance;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+}
+.prefooter-cta-button {
+  display: inline-block;
+  background-color: var(--accent-primary);
+  color: #fff;
+  font-family: var(--font-body);
+  /* Smaller than the old 16px/40px button, still a comfortable target. */
+  font-size: 0.92rem;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+.prefooter-cta-button:hover {
+  transform: scale(1.03);
+  background-color: #a50517;
+}
+.prefooter-cta-button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+@media (max-width: 768px) {
+  .prefooter-cta {
+    padding: 84px 0;
+    min-height: 340px;
+  }
+  .prefooter-cta-headline {
+    font-size: clamp(1.25rem, 5.6vw, 1.6rem);
+  }
+}
+
+/* Click-to-play poster for the Drive embed: keeps a third-party iframe off the
+   initial load, and shows the cover instead of a bare frame. */
+.drive-video-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: var(--charcoal);
+  cursor: pointer;
+  display: block;
+  overflow: hidden;
+}
+.drive-video-poster::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 18, 18, 0.28);
+  transition: background 0.3s ease;
+}
+.drive-video-poster:hover::after { background: rgba(20, 18, 18, 0.18); }
+.drive-video-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--accent-primary);
+  padding-left: 4px;
+  transition: transform 0.3s ease;
+}
+.drive-video-poster:hover .drive-video-play { transform: translate(-50%, -50%) scale(1.06); }
+.drive-video-poster:focus-visible { outline: 3px solid var(--accent-primary); outline-offset: -3px; }

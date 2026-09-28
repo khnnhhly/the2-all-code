@@ -1,11 +1,11 @@
 'use client';
 import { useEffect, useState } from 'react';
 import LogoMarquee from './LogoMarquee';
-import DriveVideoEmbed from './DriveVideoEmbed';
+import DriveVideoEmbed, { toDrivePreviewUrl } from './DriveVideoEmbed';
 import HeroSection from './HeroSection';
 import HomeShowcaseCarousel from './HomeShowcaseCarousel';
 import HomeServiceRow from './HomeServiceRow';
-import { urlFor } from '../lib/sanity';
+import { urlFor, getImageUrl } from '../lib/sanity';
 import { getTitleStyle, getBodyStyle, getScriptStyle } from '../lib/typography';
 
 export default function Home({ homeData, testimonials, projects, currentLang, setCurrentPage }) {
@@ -114,14 +114,8 @@ export default function Home({ homeData, testimonials, projects, currentLang, se
   }).filter(Boolean) || [];
 
   // 7. Testimonial / Video
-  const videoEmbedUrl = homeData?.testimonialVideoSection?.videoUrl || '';
-  let cleanVideoUrl = videoEmbedUrl;
-  if (videoEmbedUrl.includes('<iframe')) {
-    const match = videoEmbedUrl.match(/src="([^"]+)"/);
-    if (match && match[1]) {
-      cleanVideoUrl = match[1];
-    }
-  }
+  const cleanVideoUrl = toDrivePreviewUrl(homeData?.testimonialVideoSection?.videoUrl);
+  const videoCover = getImageUrl(homeData?.testimonialVideoSection?.coverImage);
 
   // 8. Pre-footer Closing CTA
   const closingLines = [];
@@ -311,7 +305,7 @@ export default function Home({ homeData, testimonials, projects, currentLang, se
             )}
           </div>
           <div className="reveal-on-scroll video-underlay-wrapper" style={{ width: '100vw', maxWidth: '100%', margin: 0, padding: 0 }}>
-            <DriveVideoEmbed driveUrl={cleanVideoUrl} isFullScreen={true} />
+            <DriveVideoEmbed driveUrl={cleanVideoUrl} coverImage={videoCover} isFullScreen={true} playLabel={currentLang === 'vi' ? 'Phát video' : 'Play video'} />
           </div>
         </section>
       )}

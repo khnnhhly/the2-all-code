@@ -645,7 +645,7 @@ function mergeSanityData(fallback, sanity) {
         )}
         {currentPage === 'services' && <Services servicesData={mergedData?.services} currentLang={lang} setCurrentPage={handleNavClick} />}
         {currentPage === 'showcase' && <Showcase worksData={mergedData?.works} projects={mergedData?.projects} currentLang={lang} setCurrentPage={handleNavClick} targetProjectId={showcaseProjectId} />}
-        {currentPage === 'contact' && <Contact contactData={mergedData?.contact} currentLang={lang} />}
+        {currentPage === 'contact' && <Contact contactData={mergedData?.contact} currentLang={lang} setCurrentPage={handleNavClick} />}
       </main>
 
       {/* ─── FOOTER ─── */}

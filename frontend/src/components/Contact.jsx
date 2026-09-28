@@ -3,9 +3,10 @@ import { useState } from 'react';
 import { CheckCircle, ArrowRight } from 'lucide-react';
 import LogoSvg from './LogoSvg';
 import { urlFor, getImageUrl } from '../lib/sanity';
+import PreFooterCta from './PreFooterCta';
 import { getTitleStyle, getBodyStyle } from '../lib/typography';
 
-export default function Contact({ contactData, currentLang }) {
+export default function Contact({ contactData, currentLang, setCurrentPage }) {
   const [formData, setFormData] = useState({
     name: '', partnerName: '', email: '', phone: '',
     date: '', location: '', guests: '', budget: '',
@@ -380,62 +381,11 @@ export default function Contact({ contactData, currentLang }) {
         </div>
       </section>
 
-      {/* Closing Line — with background image overlay */}
-      {(closingText || closingBgUrl) && (
-        <section style={{
-          position: 'relative',
-          padding: '140px 0',
-          minHeight: '380px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          textAlign: 'center',
-          overflow: 'hidden',
-          backgroundColor: 'var(--charcoal)'
-        }}>
-          {/* Background image container */}
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: `url(${closingBgUrl})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            zIndex: 1
-          }} aria-hidden="true" />
-          
-          {/* Dark gradient overlay for text readability */}
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(to bottom, rgba(20, 18, 18, 0.55), rgba(20, 18, 18, 0.75))',
-            zIndex: 2
-          }} />
-
-          <div className="container reveal-on-scroll" style={{ position: 'relative', zIndex: 3, maxWidth: '800px', margin: '0 auto', padding: '0 24px' }}>
-            <p style={getTitleStyle(contactData?.bottomBanner?.typography, {
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(1.4rem, 3.5vw, 2.2rem)',
-              fontStyle: 'italic',
-              color: 'var(--white)',
-              lineHeight: 1.5,
-              marginBottom: '20px',
-              fontWeight: 400,
-              textShadow: '0 2px 20px rgba(0, 0, 0, 0.4)'
-            })}>
-              {closingText}
-            </p>
-            <p style={getBodyStyle(contactData?.bottomBanner?.typography, {
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.85rem',
-              color: 'rgba(255, 255, 255, 0.75)',
-              letterSpacing: '0.12em',
-              textTransform: 'none'
-            })}>
-              {closingSig}
-            </p>
-          </div>
-        </section>
-      )}
+      <PreFooterCta
+        data={contactData?.bottomBanner}
+        lang={currentLang}
+        onCtaClick={setCurrentPage}
+      />
 
       {/* Responsive form row styling */}
       <style dangerouslySetInnerHTML={{__html: `
