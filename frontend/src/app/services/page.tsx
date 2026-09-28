@@ -1,20 +1,17 @@
+import type { Metadata } from 'next';
 export const revalidate = 300;
 
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Wedding & Event Services | The Two Planner',
-  description: 'Wedding planning, coordination, decoration and destination weddings, plus proposals and private celebrations.',
-  alternates: { canonical: '/services' },
-  openGraph: {
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await getServicesData();
+  return pageMetadata(data?.services, {
     title: 'Wedding & Event Services | The Two Planner',
     description: 'Wedding planning, coordination, decoration and destination weddings, plus proposals and private celebrations.',
-    url: '/services',
-    type: 'website',
-  },
-};
+    path: '/services',
+  });
+}
 
 
+import { pageMetadata } from '../../lib/seo';
 import App from '../../App';
 import { getServicesData } from '../../lib/sanityFetch';
 

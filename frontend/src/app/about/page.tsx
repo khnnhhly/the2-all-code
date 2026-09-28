@@ -1,20 +1,17 @@
+import type { Metadata } from 'next';
 export const revalidate = 300;
 
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'About Us | The Two Planner',
-  description: 'Meet the planners behind The Two Planner — our mission, our team, and the couples we have walked beside.',
-  alternates: { canonical: '/about' },
-  openGraph: {
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await getAboutData();
+  return pageMetadata(data?.about, {
     title: 'About Us | The Two Planner',
     description: 'Meet the planners behind The Two Planner — our mission, our team, and the couples we have walked beside.',
-    url: '/about',
-    type: 'website',
-  },
-};
+    path: '/about',
+  });
+}
 
 
+import { pageMetadata } from '../../lib/seo';
 import App from '../../App';
 import { getAboutData } from '../../lib/sanityFetch';
 

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { draftMode } from "next/headers";
+import { VisualEditing } from "next-sanity/visual-editing";
 import "./globals.css";
 import "../index.css";
 import "../App.css";
@@ -31,11 +33,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Only mounted inside Sanity's Presentation tool, where draft mode is on.
+  const { isEnabled: isDraft } = await draftMode();
   return (
     <html lang="en">
       <head>
@@ -48,6 +52,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         {children}
+        {isDraft && <VisualEditing />}
       </body>
     </html>
   );

@@ -1,4 +1,23 @@
+import { draftMode } from 'next/headers';
 import { client } from './sanity';
+
+/**
+ * One fetch path for both modes. Published traffic reads the CDN with a 300s
+ * revalidate and a `sanity` tag the Sanity webhook drops on publish. Inside
+ * Presentation, draft mode is on: read drafts uncached, and turn on stega so
+ * the overlays know which field painted which pixel.
+ */
+async function fetchContent(query: string) {
+  const { isEnabled: isDraft } = await draftMode();
+
+  if (isDraft) {
+    return client
+      .withConfig({ useCdn: false, perspective: 'drafts', stega: true })
+      .fetch(query, {}, { cache: 'no-store' });
+  }
+
+  return client.fetch(query, {}, { next: { revalidate: 300, tags: ['sanity'] } });
+}
 
 const settingsFields = `
   logo { asset-> },
@@ -109,7 +128,7 @@ export async function getHomeData() {
     }
   }`;
   try {
-    const data = await client.fetch(query, {}, { next: { revalidate: 300, tags: ['sanity'] } });
+    const data = await fetchContent(query);
     return data;
   } catch (err) {
     console.warn("Error fetching home data:", err);
@@ -183,7 +202,7 @@ export async function getAboutData() {
     }
   }`;
   try {
-    const data = await client.fetch(query, {}, { next: { revalidate: 300, tags: ['sanity'] } });
+    const data = await fetchContent(query);
     return data;
   } catch (err) {
     console.warn("Error fetching about data:", err);
@@ -271,7 +290,7 @@ export async function getServicesData() {
     }
   }`;
   try {
-    const data = await client.fetch(query, {}, { next: { revalidate: 300, tags: ['sanity'] } });
+    const data = await fetchContent(query);
     return data;
   } catch (err) {
     console.warn("Error fetching services data:", err);
@@ -336,7 +355,7 @@ export async function getWorksData() {
     }
   }`;
   try {
-    const data = await client.fetch(query, {}, { next: { revalidate: 300, tags: ['sanity'] } });
+    const data = await fetchContent(query);
     return data;
   } catch (err) {
     console.warn("Error fetching works data:", err);
@@ -393,7 +412,7 @@ export async function getContactData() {
     }
   }`;
   try {
-    const data = await client.fetch(query, {}, { next: { revalidate: 300, tags: ['sanity'] } });
+    const data = await fetchContent(query);
     return data;
   } catch (err) {
     console.warn("Error fetching contact data:", err);

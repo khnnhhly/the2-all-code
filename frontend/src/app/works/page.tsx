@@ -1,20 +1,17 @@
+import type { Metadata } from 'next';
 export const revalidate = 300;
 
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Our Works | The Two Planner',
-  description: 'A portfolio of weddings and events planned by The Two Planner across Vietnam and beyond.',
-  alternates: { canonical: '/works' },
-  openGraph: {
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await getWorksData();
+  return pageMetadata(data?.works, {
     title: 'Our Works | The Two Planner',
     description: 'A portfolio of weddings and events planned by The Two Planner across Vietnam and beyond.',
-    url: '/works',
-    type: 'website',
-  },
-};
+    path: '/works',
+  });
+}
 
 
+import { pageMetadata } from '../../lib/seo';
 import App from '../../App';
 import { getWorksData } from '../../lib/sanityFetch';
 
