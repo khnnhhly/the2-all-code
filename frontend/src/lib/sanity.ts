@@ -1,11 +1,34 @@
 import { createClient } from '@sanity/client';
 import { createImageUrlBuilder } from '@sanity/image-url';
 
-const sanityToken = process.env.SANITY_API_READ_TOKEN || process.env.SANITY_API_TOKEN || 'skpi0H8Xna7IFv4yr9osAl2JJg1eCU0D9zJH1IshD7vgsUveZdffIHqZpQRl2kqFeyL60rbnSHhyKxwQF';
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
+
+if (!projectId || !dataset) {
+  throw new Error(
+    'Missing Sanity config: set NEXT_PUBLIC_SANITY_PROJECT_ID and NEXT_PUBLIC_SANITY_DATASET ' +
+      '(frontend/.env.local for local dev, Vercel > Settings > Environment Variables for deploys).'
+  );
+}
+
+// Server-only, and deliberately without a literal fallback: this module is also
+// imported by client components, so any default value would be inlined into the
+// browser bundle and served publicly.
+const isServer = typeof window === 'undefined';
+const sanityToken = isServer
+  ? process.env.SANITY_API_READ_TOKEN || process.env.SANITY_API_TOKEN
+  : undefined;
+
+if (isServer && !sanityToken) {
+  throw new Error(
+    'Missing Sanity read token: set SANITY_API_READ_TOKEN ' +
+      '(frontend/.env.local for local dev, Vercel > Settings > Environment Variables for deploys).'
+  );
+}
 
 export const sanityConfig = {
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'quhr7leo',
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+  projectId,
+  dataset,
   hasReadToken: Boolean(sanityToken),
 };
 
