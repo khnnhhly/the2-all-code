@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { getFallbackData } from './lib/fallback';
+import { VI_ENABLED, resolveLang } from './lib/languages';
 import { Menu, X, Globe, ChevronDown, Heart, BookOpen, Search, CalendarDays, Palette, Rocket, Clock, Lightbulb, Trash2, MapPin, Check, XIcon } from 'lucide-react';
 import LogoSvg from './components/LogoSvg';
 import Home from './components/Home';
@@ -198,6 +199,7 @@ export default function App({ sanityData, initialPage = 'home' }) {
   const [lang, setLang] = useState('en');
 
   useEffect(() => {
+    if (!VI_ENABLED) return;
     try {
       const saved = localStorage.getItem('the2_lang');
       if (saved === 'en' || saved === 'vi') {
@@ -207,9 +209,10 @@ export default function App({ sanityData, initialPage = 'home' }) {
   }, []);
 
   const handleSetLang = (newLang) => {
-    setLang(newLang);
+    const next = resolveLang(newLang);
+    setLang(next);
     try {
-      localStorage.setItem('the2_lang', newLang);
+      localStorage.setItem('the2_lang', next);
     } catch (e) {}
   };
 
@@ -491,6 +494,7 @@ function mergeSanityData(fallback, sanity) {
           {/* Right: Language toggle + Hamburger */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexShrink: 0 }}>
             {/* Language toggle — two separate buttons side-by-side */}
+            {VI_ENABLED && (
             <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
               <button
                 onClick={() => handleSetLang('en')}
@@ -533,6 +537,7 @@ function mergeSanityData(fallback, sanity) {
                 VI
               </button>
             </div>
+            )}
 
             {/* Hamburger — mobile only */}
               <button
@@ -590,6 +595,7 @@ function mergeSanityData(fallback, sanity) {
                 </button>
               );
             })}
+            {VI_ENABLED && (
             <div style={{ display: 'flex', gap: '10px', marginTop: '24px', alignItems: 'center', flexWrap: 'wrap' }}>
               <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.85rem', color: 'rgba(255,255,255,0.55)', fontWeight: 300 }}>
                 {lang === 'en' ? 'Language' : 'Ngôn ngữ'}
@@ -631,6 +637,7 @@ function mergeSanityData(fallback, sanity) {
                 Tiếng Việt
               </button>
             </div>
+            )}
           </div>
         </div>
       )}
