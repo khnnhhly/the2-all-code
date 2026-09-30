@@ -97,10 +97,14 @@ export default function Contact({ contactData, currentLang, setCurrentPage }) {
   };
 
   const labelStyle = {
-    fontFamily: 'var(--font-mono)',
-    fontSize: '0.75rem',
-    fontWeight: 300,
-    letterSpacing: '0.2em',
+    // Was var(--font-mono), which is never defined anywhere, so these labels
+    // fell back to the browser's default monospace — the one thing on the page
+    // not set in Mulish.
+    fontFamily: 'var(--font-body)',
+    fontSize: '0.78rem',
+    fontWeight: 400,
+    // 0.2em was tuned for the monospace; Mulish reads better tighter.
+    letterSpacing: '0.09em',
     color: 'var(--text-muted)',
     display: 'block',
     marginBottom: '8px'

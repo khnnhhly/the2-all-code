@@ -5453,3 +5453,24 @@ button[style*='var(--accent-primary)'] { background-color: #8e0413 !important; b
 .prefooter-cta :focus-visible {
   outline-color: #fff;
 }
+
+/* --font-mono was referenced by the contact form labels and the palette hex
+   codes but never defined, so both fell back to the browser default. The form
+   labels now use Mulish; give the hex codes a real mono stack. */
+:root {
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+/* Contact form sat on cream; white matches the rest of the page. */
+.contact-chat-section {
+  background: #ffffff !important;
+}
+
+/* Couple names are set in the script face, which reads small: 1.6rem/1.15rem
+   was too quiet against the photographs. */
+.showcase-card-title {
+  font-size: clamp(2rem, 3.2vw, 2.6rem) !important;
+}
+.showcase-card-mobile-title {
+  font-size: clamp(1.35rem, 5vw, 1.65rem) !important;
+}

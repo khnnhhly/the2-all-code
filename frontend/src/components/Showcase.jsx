@@ -246,7 +246,10 @@ export default function Showcase({ worksData, projects, currentLang, setCurrentP
                   fontSize: '0.85rem',
                   fontWeight: 300,
                   letterSpacing: '0.1em',
-                  textTransform: 'none',
+                  // The tab labels are lowercase in the data, and Sanity can
+                  // supply its own list, so capitalise at render rather than
+                  // rewriting either source.
+                  textTransform: 'capitalize',
                   color: selectedFilter === filter ? 'var(--accent-secondary)' : 'var(--text-muted)',
                   transition: 'all var(--transition)'
                 }}
