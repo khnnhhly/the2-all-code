@@ -5474,3 +5474,141 @@ button[style*='var(--accent-primary)'] { background-color: #8e0413 !important; b
 .showcase-card-mobile-title {
   font-size: clamp(1.35rem, 5vw, 1.65rem) !important;
 }
+
+/* ═════════════════════════════════════════════════════
+   SHARED HERO SYSTEM — Services is the reference
+   The variables below are Services' own computed values at
+   1440x900 (script 120px, body 20.1px, copy anchored at 171px =
+   11.875vw). Services keeps them, so it renders identically;
+   Our Works and Contact adopt them and stop being one-offs.
+   ═════════════════════════════════════════════════════ */
+:root {
+  --hero-script-size: clamp(4rem, 10vw, 8rem);      /* 120px @1440 */
+  --hero-script-lh: 0.85;
+  --hero-body-size: clamp(1.14rem, 1.74vw, 1.34rem); /* 20.1px @1440 */
+  --hero-body-lh: 1.6;
+  --hero-inline: clamp(24px, 11.875vw, 171px);       /* left anchor */
+  --hero-copy-max: 620px;
+  --hero-gap-title: 32px;   /* script -> supporting text */
+  --hero-gap-body: 24px;
+  --hero-script-color: rgba(255, 255, 255, 0.94);
+}
+
+/* Services: same variables, same numbers — no visual change. */
+.services-intro-label { font-size: var(--hero-script-size) !important; }
+.services-intro-subtitle { font-size: var(--hero-body-size) !important; line-height: var(--hero-body-lh) !important; }
+
+/* ── Our Works ─────────────────────────────────────────
+   Was: title 93.75px pinned to the top (155px), copy at 128px,
+   subtitle 16.8px, locations glued to the top edge. */
+.showcase-brutalist-content {
+  padding-left: var(--hero-inline) !important;
+  padding-right: clamp(24px, 4vw, 56px) !important;
+  align-items: center !important;
+}
+.showcase-hero-heading {
+  align-self: center !important;
+  max-width: var(--hero-copy-max) !important;
+}
+.showcase-hero-heading h1 {
+  font-size: var(--hero-script-size) !important;
+  line-height: var(--hero-script-lh) !important;
+  color: var(--hero-script-color) !important;
+  margin: 0 0 var(--hero-gap-title) !important;
+}
+.showcase-hero-heading p {
+  margin-top: 0 !important;
+  max-width: var(--hero-copy-max) !important;
+  font-size: var(--hero-body-size) !important;
+  line-height: var(--hero-body-lh) !important;
+}
+/* Supporting navigation, not a second headline. */
+.showcase-brutalist-locations {
+  align-self: center !important;
+  opacity: 0.86;
+}
+
+/* ── Contact ───────────────────────────────────────────
+   Was: a 96px serif title on its own, then two orphaned lines.
+   Now one centred block on the shared scale. */
+.contact-cinematic-content {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+.contact-hero-copy {
+  width: min(720px, 100%);
+  max-width: 720px !important;
+  margin: 0 auto;
+}
+.contact-hero-label {
+  font-family: var(--font-hand) !important;
+  font-size: var(--hero-script-size) !important;
+  line-height: var(--hero-script-lh) !important;
+  font-style: normal !important;
+  font-weight: 300 !important;
+  color: var(--hero-script-color) !important;
+  margin: 0 0 40px !important;
+}
+.contact-hero-subtext {
+  margin: 0 auto !important;
+  max-width: 680px !important;
+  font-family: var(--font-display) !important;
+  font-size: var(--hero-body-size) !important;
+  line-height: var(--hero-body-lh) !important;
+}
+.contact-hero-cta-text {
+  margin: 28px auto 0 !important;
+  font-size: clamp(1.2rem, 1.9vw, 1.5rem) !important;
+}
+
+@media (max-width: 768px) {
+  .showcase-brutalist-content {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+  /* Stop the location list sitting on top of the headline. */
+  .showcase-brutalist-locations {
+    align-self: start !important;
+    margin-top: 24px;
+  }
+  .contact-hero-label { margin-bottom: 28px !important; }
+  .contact-hero-cta-text { margin-top: 32px !important; }
+}
+
+/* ── Contact colour hierarchy: red page, white card ──
+   The card was cream (#fffaf2). Reuse the brand red already on
+   :root rather than introducing a second one. */
+.contact-chat-section { background: var(--accent-primary) !important; }
+.contact-chat-card,
+.contact-form-card { background: var(--white) !important; }
+
+/* The Works hero grid is a centred max-width:1280 box, so padding-left was
+   added to an existing 80px offset and pushed the copy to 251px instead of the
+   shared 171px. Let the grid span the viewport and carry the anchor itself. */
+.showcase-brutalist-content {
+  max-width: none !important;
+  width: 100% !important;
+}
+/* The location column had an explicit height, so it filled its grid row and
+   align-self had nothing to centre. */
+.showcase-brutalist-locations {
+  height: auto !important;
+}
+
+/* The grid declared `auto 1fr auto` but only ever holds two children, so a
+   275px row sat empty in the middle of the hero and pushed the copy high.
+   Collapse to the rows in use and centre them, which lands the text block on
+   the same vertical zone as the Services hero. */
+.showcase-brutalist-content {
+  grid-template-rows: auto !important;
+  align-content: center !important;
+}
+
+/* The Contact scrim was a radial that is lightest at 50% 48% — exactly where
+   the copy now sits, so the centred block washed out. Use the flat gradient
+   Services uses, which is the reference for image-vs-text balance. */
+.contact-cinematic-hero::before {
+  background: linear-gradient(rgba(18, 17, 16, 0.42), rgba(18, 17, 16, 0.54)) !important;
+}
